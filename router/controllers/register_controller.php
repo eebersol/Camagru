@@ -1,6 +1,5 @@
 <?php
 
-require("../models/user.is_subscribe.php");
 require("../models/user.create.php");
 
 if (isset($_POST['validate_register']))
@@ -13,13 +12,13 @@ if (isset($_POST['validate_register']))
    		echo "Invalid or to short password.\n";
 	else
   	{
-		$ret_value = check_if_user_exists($_POST['email'], $_POST['login'], hash('whirlpool', $_POST['passwd']));
-
-		if ($ret_value == 0)
+		if (check_user_subscribe($_POST['email'], $_POST['login'], hash('whirlpool', $_POST['passwd'])) === false)
 		{
 			$ret_value = create_user($_POST['email'], $_POST['login'], hash('whirlpool', $_POST['passwd']));
 			echo "User " . $login . "\n";
 		}
+		else
+			echo "FAIL\n.";
   	}
 }
 

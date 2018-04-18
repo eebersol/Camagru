@@ -12,7 +12,7 @@ sera obligatoirement défini sur PDO::ERRMODE_EXCEPTION
 
 
 
-SCHEMA USER ::
+SCHEMA USER ::                
 
 {
 	||	USER	||
@@ -46,3 +46,17 @@ On en est ::  user.create.php j'essaye de faire envoyer un mail pour l'inscripti
 
 
 FINALEMENT JE RECOIS LE MAIL
+
+
+
+Todo :
+
+-Creation du template du mail et de la creation du token OK
+
+
+
+VIEWS :: 
+
+- Register
+- Verifier_email
+- Register_success

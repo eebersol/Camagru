@@ -21,7 +21,8 @@ try
 		email 				VARCHAR(255)	NOT NULL,
 		login 				VARCHAR(120)	NOT NULL,
 		passwd 				VARCHAR(500)	NOT NULL,
-		subscribe_mail 		INT 			NOT NULL,
+		subscribe_email 	INT 			NOT NULL,
+		token_subscribe		TEXT			NOT NULL,
 		pic_reference 		TEXT 			NOT NULL,
 		notification_like 	INT 			NOT NULL,
 		notification_comment INT 			NOT NULL

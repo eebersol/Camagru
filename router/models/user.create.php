@@ -1,17 +1,71 @@
 <?php
 
+function check_user_subscribe($email, $login, $passwd)
+{
+	require("../config/contact_db.php");
+
+	return (execute_sql_query('
+		SELECT *
+		FROM users
+		WHERE email="'.$email.'"
+	'));
+}
+
+
+function generate_token($length)
+{
+	$pull = [];
+	while (count($pull) < $length)
+		$pull = array_merge($pull, range(0, 9), range('a', 'z'), range('A', 'Z'));
+	shuffle($pull);
+	return (implode("", $pull));
+}
+
+function subscribe_email($email, $login)
+{
+	$token 		= generate_token(90);
+	$subject 	= "[-CAMAGRU-] - Email verification";
+	$headers  	= 'MIME-Version: 1.0' . "\r\n";
+	$headers 	.= 'Content-type: text/html; charset=UTF-8' . "\r\n";
+	$headers 	.= 'From: <eebersol@student.42.fr>' . "\r\n";
+	$html_page 	= file_get_contents("../ressources/mails/mail.subscribe.html");
+	$html_page 	= str_replace("HERE", $token, $html_page);
+	$message 	= $html_page;
+	mail($email, $subject, $message, $headers); 
+	return ($token);
+}
+
 function create_user($email, $login, $passwd)
 {
 	require("../config/database.php");
-	require("../models/mail.subscribe.php");
-	echo "AQUI " . $DB_DSN . $DB_USER . $DB_PASS;
-	$conn = new PDO($DB_DSN, $DB_USER, $DB_PASS);
-	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-	$SQL_QUERY = 'INSERT INTO users (id, email, login, passwd, subscribe_mail, pic_reference, notification_like, notification_comment) VALUE (0, "'.$email.'", "'.$login.'", "'.$passwd.'", 1, "", 1, 1)';
-	$result_value = $conn->exec($SQL_QUERY);
-	subscribe_mail($email, $login, "", "");
-	return ($result_value);
 
+	$token 	= subscribe_email($email, $login);
+	return (exec_sql_query('
+		INSERT INTO
+		users (
+			id,
+			email,
+			login,
+			passwd,
+			subscribe_email,
+			token_subscribe,
+			pic_reference,
+			notification_like,
+			notification_comment
+		) 
+		VALUE 
+		(
+			0,
+			"'.$email.'",
+			"'.$login.'",
+			"'.$passwd.'",
+			1,
+			"'.$token.'",
+			"",
+			1,
+			1
+		)'
+	));
 }
 
 ?>
