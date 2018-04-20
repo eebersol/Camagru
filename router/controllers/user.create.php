@@ -1,6 +1,12 @@
 <?php
 
 
+if (isset($_GET['create']))
+{
+	check_user_subscribe($_GET['email'], $_GET['login'], $_GET['passswd']);
+	create_user($_GET['email'], $_GET['login'], $_GET['passswd']);
+}
+
 function check_user_subscribe($email, $login, $passwd)
 {
 	require("../config/contact_db.php");

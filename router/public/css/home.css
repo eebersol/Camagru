@@ -1,0 +1,173 @@
+
+.policeFamily
+{
+	font-family: "Verdana";
+}
+
+
+#enterHome {
+	width: 40%;
+	margin: 0 0 0 30%;
+	height: 30%;
+}
+
+#enterTextHome {
+	text-align: center;
+	font-size: 100px;
+	animation: colorblink 2s infinite;
+}
+@keyframes colorblink { 0% { }50% { background-color: #BDBDBD; }}
+
+
+#optionHome {
+	display: none;
+	width: 50%;
+	margin: 2% 0 0 25%;
+	height: 10%;
+}
+
+#optionInputHome {
+	text-align: center;
+	font-size: 50px;
+	animation: colorblink 2s infinite;
+}
+@keyframes colorblink { 0% { }50% { background-color: #BDBDBD; }}
+/*
+			LOGIN
+*/
+#loginHome
+{
+	display: none;
+	width: 25%;
+	margin: 5% 0 0 35.5%;
+	height: 30%;
+	animation: colorblink 2s infinite;
+}
+@keyframes colorblink { 0% { }50% { background-color: #BDBDBD; }}
+
+#loginTitleHome {
+	text-align: center;
+	font-size: 50px;
+	text-decoration: underline;
+}
+
+#loginCell
+{
+	width: 60%;
+	margin: 2% 0 0 20%;
+}
+
+#successLoginHome
+{
+	text-align: center;
+	display: none;
+	width: 50%;
+	border-radius: 500px;
+	margin: 10% 0 0 25%;
+	height: 4%;
+	padding: 5px 0 0 0;
+	background-color: #9CCC65;
+}
+
+#failLoginHome
+{
+	text-align: center;
+	display: none;
+	width: 50%;
+	border-radius: 500px;
+	margin: 10% 0 0 25%;
+	height: 4%;
+	padding: 5px 0 0 0;
+	background-color: #EF5350;
+}
+
+/*
+			END
+*/
+/*
+			SUBSCRIBE
+*/
+#subscribeHome
+{
+	display: none;
+	width: 25%;
+	margin: 2% 0 0 35.5%;
+	height: 40%;
+	animation: colorblink 2s infinite;
+}
+@keyframes colorblink { 0% { }50% { background-color: #BDBDBD; }}
+
+#subscribeTitleHome {
+	text-align: center;
+	font-size: 50px;
+	text-decoration: underline;
+}
+
+#subscribeCell
+{
+	width: 60%;
+	margin: 2% 0 0 20%;
+}
+
+#successSubscribeHome
+{
+	text-align: center;
+	display: none;
+	width: 50%;
+	border-radius: 500px;
+	margin: 10% 0 0 25%;
+	height: 4%;
+	padding: 5px 0 0 0;
+	background-color: #9CCC65;
+}
+
+#failSubscribeHome
+{
+	text-align: center;
+	display: none;
+	width: 50%;
+	border-radius: 500px;
+	margin: 10% 0 0 25%;
+	height: 4%;
+	padding: 5px 0 0 0;
+	background-color: #EF5350;
+}
+
+/*
+			END
+*/
+@media only screen and (min-width: 937px) 
+{
+
+  	#titleHome {
+		width: 50%;
+		margin: 1% 0 0 25%;
+		height: 30%;
+		color: black;
+	}
+
+	#titleTextHome {
+		font-family: "Verdana";
+		font-size: 200px;
+		text-align: center;
+
+	}
+}
+
+@media only screen and (max-width: 937px) 
+{
+  	#titleHome {
+
+		width: 50%;
+		margin: 1% 0 0 25%;
+		height: 30%;
+
+	}
+
+	#titleTextHome {
+		font-family: "Verdana";
+		font-size: 125px;
+		text-align: center;;
+
+	}
+}

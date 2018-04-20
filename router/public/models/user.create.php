@@ -1,14 +1,28 @@
 <?php
 
+require("../../config/contact_db.php");
+require("../../config/database.php");
 
-function check_user_subscribe($email, $login, $passwd)
+if (isset($_GET['create']))
 {
-	require("../config/contact_db.php");
+	if (check_user_subscribe($_GET['email'], $_GET['login']) == 0)
+	{
+		create_user($_GET['email'], $_GET['login'], $_GET['passwd']);
+		echo "TRUE";
+	}
+	else
+		echo "FALSE";
+
+}
+
+function check_user_subscribe($email, $login)
+{
 
 	return (execute_sql_query('
 		SELECT *
 		FROM users
-		WHERE email="'.$email.'"
+		WHERE email="'.$email.'" 
+		AND login="'.$login.'"
 	'));
 }
 
@@ -29,8 +43,9 @@ function subscribe_email($email, $login)
 	$headers  	= 'MIME-Version: 1.0' . "\r\n";
 	$headers 	.= 'Content-type: text/html; charset=UTF-8' . "\r\n";
 	$headers 	.= 'From: <eebersol@student.42.fr>' . "\r\n";
-	$html_page 	= file_get_contents("../ressources/mails/mail.subscribe.html");
+	$html_page 	= file_get_contents("../../ressources/mails/mail.subscribe.html");
 	$html_page 	= str_replace("HERE", $token, $html_page);
+	$html_page 	= str_replace("LOGIN", $login, $html_page);
 	$message 	= $html_page;
 	mail($email, $subject, $message, $headers); 
 	return ($token);
@@ -38,7 +53,6 @@ function subscribe_email($email, $login)
 
 function create_user($email, $login, $passwd)
 {
-	require("../config/database.php");
 
 	$token 	= subscribe_email($email, $login);
 	return (exec_sql_query('
@@ -59,7 +73,7 @@ function create_user($email, $login, $passwd)
 			0,
 			"'.$email.'",
 			"'.$login.'",
-			"'.$passwd.'",
+			"'.hash('whirlpool', $passwd).'",
 			1,
 			"'.$token.'",
 			"",

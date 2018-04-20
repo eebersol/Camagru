@@ -1,12 +1,15 @@
 <?php
 // Grabs the URI and breaks it apart in case we have querystring stuff
+session_start();
 $request_uri = explode('?', $_SERVER['REQUEST_URI'], 2);
-
 // Route it up!
 switch ($request_uri[0]) {
 	// Home page
 	case '/':
-	require '../views/home.php';
+		if (isset($_SESSION['login']))
+			require '../views/homeLoggued.php';
+		else
+			require '../views/home.php';
 		break;
 	// About page
 	case '/about':

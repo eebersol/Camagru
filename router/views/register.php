@@ -2,6 +2,7 @@
 <html>
 	<head>
 		<meta charset="utf-8" />
+		<script src="../css/home.css"></script>
 		<title>Titre</title>
 	</head>
 <?php
