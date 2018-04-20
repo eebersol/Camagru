@@ -60,3 +60,14 @@ VIEWS ::
 - Register
 - Verifier_email
 - Register_success
+
+
+
+
+ajouter un message d'erreur pour les champs et un message pour dire que l'inscription est valide t au'un mail de verificationarrive
+
+mettre le sinpout mot de pass en hasher
+
+
+
+disconnect marche maintenant il faut pouvoir modifier les infornations
