@@ -16,13 +16,30 @@ function execute_sql_query($query)
 	return count($result) == 0 ? false : true;
 }
 
+function execute_sql_query_with_value($query)
+{
+	require("database.php");
+
+	$conn = new PDO($DB_DSN, $DB_USER, $DB_PASS);
+	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+	$SQL_QUERY = $conn->prepare($query);
+	$SQL_QUERY->execute();
+	$result = $SQL_QUERY->fetchAll();
+	$SQL_QUERY = null;
+	$conn = null;
+	return $result;
+}
+
+
 function exec_sql_query($query)
 {
 	require("database.php");
 
 	$conn = new PDO($DB_DSN, $DB_USER, $DB_PASS);
 	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-	return ($conn->exec($query));
+	$result = $conn->exec($query);
+	return ($result);
 }
+
 
 ?>

@@ -1,559 +1,160 @@
+#fakeBody {
+	background-color: black;
+}
+#galleryDiv {
+	margin: 0 0 0 15%;
+}
 
+.galleryPicture {
+	margin: 1% 0 0 1%;
+}
+#galleryPagination {
+    display: inline-block;
+    margin: 3% 0 0 25%;
+}
 
-.policeFamily
-{
+#galleryPagination a {
+    color: black;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
+}
+
+#mediumTitle {
+	text-align: center;
+	width: 75%;
+	margin: 1% 0 0 12.5%;
+}
+
+#loginDiv {
+	display: none;
+}
+
+#trollPicture {
+	display: none;
+}
+
+#photoPicture {
+	width: 100%;
+}
+
+#titleDiv {
+	border: 2px solid black;
+}
+
+#enter {
+		text-align: center;
+		font-size: 6em;
+		font-family: "Verdana";
+		padding: 0 0 0 0;
+}
+
+#enterDiv {
+	width: 75%;
+	margin: 15% 0 0 12.5%;
+	animation: colorblink 3s infinite;
+}
+
+#optionDiv {
+	margin: 13% 0 0 12.5%;
+	display: none;
+}
+
+#optionText {
+	width: 75%;
+	margin: 2% 0 0 12.5%;
+	text-align: center;
+	font-size: 5em;
 	font-family: "Verdana";
+	animation: colorblink 3s infinite;
 }
 
-
-#enterHome {
-	padding-bottom: 3%;
-	width: 40%;
-	margin: 0 0 0 30%;
-	height: 30%;
-}
-
-#enterTextHome {
-	text-align: center;
-	font-size: 100px;
-	animation: colorblink 2s infinite;
-}
-@keyframes colorblink { 0% { }50% { background-color: #BDBDBD; }}
-
-
-#optionHome {
+#subscribeDiv {
 	display: none;
-	width: 50%;
-	margin: 2% 0 0 25%;
-	height: 10%;
+	animation: colorblink 3s infinite;
+}
+#submitButton {
+	width: 30%;
+	margin: 1% 0 3% 35%;
+}
+#submitButton:hover { background-color: #BDBDBD }
+.group {
+	width: 30%;
+	margin: 1% 0 0 35%;
 }
 
-#optionInputHome {
-	text-align: center;
-	font-size: 50px;
-	animation: colorblink 2s infinite;
-}
-@keyframes colorblink { 0% { }50% { background-color: #BDBDBD; }}
-/*
-			LOGIN
-*/
-#loginHome
-{
+#loginDiv {
 	display: none;
+	animation: colorblink 3s infinite;
+}
+
+
+#galleryDiv {
+	display: none;
+}
+
+@keyframes colorblink { 0% { }50% { background-color: #BDBDBD;}}
+@media only screen and (min-width: 1400px) {
+
+	#title {
+		text-align: center;
+		font-size: 9em;
+		font-family: "Verdana";
+		padding: 3% 0 0 0;
+	}
+
+	#optionText {
+		width: 75%;
+		margin: 2% 0 0 12.5%;
+		text-align: center;
+		font-size: 5em;
+		font-family: "Verdana";
+		animation: colorblink 3s infinite;
+	}
+
+}
+@media only screen and (max-width: 1399px) and (min-width: 501px){
+
+	#title {
+		text-align: center;
+		font-size: 7em;
+	}
+
+	#optionText {
+		width: 75%;
+		margin: 2% 0 0 12.5%;
+		text-align: center;
+		font-size: 3em;
+		font-family: "Verdana";
+		animation: colorblink 3s infinite;
+	}
+
+}
+@media only screen and (max-width: 500px) {
+
+	#title {
+		text-align: center;
+		font-size: 5em;
+		font-family: "Verdana";
+		padding: 3% 0 0 0;
+	}
+
+	#trollPicture {
+		display: none;
+		padding: 0 0 2% 0;
+	}
+
+	#photoPicture {
+		display: block;
+		width: 100%;
+		padding: 0 0 2% 0;
+	}
+}
+
+#zoomDiv {
+	display: none;
+}
+
+#zoomDisplayPicture {
 	width: 25%;
-	margin: 5% 0 0 35.5%;
-	height: 30%;
-	animation: colorblink 2s infinite;
-}
-@keyframes colorblink { 0% { }50% { background-color: #BDBDBD; }}
-
-#loginTitleHome {
-	text-align: center;
-	font-size: 50px;
-	text-decoration: underline;
-}
-
-#loginCell
-{
-	width: 60%;
-	margin: 2% 0 0 20%;
-}
-
-#successLoginHome
-{
-	text-align: center;
-	display: none;
-	width: 50%;
-	border-radius: 500px;
-	margin: 10% 0 0 25%;
-	height: 4%;
-	padding: 5px 0 0 0;
-	background-color: #9CCC65;
-}
-
-#failLoginHome
-{
-	text-align: center;
-	display: none;
-	width: 50%;
-	border-radius: 500px;
-	margin: 10% 0 0 25%;
-	height: 4%;
-	padding: 5px 0 0 0;
-	background-color: #EF5350;
-}
-
-/*
-			END
-*/
-/*
-			SUBSCRIBE
-*/
-#subscribeHome
-{
-	display: none;
-	width: 25%;
-	margin: 2% 0 0 35.5%;
-	height: 40%;
-	animation: colorblink 2s infinite;
-}
-@keyframes colorblink { 0% { }50% { background-color: #BDBDBD; }}
-
-#subscribeTitleHome {
-	text-align: center;
-	font-size: 50px;
-	text-decoration: underline;
-}
-
-#subscribeCell
-{
-	width: 60%;
-	margin: 2% 0 0 20%;
-}
-
-#successSubscribeHome
-{
-	text-align: center;
-	display: none;
-	width: 50%;
-	border-radius: 500px;
-	margin: 10% 0 0 25%;
-	height: 4%;
-	padding: 5px 0 0 0;
-	background-color: #9CCC65;
-}
-
-#failSubscribeHome
-{
-	text-align: center;
-	display: none;
-	width: 50%;
-	border-radius: 500px;
-	margin: 10% 0 0 25%;
-	height: 4%;
-	padding: 5px 0 0 0;
-	background-color: #EF5350;
-}
-
-/*
-			END
-*/
-/*@media only screen and (min-width: 1000px) 
-{
-
-  	#titleHome {
-  		background-color: blue;
-		width: 50%;
-		margin: 1% 0 0 25%;
-		height: 30%;
-		color: black;
-	}
-
-	#titleTextHome {
-		font-family: "Verdana";
-		font-size: 200px;
-		text-align: center;
-
-	}
-
-}
-*/
-@media only screen and (max-height: 850px) 
-{
-
-  	#titleHome {
-		width: 50%;
-		margin: 1% 0 0 25%;
-		height: 30%;
-		color: black;
-	}
-
-	#titleTextHome {
-		font-family: "Verdana";
-		font-size: 150px;
-		text-align: center;
-
-	}
-
-	#enterHome {
-		width: 40%;
-		margin: 6% 0 0 30%;
-		height: 30%;
-	}
-
-	#enterTextHome {
-		padding-bottom: 3%;
-		text-align: center;
-		font-size: 100px;
-		animation: colorblink 2s infinite;
-	}
-	@keyframes colorblink { 0% { }50% { background-color: #BDBDBD; }}
-
-	#optionHome {
-		display: none;
-		width: 50%;
-		margin: 6% 0 0 25%;
-		height: 10%;
-	}	
-
-	#optionInputHome {
-		text-align: center;
-		font-size: 50px;
-		animation: colorblink 2s infinite;
-	}
-	@keyframes colorblink { 0% { }50% { background-color: #BDBDBD; }}
-	/*
-				SUBSCRIBE
-	*/
-	#subscribeHome
-	{
-		display: none;
-		width: 25%;
-		margin: 2% 0 0 35.5%;
-		height: 40%;
-		animation: colorblink 2s infinite;
-	}
-	@keyframes colorblink { 0% { }50% { background-color: #BDBDBD; }}
-
-	#subscribeTitleHome {
-		text-align: center;
-		font-size: 50px;
-		text-decoration: underline;
-	}
-
-	#subscribeCell
-	{
-		width: 60%;
-		margin: 2% 0 0 20%;
-	}
-
-	#successSubscribeHome
-	{
-		text-align: center;
-		display: none;
-		width: 50%;
-		border-radius: 500px;
-		margin: 10% 0 0 25%;
-		height: 4%;
-		padding: 5px 0 0 0;
-		background-color: #9CCC65;
-	}
-
-	#failSubscribeHome
-	{
-		text-align: center;
-		display: none;
-		width: 50%;
-		border-radius: 500px;
-		margin: 10% 0 0 25%;
-		height: 4%;
-		padding: 5px 0 0 0;
-		background-color: #EF5350;
-	}
-
-	/*
-				END
-	*/
-	/*
-				LOGIN
-	*/
-	#loginHome
-	{
-		display: none;
-		width: 25%;
-		margin: 6% 0 0 35.5%;
-		height: 45%;
-		animation: colorblink 2s infinite;
-	}
-	@keyframes colorblink { 0% { }50% { background-color: #BDBDBD; }}
-
-	#loginTitleHome {
-		text-align: center;
-		font-size: 50px;
-		text-decoration: underline;
-	}
-
-	#loginCell
-	{
-		width: 60%;
-		margin: 2% 0 0 20%;
-	}
-
-	#successLoginHome
-	{
-		text-align: center;
-		display: none;
-		width: 50%;
-		border-radius: 500px;
-		margin: 10% 0 0 25%;
-		height: 4%;
-		padding: 5px 0 0 0;
-		background-color: #9CCC65;
-	}
-
-	#failLoginHome
-	{
-		text-align: center;
-		display: none;
-		width: 50%;
-		border-radius: 500px;
-		margin: 10% 0 0 25%;
-		height: 4%;
-		padding: 5px 0 0 0;
-		background-color: #EF5350;
-	}
-
-	/*
-				END
-	*/
-}
-@media (max-height: 850px) and (max-width: 1250px) 
-{
-
-  	#titleHome {
-		width: 50%;
-		margin: 1% 0 0 25%;
-		height: 30%;
-		color: black;
-	}
-
-	#titleTextHome {
-		font-family: "Verdana";
-		font-size: 150px;
-		text-align: center;
-
-	}
-
-	#enterHome {
-		width: 40%;
-		margin: 6% 0 0 30%;
-		height: 30%;
-	}
-
-	#enterTextHome {
-		padding-bottom: 3%;
-		text-align: center;
-		font-size: 100px;
-		animation: colorblink 2s infinite;
-	}
-	@keyframes colorblink { 0% { }50% { background-color: #BDBDBD; }}
-
-	#optionHome {
-		display: none;
-		width: 50%;
-		margin: 6% 0 0 25%;
-		height: 10%;
-	}	
-
-	#optionInputHome {
-		text-align: center;
-		font-size: 50px;
-		animation: colorblink 2s infinite;
-	}
-	@keyframes colorblink { 0% { }50% { background-color: #BDBDBD; }}
-	/*
-				SUBSCRIBE
-	*/
-	#subscribeHome
-	{
-		display: none;
-		width: 25%;
-		margin: 2% 0 0 35.5%;
-		height: 40%;
-		animation: colorblink 2s infinite;
-	}
-	@keyframes colorblink { 0% { }50% { background-color: #BDBDBD; }}
-
-	#subscribeTitleHome {
-		text-align: center;
-		font-size: 50px;
-		text-decoration: underline;
-	}
-
-	#subscribeCell
-	{
-		width: 60%;
-		margin: 2% 0 0 20%;
-	}
-
-	#successSubscribeHome
-	{
-		text-align: center;
-		display: none;
-		width: 50%;
-		border-radius: 500px;
-		margin: 10% 0 0 25%;
-		height: 4%;
-		padding: 5px 0 0 0;
-		background-color: #9CCC65;
-	}
-
-	#failSubscribeHome
-	{
-		text-align: center;
-		display: none;
-		width: 50%;
-		border-radius: 500px;
-		margin: 10% 0 0 25%;
-		height: 4%;
-		padding: 5px 0 0 0;
-		background-color: #EF5350;
-	}
-
-	/*
-				END
-	*/
-	/*
-				LOGIN
-	*/
-	#loginHome
-	{
-		display: none;
-		width: 25%;
-		margin: 6% 0 0 35.5%;
-		height: 45%;
-		animation: colorblink 2s infinite;
-	}
-	@keyframes colorblink { 0% { }50% { background-color: #BDBDBD; }}
-
-	#loginTitleHome {
-		text-align: center;
-		font-size: 50px;
-		text-decoration: underline;
-	}
-
-	#loginCell
-	{
-		width: 60%;
-		margin: 2% 0 0 20%;
-	}
-
-	#successLoginHome
-	{
-		text-align: center;
-		display: none;
-		width: 50%;
-		border-radius: 500px;
-		margin: 10% 0 0 25%;
-		height: 4%;
-		padding: 5px 0 0 0;
-		background-color: #9CCC65;
-	}
-
-	#failLoginHome
-	{
-		text-align: center;
-		display: none;
-		width: 50%;
-		border-radius: 500px;
-		margin: 10% 0 0 25%;
-		height: 4%;
-		padding: 5px 0 0 0;
-		background-color: #EF5350;
-	}
-
-	/*
-				END
-	*/
-}
-@media only screen and (max-width: 937px) 
-{
-  	#titleHome {
-  		background-color: yellow;
-		width: 50%;
-		margin: 1% 0 0 25%;
-		height: 30%;
-
-	}
-
-	#titleTextHome {
-		font-family: "Verdana";
-		font-size: 125px;
-		text-align: center;;
-
-	}
-}
-
-@media only screen and (min-width: 1300px; max-width: 1800px) 
-{
-  	#titleHome {
-  		background-color: yellow;
-		width: 50%;
-		margin: 1% 0 0 25%;
-		height: 30%;
-
-	}
-
-	#titleTextHome {
-		font-family: "Verdana";
-		font-size: 125px;
-		text-align: center;;
-
-	}
-
-	#optionHome {
-		display: none;
-		width: 50%;
-		margin: 0% 0 0 25%;
-		height: 40%;
-	}	
-
-	#optionInputHome {
-		text-align: center;
-		font-size: 50px;
-		animation: colorblink 2s infinite;
-	}
-	@keyframes colorblink { 0% { }50% { background-color: #BDBDBD; }}
-	/*
-				LOGIN
-	*/
-	#loginHome
-	{
-		display: none;
-		width: 25%;
-		margin: 6% 0 0 35.5%;
-		height: 45%;
-		animation: colorblink 2s infinite;
-	}
-	@keyframes colorblink { 0% { }50% { background-color: #BDBDBD; }}
-
-	#loginTitleHome {
-		text-align: center;
-		font-size: 50px;
-		text-decoration: underline;
-	}
-
-	#loginCell
-	{
-		width: 60%;
-		margin: 2% 0 0 20%;
-	}
-
-	#successLoginHome
-	{
-		text-align: center;
-		display: none;
-		width: 50%;
-		border-radius: 500px;
-		margin: 10% 0 0 25%;
-		height: 4%;
-		padding: 5px 0 0 0;
-		background-color: #9CCC65;
-	}
-
-	#failLoginHome
-	{
-		text-align: center;
-		display: none;
-		width: 50%;
-		border-radius: 500px;
-		margin: 10% 0 0 25%;
-		height: 4%;
-		padding: 5px 0 0 0;
-		background-color: #EF5350;
-	}
-
-	/*
-				END
-	*/
 }

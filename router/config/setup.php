@@ -42,7 +42,10 @@ try
 		id 					INT 	NOT NULL AUTO_INCREMENT PRIMARY KEY,
 		date_creation 		DATE	NOT NULL,
 		like_reference 		TEXT	NOT NULL,
-		comment_reference 	TEXT	NOT NULL
+		comment_reference 	TEXT	NOT NULL,
+		category			TEXT 	NOT NULL,
+		picture_path 		TEXT 	NOT NULL,
+		description 		TEXT 	NOT NULL
 	)";
 	$ret_value = $conn->exec($SQL_QUERY);
 	echo "DB_NAME : pictures -> created : " . $ret_value . "\n";

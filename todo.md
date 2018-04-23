@@ -70,4 +70,17 @@ mettre le sinpout mot de pass en hasher
 
 
 
-disconnect marche maintenant il faut pouvoir modifier les infornations
+disconnect marche maintenant il faut pouvoir modifier les infornations\
+
+
+
+
+
+
+
+
+TODO ::: 
+
+- creer l'interface de modifications des donnees
+- creer des pages perso quand on clique sur une photo
+- peut etre essayer de faire un system de card
