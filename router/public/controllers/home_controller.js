@@ -1,4 +1,26 @@
 
+function take_picture()
+{
+	let optionDiv 		= document.getElementById("optionHome");
+	let takePictureDiv 	= document.getElementById("takePictureHome");
+
+	takePictureDiv.style.display 	= "block";
+	optionDiv.style.display 		= "none";
+}
+
+function troll(index)
+{
+	if (index == 1)
+	{
+		document.getElementById("picture").style.display = 'none'
+		document.getElementById("pictureTroll").style.display = 'block'
+	}
+	else
+	{
+		document.getElementById("picture").style.display = 'block'
+		document.getElementById("pictureTroll").style.display = 'none'
+	}
+}
 function returnHome()
 {
 	location.reload()

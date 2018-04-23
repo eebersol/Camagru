@@ -15,6 +15,9 @@ switch ($request_uri[0]) {
 	case '/about':
 		require '../views/about.php';
 		break;
+	case '/test':
+		require '../views/test.php';
+		break;
 	case '/register';
 		require '../views/register.php';
 		break;
@@ -26,6 +29,9 @@ switch ($request_uri[0]) {
 		break;
 	case '/register_controller';
 		require '../controllers/register_controller.php';
+		break;
+	case '/takePicture';
+		require '../views/takePicture.html';
 		break;
 
 	// Everything else

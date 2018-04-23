@@ -1,4 +1,5 @@
 
+
 .policeFamily
 {
 	font-family: "Verdana";
@@ -6,6 +7,7 @@
 
 
 #enterHome {
+	padding-bottom: 3%;
 	width: 40%;
 	margin: 0 0 0 30%;
 	height: 30%;
@@ -136,10 +138,11 @@
 /*
 			END
 */
-@media only screen and (min-width: 937px) 
+/*@media only screen and (min-width: 1000px) 
 {
 
   	#titleHome {
+  		background-color: blue;
 		width: 50%;
 		margin: 1% 0 0 25%;
 		height: 30%;
@@ -152,12 +155,311 @@
 		text-align: center;
 
 	}
-}
 
+}
+*/
+@media only screen and (max-height: 850px) 
+{
+
+  	#titleHome {
+		width: 50%;
+		margin: 1% 0 0 25%;
+		height: 30%;
+		color: black;
+	}
+
+	#titleTextHome {
+		font-family: "Verdana";
+		font-size: 150px;
+		text-align: center;
+
+	}
+
+	#enterHome {
+		width: 40%;
+		margin: 6% 0 0 30%;
+		height: 30%;
+	}
+
+	#enterTextHome {
+		padding-bottom: 3%;
+		text-align: center;
+		font-size: 100px;
+		animation: colorblink 2s infinite;
+	}
+	@keyframes colorblink { 0% { }50% { background-color: #BDBDBD; }}
+
+	#optionHome {
+		display: none;
+		width: 50%;
+		margin: 6% 0 0 25%;
+		height: 10%;
+	}	
+
+	#optionInputHome {
+		text-align: center;
+		font-size: 50px;
+		animation: colorblink 2s infinite;
+	}
+	@keyframes colorblink { 0% { }50% { background-color: #BDBDBD; }}
+	/*
+				SUBSCRIBE
+	*/
+	#subscribeHome
+	{
+		display: none;
+		width: 25%;
+		margin: 2% 0 0 35.5%;
+		height: 40%;
+		animation: colorblink 2s infinite;
+	}
+	@keyframes colorblink { 0% { }50% { background-color: #BDBDBD; }}
+
+	#subscribeTitleHome {
+		text-align: center;
+		font-size: 50px;
+		text-decoration: underline;
+	}
+
+	#subscribeCell
+	{
+		width: 60%;
+		margin: 2% 0 0 20%;
+	}
+
+	#successSubscribeHome
+	{
+		text-align: center;
+		display: none;
+		width: 50%;
+		border-radius: 500px;
+		margin: 10% 0 0 25%;
+		height: 4%;
+		padding: 5px 0 0 0;
+		background-color: #9CCC65;
+	}
+
+	#failSubscribeHome
+	{
+		text-align: center;
+		display: none;
+		width: 50%;
+		border-radius: 500px;
+		margin: 10% 0 0 25%;
+		height: 4%;
+		padding: 5px 0 0 0;
+		background-color: #EF5350;
+	}
+
+	/*
+				END
+	*/
+	/*
+				LOGIN
+	*/
+	#loginHome
+	{
+		display: none;
+		width: 25%;
+		margin: 6% 0 0 35.5%;
+		height: 45%;
+		animation: colorblink 2s infinite;
+	}
+	@keyframes colorblink { 0% { }50% { background-color: #BDBDBD; }}
+
+	#loginTitleHome {
+		text-align: center;
+		font-size: 50px;
+		text-decoration: underline;
+	}
+
+	#loginCell
+	{
+		width: 60%;
+		margin: 2% 0 0 20%;
+	}
+
+	#successLoginHome
+	{
+		text-align: center;
+		display: none;
+		width: 50%;
+		border-radius: 500px;
+		margin: 10% 0 0 25%;
+		height: 4%;
+		padding: 5px 0 0 0;
+		background-color: #9CCC65;
+	}
+
+	#failLoginHome
+	{
+		text-align: center;
+		display: none;
+		width: 50%;
+		border-radius: 500px;
+		margin: 10% 0 0 25%;
+		height: 4%;
+		padding: 5px 0 0 0;
+		background-color: #EF5350;
+	}
+
+	/*
+				END
+	*/
+}
+@media (max-height: 850px) and (max-width: 1250px) 
+{
+
+  	#titleHome {
+		width: 50%;
+		margin: 1% 0 0 25%;
+		height: 30%;
+		color: black;
+	}
+
+	#titleTextHome {
+		font-family: "Verdana";
+		font-size: 150px;
+		text-align: center;
+
+	}
+
+	#enterHome {
+		width: 40%;
+		margin: 6% 0 0 30%;
+		height: 30%;
+	}
+
+	#enterTextHome {
+		padding-bottom: 3%;
+		text-align: center;
+		font-size: 100px;
+		animation: colorblink 2s infinite;
+	}
+	@keyframes colorblink { 0% { }50% { background-color: #BDBDBD; }}
+
+	#optionHome {
+		display: none;
+		width: 50%;
+		margin: 6% 0 0 25%;
+		height: 10%;
+	}	
+
+	#optionInputHome {
+		text-align: center;
+		font-size: 50px;
+		animation: colorblink 2s infinite;
+	}
+	@keyframes colorblink { 0% { }50% { background-color: #BDBDBD; }}
+	/*
+				SUBSCRIBE
+	*/
+	#subscribeHome
+	{
+		display: none;
+		width: 25%;
+		margin: 2% 0 0 35.5%;
+		height: 40%;
+		animation: colorblink 2s infinite;
+	}
+	@keyframes colorblink { 0% { }50% { background-color: #BDBDBD; }}
+
+	#subscribeTitleHome {
+		text-align: center;
+		font-size: 50px;
+		text-decoration: underline;
+	}
+
+	#subscribeCell
+	{
+		width: 60%;
+		margin: 2% 0 0 20%;
+	}
+
+	#successSubscribeHome
+	{
+		text-align: center;
+		display: none;
+		width: 50%;
+		border-radius: 500px;
+		margin: 10% 0 0 25%;
+		height: 4%;
+		padding: 5px 0 0 0;
+		background-color: #9CCC65;
+	}
+
+	#failSubscribeHome
+	{
+		text-align: center;
+		display: none;
+		width: 50%;
+		border-radius: 500px;
+		margin: 10% 0 0 25%;
+		height: 4%;
+		padding: 5px 0 0 0;
+		background-color: #EF5350;
+	}
+
+	/*
+				END
+	*/
+	/*
+				LOGIN
+	*/
+	#loginHome
+	{
+		display: none;
+		width: 25%;
+		margin: 6% 0 0 35.5%;
+		height: 45%;
+		animation: colorblink 2s infinite;
+	}
+	@keyframes colorblink { 0% { }50% { background-color: #BDBDBD; }}
+
+	#loginTitleHome {
+		text-align: center;
+		font-size: 50px;
+		text-decoration: underline;
+	}
+
+	#loginCell
+	{
+		width: 60%;
+		margin: 2% 0 0 20%;
+	}
+
+	#successLoginHome
+	{
+		text-align: center;
+		display: none;
+		width: 50%;
+		border-radius: 500px;
+		margin: 10% 0 0 25%;
+		height: 4%;
+		padding: 5px 0 0 0;
+		background-color: #9CCC65;
+	}
+
+	#failLoginHome
+	{
+		text-align: center;
+		display: none;
+		width: 50%;
+		border-radius: 500px;
+		margin: 10% 0 0 25%;
+		height: 4%;
+		padding: 5px 0 0 0;
+		background-color: #EF5350;
+	}
+
+	/*
+				END
+	*/
+}
 @media only screen and (max-width: 937px) 
 {
   	#titleHome {
-
+  		background-color: yellow;
 		width: 50%;
 		margin: 1% 0 0 25%;
 		height: 30%;
@@ -170,4 +472,88 @@
 		text-align: center;;
 
 	}
+}
+
+@media only screen and (min-width: 1300px; max-width: 1800px) 
+{
+  	#titleHome {
+  		background-color: yellow;
+		width: 50%;
+		margin: 1% 0 0 25%;
+		height: 30%;
+
+	}
+
+	#titleTextHome {
+		font-family: "Verdana";
+		font-size: 125px;
+		text-align: center;;
+
+	}
+
+	#optionHome {
+		display: none;
+		width: 50%;
+		margin: 0% 0 0 25%;
+		height: 40%;
+	}	
+
+	#optionInputHome {
+		text-align: center;
+		font-size: 50px;
+		animation: colorblink 2s infinite;
+	}
+	@keyframes colorblink { 0% { }50% { background-color: #BDBDBD; }}
+	/*
+				LOGIN
+	*/
+	#loginHome
+	{
+		display: none;
+		width: 25%;
+		margin: 6% 0 0 35.5%;
+		height: 45%;
+		animation: colorblink 2s infinite;
+	}
+	@keyframes colorblink { 0% { }50% { background-color: #BDBDBD; }}
+
+	#loginTitleHome {
+		text-align: center;
+		font-size: 50px;
+		text-decoration: underline;
+	}
+
+	#loginCell
+	{
+		width: 60%;
+		margin: 2% 0 0 20%;
+	}
+
+	#successLoginHome
+	{
+		text-align: center;
+		display: none;
+		width: 50%;
+		border-radius: 500px;
+		margin: 10% 0 0 25%;
+		height: 4%;
+		padding: 5px 0 0 0;
+		background-color: #9CCC65;
+	}
+
+	#failLoginHome
+	{
+		text-align: center;
+		display: none;
+		width: 50%;
+		border-radius: 500px;
+		margin: 10% 0 0 25%;
+		height: 4%;
+		padding: 5px 0 0 0;
+		background-color: #EF5350;
+	}
+
+	/*
+				END
+	*/
 }
