@@ -35,9 +35,11 @@ function exec_sql_query($query)
 {
 	require("database.php");
 
+	echo "query : " . $query . "<br/>";
 	$conn = new PDO($DB_DSN, $DB_USER, $DB_PASS);
 	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 	$result = $conn->exec($query);
+	print_r($result);
 	return ($result);
 }
 

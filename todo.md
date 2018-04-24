@@ -84,3 +84,25 @@ TODO :::
 - creer l'interface de modifications des donnees
 - creer des pages perso quand on clique sur une photo
 - peut etre essayer de faire un system de card
+- faire aussi la modification du mot de passe via l;envoi d;un mail\
+
+
+
+
+- Commentaire :: on peut voir et ecrire un commentaire, pour l'ajouter il faut finir le systeme de login\
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-- Les commentaires ne marche pas encore il faut changer le champ dans user.informations

@@ -1,69 +1,163 @@
-
-.policeFamily
+#zoomDescription
 {
+	display: none;
+}
+
+#zoomDiv {
+	display: none;
+}
+
+#fakeBody {
+	background-color: black;
+}
+
+#galleryDiv {
+	margin: 0 0 0 15%;
+}
+
+.galleryPicture {
+	margin: 1% 0 0 1%;
+}
+#galleryPagination {
+    display: inline-block;
+    margin: 3% 0 0 25%;
+}
+
+#galleryPagination a {
+    color: black;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
+}
+
+#mediumTitle {
+	text-align: center;
+	width: 75%;
+	margin: 1% 0 0 12.5%;
+}
+
+#loginDiv {
+	display: none;
+}
+
+#trollPicture {
+	display: none;
+}
+
+#photoPicture {
+	width: 100%;
+}
+
+#titleDiv {
+	border: 2px solid black;
+}
+
+
+
+#optionDiv {
+	margin: 13% 0 0 12.5%;
+	display: block;
+}
+
+#optionText {
+	width: 75%;
+	margin: 2% 0 0 12.5%;
+	text-align: center;
+	font-size: 4em;
 	font-family: "Verdana";
+	animation: colorblink 3s infinite;
+}
+
+#userProfilDiv {
+	display: none;
+	animation: colorblink 3s infinite;
+}
+#submitButton {
+	width: 30%;
+	margin: 1% 0 3% 35%;
+}
+#submitButton:hover { background-color: #BDBDBD }
+.group {
+	width: 30%;
+	margin: 1% 0 0 35%;
+}
+
+#loginDiv {
+	display: none;
+	animation: colorblink 3s infinite;
 }
 
 
-#enterHome {
-	width: 40%;
-	margin: 0 0 0 30%;
-	height: 30%;
+#galleryDiv {
+	display: none;
 }
 
-#enterTextHome {
-	text-align: center;
-	font-size: 100px;
-	animation: colorblink 2s infinite;
-}
-@keyframes colorblink { 0% { }50% { background-color: #BDBDBD; }}
+@keyframes colorblink { 0% { }50% { background-color: #BDBDBD;}}
+@media only screen and (min-width: 1400px) {
 
-
-#optionHome {
-	width: 50%;
-	margin: 2% 0 0 25%;
-	height: 10%;
-}
-
-#optionInputHome {
-	text-align: center;
-	font-size: 50px;
-	animation: colorblink 2s infinite;
-}
-@keyframes colorblink { 0% { }50% { background-color: #BDBDBD; }}
-
-@media only screen and (min-width: 937px) 
-{
-
-  	#titleHome {
-		width: 50%;
-		margin: 1% 0 0 25%;
-		height: 30%;
-		color: black;
-	}
-
-	#titleTextHome {
-		font-family: "Verdana";
-		font-size: 200px;
+	#title {
 		text-align: center;
-
-	}
-}
-
-@media only screen and (max-width: 937px) 
-{
-  	#titleHome {
-
-		width: 50%;
-		margin: 1% 0 0 25%;
-		height: 30%;
-
-	}
-
-	#titleTextHome {
+		font-size: 9em;
 		font-family: "Verdana";
-		font-size: 125px;
-		text-align: center;;
+		padding: 3% 0 0 0;
+	}
 
+	#optionText {
+		width: 75%;
+		margin: 2% 0 0 12.5%;
+		text-align: center;
+		font-size: 4em;
+		font-family: "Verdana";
+		animation: colorblink 3s infinite;
+	}
+
+}
+@media only screen and (max-width: 1399px) and (min-width: 501px){
+
+	#title {
+		text-align: center;
+		font-size: 7em;
+	}
+
+	#optionText {
+		width: 75%;
+		margin: 2% 0 0 12.5%;
+		text-align: center;
+		font-size: 3em;
+		font-family: "Verdana";
+		animation: colorblink 3s infinite;
+	}
+
+}
+@media only screen and (max-width: 500px) {
+
+	#title {
+		text-align: center;
+		font-size: 5em;
+		font-family: "Verdana";
+		padding: 3% 0 0 0;
+	}
+
+	#trollPicture {
+		display: none;
+		padding: 0 0 2% 0;
+	}
+
+	#photoPicture {
+		display: block;
+		width: 100%;
+		padding: 0 0 2% 0;
 	}
 }
+
+#zoomComments {
+	overflow: auto;
+}
+
+
+
+
+/* webkit solution */
+::-webkit-input-placeholder { text-align:center; }
+/* mozilla solution */
+input:-moz-placeholder { text-align:center; }

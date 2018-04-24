@@ -79,11 +79,11 @@ function login_success(email, login, passwd, response)
 {
 	let loginDiv 					= document.getElementById("loginDiv");
 	let successDiv 					= document.getElementById("successloginDiv");
+	let iDiv 						= document.createTextNode("Bienvenue " +response[0] + ".");
 	
 	loginDiv.style.display 			= "none";
 	successDiv.style.display 		= "block";
-	response = response.split(',');
-	let iDiv 						= document.createTextNode("Bienvenue " +response[0] + ".");
+	response 						= response.split(',');
 	iDiv.id 						= 'successLoginTextHome';
 	successDiv.appendChild(iDiv);
 	setTimeout(function(){ location.reload(); }, 4000);
@@ -135,40 +135,23 @@ function subscribe()
 
 function create_user()
 {
-	let email 		= document.getElementsByName("email")[0].value;
-	let login 		= document.getElementsByName("login")[0].value;
-	let passwd 		= document.getElementsByName("passwd")[0].value;
-	let passwdClone = document.getElementsByName("passwdClone")[0].value;
-	let flag 		= true;
+	let email 		= document.getElementsByName("email")[0];
+	let login 		= document.getElementsByName("login")[0];
+	let passwd 		= document.getElementsByName("passwd")[0];
+	let passwdClone = document.getElementsByName("passwdClone")[0];
 
-	if (!email || !validateEmail(email))
-	{
-		flag = false;
-		document.getElementsByName("email")[0].style.borderColor = 'red';
-	}
-	if (!login || login.length < 6)
-	{
-		flag = false;
-		document.getElementsByName("login")[0].style.borderColor = 'red';
-	}
-	if (!passwdClone)
-	{
-		flag = false;
-		document.getElementsByName("passwdClone")[0].style.borderColor = 'red';
-	}
-	if (!passwd || passwd.length < 6)
-	{
-		flag = false;
-		document.getElementsByName("passwd")[0].style.borderColor = 'red';
-	}
-	if (passwd != passwdClone)
-	{
-		flag = false;
-		document.getElementsByName("passwd")[0].style.borderColor = 'red';
-		document.getElementsByName("passwdClone")[0].style.borderColor = 'red';
-	}
-	if (flag == true)
-		loadXMLSubscribe(email, login, passwd);
+	if (!email.value || !validateEmail(email.value))
+		email.style.borderColor = 'red';
+	else if (!login.value || login.value.length < 6)
+		login.style.borderColor = 'red';
+	else if (!passwdClone.value)
+		passwdClone[0].style.borderColor = 'red';
+	else if (!passwd.value || passwd.value.length < 6)
+		passwd.style.borderColor = 'red';
+	else if (passwd.value != passwdClone.value)
+		passwd.style.borderColor = passwdClone.style.borderColor ='red';
+	else 
+		loadXMLSubscribe(email.value, login.value, passwd.value);
 
 
 }
@@ -179,6 +162,7 @@ function loadXMLLogin(email, login, passwd, url)
 	xhr.open('GET', '/models/user.login.php?login=true&&login='+login+'&&passwd='+passwd, false);
 	xhr.onload= function() {
 		if (xhr.status === 200) {
+			console.log(xhr.responseText);
 			if (xhr.responseText == "TRUE")
 			{
 				loadXMLSuccessLogin(email, login, passwd);
@@ -204,23 +188,15 @@ function login()
 
 function login_user()
 {
-	let login 		= document.getElementsByName("loginLogin")[0].value;
-	let passwd 		= document.getElementsByName("passwdLogin")[0].value;
-	let flag 		= true;
+	let login 		= document.getElementById("loginLogin");
+	let passwd 		= document.getElementById("passwdLogin");
 
-	if (!login || login.length < 6)
-	{
-		flag = false;
-		document.getElementsByName("login")[0].style.borderColor = 'red';
-	}
-	if (!passwd || passwd.length < 6)
-	{
-		flag = false;
-		document.getElementsByName("passwd")[0].style.borderColor = 'red';
-	}
-	if (flag == true)
-		loadXMLLogin("", login, passwd)
-
+	if (!login.value || login.value.length < 6)
+		login.style.borderColor = '#D32F2F';
+	else if (!passwd.value || passwd.value.length < 6)
+		passwd.style.borderColor = '#D32F2F';
+	else
+		loadXMLLogin("", login.value, passwd.value)
 }
 
 
@@ -275,27 +251,25 @@ function make_pagination(length, page)
 function parse_pictures(pictures, page)
 {
 	let galleryDivFPicture 		= document.getElementById("galleryDivPicture");
-	let i = 0
+	let i 						= 0
     
-    pictures = JSON.parse(pictures);
+    this.pictures = JSON.parse(pictures);
     if (page == 0)
     	i = 0;
     else
     	i = page * 10
     let limit = i + 9
-    console.log("Affice : [" + i + '-' + limit + ']');
     for (i; i < limit; i++)
     {
     	if (i >= pictures.length)
     		break;
-    	console.log(pictures[i]);
     	let iDiv 		= document.createElement("IMG");
-    	let category 	= pictures[i][4];
-    	let path 		= pictures[i][5];
+    	let category 	= this.pictures[i][4];
+    	let path 		= this.pictures[i][5];
     	iDiv.setAttribute("src", path);
     	iDiv.setAttribute("class", "galleryPicture");
 		iDiv.setAttribute("width", "300");
-		iDiv.setAttribute("onclick", "loadXMLgetInfoImage('"+ pictures[i][5] +"')");
+		iDiv.setAttribute("onclick", "displayPicture("+i+");");
 		iDiv.setAttribute("height", "200");
 		galleryDivFPicture.appendChild(iDiv);
     }
@@ -323,19 +297,18 @@ function loadXMLgetImage(page)
 	xhr.send();
 }
 
-function loadXMLgetInfoImage(path)
+function set_user(data)
+{
+	this.user = JSON.parse(data)
+}
+
+function getUserInformation()
 {
 	var xhr = new XMLHttpRequest();
-	xhr.open('GET', '/models/picture.get.php?oneImage=true&&path='+path+'', false);
+	xhr.open('GET', '/models/user.informations.php?getInformation=true');
 	xhr.onload= function() {
 		if (xhr.status === 200) {
-			if (xhr.responseText !== null)
-			{
-				open_pictures(JSON.parse(xhr.responseText));
-				return xhr.responseText;
-			}
-			else if (xhr.responseText == null)
-				console.log("FAIL")
+			set_user(xhr.responseText);
 		}
 		else {
 			alert('Request failed.  Returned status of ' + xhr.status);
@@ -344,8 +317,9 @@ function loadXMLgetInfoImage(path)
 	xhr.send();
 }
 
-function gallery()
+function gallery(somethong)
 {
+	console.log(somethong);
 	let optionDiv 				= document.getElementById("optionDiv");
 	let galleryDiv 				= document.getElementById("galleryDiv");
 	let page 					= 0;
@@ -355,41 +329,181 @@ function gallery()
 
 
 	loadXMLgetImage(page);
+	getUserInformation();
 }
 
-function open_pictures(data)
+
+
+// VUE DETAILLE PHOTO //
+
+function parse_comments()
 {
-	let zoomDiv 					= document.getElementById("zoomDiv");
-	let zoomDisplayPicture 			= document.getElementById("zoomDisplayPicture");
-	let zoomDisplayDecription 			= document.getElementById("zoomDisplayDescription");
+	let tmpTab 		= this.pictures;
+
+	for (let i = 0; i < tmpTab.length; i++)
+	{
+		let tmpObjTab 	= [];
+		if (tmpTab[i][3].search("&&") > 0)
+		{
+			let comment = tmpTab[i][3].split("&&");
+
+			for (let j = 0; j < comment.length; j++)
+			{
+				let obj_comment = {
+					'auteur':comment[j].split("||")[0] 	|| null,
+					'text':comment[j].split("||")[1] 	|| null
+				}
+				tmpObjTab.push(obj_comment);
+			}
+		}
+		else
+		{
+			let obj_comment = {
+				'auteur':tmpTab[i][3].split("||")[0] 	|| null,
+				'text':tmpTab[i][3].split("||")[1] 		|| null
+			}
+			tmpObjTab.push(obj_comment);
+		}
+		tmpTab[i][3] = tmpObjTab
+	}
+	this.pictures = tmpTab;
+}
+
+function add_comment ()
+{
+	let text 	= document.getElementById("textComment").value;
+	let login 	= this.user.login;
+
+	let xhr = new XMLHttpRequest();
+	xhr.open('GET', '/models/user.informations.php?addComment=true&&auteur='+login+'&&text='+text);
+	xhr.onload= function() {
+		if (xhr.status === 200) {
+			console.log(xhr.responseText);
+			console.log("OK");
+		}
+		else {
+			alert('Request failed.  Returned status of ' + xhr.status);
+		}
+	};
+	xhr.send();
+}
+
+function checkKey(event)
+{
+	let textComment = document.getElementById("textComment")
+	let cellComment = document.getElementById("cellComment");
+
+	if (textComment.value.length%35 == 0)
+	{
+		cellComment.style.height = (cellComment.offsetHeight + 20) + "px";
+		textComment.style.height = (textComment.offsetHeight + 20) + "px";
+	}
+	if (event.keyCode === 13 && event.shiftKey === false) 
+	{
+		event.preventDefault();
+		add_comment();
+	}
+	else if (event.keyCode === 13 && event.shiftKey === true)
+		textComment.value = textComment.value + "\n";
+}
+
+function reducePolice ()
+{
+	let textComment = document.getElementById("textComment");
+
+	textComment.style.lineHeight 	= "1em";
+}
+
+function displayPicture(index)
+{
 	let galleryDiv 					= document.getElementById("galleryDiv");
+	let zoomDiv 					= document.getElementById("zoomDiv");	
+	let zoomPicture 				= document.getElementById("zoomPicture");
+	let user 						= getUserInformation();
 	
 	galleryDiv.style.display 		= "none";
 	zoomDiv.style.display 			= "block";
+	zoomPicture.style.width 		=	"100%";
+	zoomPicture.style.height 		=	"auto";
+	zoomPicture.setAttribute("src", this.pictures[index][5]);
 
-	let picture 					= document.createElement("IMG");
-	picture.setAttribute("src", data[0][5]);
-	zoomDisplayPicture.appendChild(picture);
+	if (this.pictures[index][6] != '')
+	{
+		let zoomDescription					= document.getElementById("zoomDescription");
+		let zoomDescriptionText 			= document.getElementById("zoomDescriptionText");
 
-	let description 				= document.createElement("p");
-	let descriptionText 			= document.createTextNode("Description : " + data[0][6]);
-	description.style.float = "right";
-	description.appendChild(descriptionText);
-	zoomDisplayDescription.appendChild(description)
+		zoomDescription.style.display 		= "block";
+		zoomDescriptionText.style.display 	= "inline-block";
+		zoomDescriptionText.textContent 	= this.pictures[index][6];
+	}
+
+	if (this.pictures[index][3] != '')
+	{
+		let zoomComments	= document.getElementById("zoomComments");
+		let zoomAddComments = document.getElementById("zoomAddComments");
+
+		parse_comments();
+
+		for (let i = 0; i < this.pictures[index][3].length; i++)
+		{
+			let comment = this.pictures[index][3][i];
+			if (comment.auteur && comment.text)
+			{
+				let comment 					= this.pictures[index][3][i];
+				let cell						= document.createElement("div");
+				let cellAuteur 					= document.createElement("p");
+				let cellComments 				= document.createElement("p");
+
+				cell.style.margin 				= "1% 0 0 0";
+				cell.style.opcatity 			= "0.1";
+				cell.style.borderRadius 		= "500px";
+				cell.style.backgroundColor 		= "#BDBDBD";
+
+				if (this.user.login == comment.auteur)
+					cellAuteur.textContent 		= "you :\xa0";
+				else
+					cellAuteur.textContent 		= comment.auteur + ":\xa0";
+				cellAuteur.style.display 		= "inline-block";
+				cellAuteur.style.padding 		= "1% 0 0 25%";
+				cellAuteur.style.fontWeight 	= "bold";
+				cellAuteur.style.textAlign 		= "center";
+				
+				cellComments.textContent 		= comment.text;
+				cellComments.style.display 		= "inline-block";
+				cellAuteur.style.textAlign 		= "center";
+			
+				zoomComments.appendChild(cell);
+				cell.appendChild(cellAuteur);
+				cell.appendChild(cellComments);
+			}
+		}
+		if (this.user.email)
+		{
+			let cellAddComment 		= document.createElement("div");
+			let textareaComments 	= document.createElement("textarea");
+
+			cellAddComment.style.margin 			= "6% 0 0 0";
+			cellAddComment.style.borderRadius 		= "500px";
+			cellAddComment.style.backgroundColor 	= "#BDBDBD";
+			cellAddComment.setAttribute("id", "cellComment");
+
+			textareaComments.style.width 			= '90%';
+			textareaComments.style.margin 			= '3% 0 3% 5%';
+			textareaComments.style.padding 			= "0 0 0 5%";
+			textareaComments.style.backgroundColor 	= '#FAFAFA';
+			textareaComments.style.textIndent 		= "0%";
+			textareaComments.style.lineHeight		= "2.3em";
+			textareaComments.setAttribute("id", "textComment");
+			textareaComments.setAttribute("cols", "25");
+			textareaComments.setAttribute("rows", "5");
+			textareaComments.setAttribute("onkeypress", "checkKey(event);");
+			textareaComments.setAttribute("onclick", "reducePolice();");
+			textareaComments.setAttribute("placeHolder", "ajouter un commentaire ...");
 
 
-
-
-	// let iDiv 						= document.createElement("IMG");
-	// iDiv.setAttribute("src", data[0][5]);
-	// iDiv.setAttribute("width", "500");
-	// iDiv.setAttribute("height", "500");
-	// zoomDisplay.appendChild(iDiv)
-
-	// let description = document.createTextNode(data[0][6]);
-	// zoomDisplayDescription[0].value = "TOTO"
-	// zoomDisplayDescription.appendChild(description);
+			zoomAddComments.appendChild(cellAddComment);
+			cellAddComment.appendChild(textareaComments);
+		}
+	}
 
 }
-
-

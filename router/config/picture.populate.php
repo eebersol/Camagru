@@ -4,7 +4,7 @@
 
 require_once('database.php');
 
-function create_picture($category, $picture_path, $desc)
+function create_picture($comments, $category, $picture_path, $desc)
 {
 	if( ! ini_get('date.timezone') )
 	{
@@ -28,7 +28,7 @@ function create_picture($category, $picture_path, $desc)
 			0,
 			"'.$date.'",
 			"",
-			"",
+			"'.$comments.'",
 			"'.$category.'",
 			"'.$picture_path.'",
 			"'.$desc.'"
@@ -42,8 +42,8 @@ function create_picture($category, $picture_path, $desc)
 try {
 
 	$array = [
-		"0,'','','',nature,../ressources/images/nature_1.jpeg,'COUCOU JE TEST'",
-		"0,'','','',nature,../ressources/images/nature_2.jpeg,''",
+		"0,'','',edouard||tropChouetteTaPhoto&&paul||hahahahaha,nature,../ressources/images/nature_1.jpeg,'COUCOU JE TEST'",
+		"0,'','',paul||hahahahaha,nature,../ressources/images/nature_2.jpeg,''",
 		"0,'','','',nature,../ressources/images/nature_3.jpeg,''",
 		"0,'','','',nature,../ressources/images/nature_4.jpeg,''",
 		"0,'','','',nature,../ressources/images/nature_5.jpeg,''",
@@ -65,7 +65,7 @@ try {
 		print_r($line);
 		$conn = new PDO($DB_DSN, $DB_USER, $DB_PASS);
 		$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		$ret_value = $conn->exec(create_picture($line[4], $line[5], $line[6]));
+		$ret_value = $conn->exec(create_picture($line[3], $line[4], $line[5], $line[6]));
 	}
 }
 catch (PDOException $e) {

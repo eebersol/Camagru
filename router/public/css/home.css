@@ -1,6 +1,16 @@
+#zoomDescription
+{
+	display: none;
+}
+
+#zoomDiv {
+	display: none;
+}
+
 #fakeBody {
 	background-color: black;
 }
+
 #galleryDiv {
 	margin: 0 0 0 15%;
 }
@@ -151,10 +161,14 @@
 	}
 }
 
-#zoomDiv {
-	display: none;
+#zoomComments {
+	overflow: auto;
 }
 
-#zoomDisplayPicture {
-	width: 25%;
-}
+
+
+
+/* webkit solution */
+::-webkit-input-placeholder { text-align:center; }
+/* mozilla solution */
+input:-moz-placeholder { text-align:center; }
