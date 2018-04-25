@@ -65,6 +65,7 @@ function create_user($email, $login, $passwd)
 			subscribe_email,
 			token_subscribe,
 			pic_reference,
+			pic_liked,
 			notification_like,
 			notification_comment
 		) 
@@ -76,6 +77,7 @@ function create_user($email, $login, $passwd)
 			"'.hash('whirlpool', $passwd).'",
 			1,
 			"'.$token.'",
+			"",
 			"",
 			1,
 			1

@@ -76,34 +76,52 @@
 						<div id="galleryPagination"></div>
 					</div>
 
-
 					<!-- VUE DETAILLEE -->
-					<div class="container" id="zoomDiv">
+<!-- 					<div class="container" id="zoomDiv">
 						<div class="row" >
-							<div  class="col" >
-								<img id="zoomPicture">
-							</div>
-							<div class="col" >
+							<div  class="col"> <img id="zoomPicture"> </div>
+							<div class="col">
 								<div id="zoomComments"></div>
 								<div id="zoomAddComments"></div>
 							</div>
 							<div class="w-100" ></div>
 							<div class="col" >
+								<div class="col" >Column 11 </div>
 								<div id="zoomDescription">
 									<b>Description : </b>
 									<p id="zoomDescriptionText"></p>
-								<div>
+								</div>
 							</div>
 							<div class="col" >Column</div>
+						</div>
+					</div> -->
+										<div class="container" id="zoomDiv">
+						<div class="row" >
+							<div class="col" >
+								<div id="zoomDescription">
+									<b>Description : </b>
+									<p id="zoomDescriptionText"></p>
+									<img id="zoomPicture">
+								</div>
+							</div>
+							<div class="col">
+								<div id="zoomComments"></div>
+								<div id="zoomAddComments"></div>
+							</div>
+							<div class="w-100"></div>
+							<div class="col">
+								<img id="liked" onclick="unlikePicture();" src="/ressources/images/liked.svg">
+								<img id="no_like" onclick="likePicture();" src="/ressources/images/no_like.svg">
+							</div>
 						</div>
 					</div>
 		    </div>
 
 
 	</body>
-	<footer class="row">
+	<footer class="container row">
 		<div class="col-lg-12">
-			Pied de page
+			<img id="photoDisconnect" src="/ressources/images/disconnect.png" onclick="disconnect();">
 		</div>
 	</footer> 
 </html>

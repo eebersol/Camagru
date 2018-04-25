@@ -1,3 +1,17 @@
+
+#liked {
+	width: 50px
+}
+#no_like {
+	width: 50px
+}
+#infoMessage {
+	display:none;
+	border-radius: 500px;
+	height: 10%;
+	margin: 15% 0 0 5%;
+}
+
 #zoomDescription
 {
 	display: none;
@@ -5,6 +19,7 @@
 
 #zoomDiv {
 	display: none;
+	border: 1px solid black;
 }
 
 #fakeBody {
@@ -20,7 +35,7 @@
 }
 #galleryPagination {
     display: inline-block;
-    margin: 3% 0 0 25%;
+    margin: 3% 0 0 39%;
 }
 
 #galleryPagination a {
@@ -81,6 +96,7 @@
 
 #subscribeDiv {
 	display: none;
+	margin: 10% 0 0 5%;
 	animation: colorblink 3s infinite;
 }
 #submitButton {
@@ -96,10 +112,12 @@
 #loginDiv {
 	display: none;
 	animation: colorblink 3s infinite;
+	margin: 10% 0 0 5%;
 }
 
 
 #galleryDiv {
+	margin: 5% 0 0 23%;
 	display: none;
 }
 

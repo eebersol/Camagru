@@ -24,6 +24,7 @@ try
 		subscribe_email 	INT 			NOT NULL,
 		token_subscribe		TEXT			NOT NULL,
 		pic_reference 		TEXT 			NOT NULL,
+		pic_liked 			TEXT 			NOT NULL,
 		notification_like 	INT 			NOT NULL,
 		notification_comment INT 			NOT NULL
 	)";

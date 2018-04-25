@@ -1,22 +1,39 @@
 <?php
-
+session_start();
 require("../../config/contact_db.php");
 
 
-if (isset($_GET['addComment']))
+if (isset($_GET['unLikePicture']))
 {
-	session_start();
+	$url_path 		= $_GET['picturePath'];
+	$login 			= $_GET['login'];
+	$like_reference = get_like_picture($login, $url_path);
+	$str = $like_reference['like_reference'];
+	echo "COUCOU" . $str;
+}
+else if (isset($_GET['getLikedPicture']))
+{
+	$url_path 	= $_GET['picturePath'];
+	echo json_encode(get_like_picture($login, $url_path));
+}
+else if (isset($_GET['likePicture']))
+{
+	$url_path 	= $_GET['picturePath'];
+	$login 		= $_GET['login'];
+	like_picture($login, $url_path);
+	echo "TRUE";
+}
+else if (isset($_GET['addComment']))
+{
 	$comment = '&&' . $_GET['auteur'] . '||' . $_GET['text'];
-	echo add_comment($SESSION['email'], $comment);
+	echo add_comment($SESSION['email'], $comment, $_GET['photoUrl']);
 }
 else if (isset($_GET['getInformation']))
 {
-	session_start();
 	echo json_encode($_SESSION);
 }
 else if (isset($_GET['refreshInformation']))
 {
-	session_start();
 	if (hash('whirlpool', $_GET['passwd']) != $_SESSION['passwd'])
 		$_GET['passwd'] = hash('whirlpool', $_GET['passwd']);
 	echo update_user($_SESSION, $_GET);
@@ -25,6 +42,30 @@ else if (isset($_GET['refreshInformation']))
 	$_SESSION['passwd'] = hash('whirlpool', $_GET['passwd']);
 	$_SESSION['admin'] 	= "false";
 
+}
+
+function get_like_picture($login, $url_path)
+{
+	return (execute_sql_query_with_value('
+		SELECT like_reference 
+		FROM pictures 
+		WHERE picture_path = "'.$url_path.'"
+	'));
+}
+
+function like_picture($login, $url_path)
+{
+	exec_sql_query('
+		UPDATE pictures
+		SET like_reference = concat(`like_reference`, "'.$login.'&&")
+		WHERE picture_path = "'.$url_path.'"
+	');
+	
+	return (exec_sql_query('
+		UPDATE users
+		SET pic_liked = concat(`pic_liked`, "'.$url_path.'&&")
+		WHERE login = "'.$login.'"
+	'));
 }
 
 function update_user($session, $get)
@@ -45,13 +86,13 @@ function update_user($session, $get)
 	'));
 }
 
-function add_comment($email, $comment)
+function add_comment($email, $comment, $picture)
 {
 
 	return (exec_sql_query('
 		UPDATE pictures
-		SET `comment_reference` = concat(comment_reference,'.$comment.')
-		WHERE email="'.$email.'"
+		SET `comment_reference` = concat(`comment_reference`,"'.$comment.'")
+		WHERE picture_path="'.$picture.'"
 	'));
 }
 ?>

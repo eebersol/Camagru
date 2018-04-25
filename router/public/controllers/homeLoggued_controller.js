@@ -120,3 +120,4 @@ function userModifyProfil ()
 	};
 	xhr.send();
 }
+

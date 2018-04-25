@@ -120,38 +120,46 @@
 
 
 					<!-- VUE DETAILLEE -->
-					<div class="container" id="zoomDiv">
+<!-- 					<div class="container" id="zoomDiv">
 						<div class="row" >
-							<div  class="col" >
-								<img id="zoomPicture">
-							</div>
-							<div class="col" >
+							<div  class="col"> <img id="zoomPicture"> </div>
+							<div class="col">
 								<div id="zoomComments"></div>
 								<div id="zoomAddComments"></div>
 							</div>
 							<div class="w-100" ></div>
 							<div class="col" >
+								<div class="col" >Column 11 </div>
 								<div id="zoomDescription">
 									<b>Description : </b>
 									<p id="zoomDescriptionText"></p>
-								<div>
+								</div>
 							</div>
 							<div class="col" >Column</div>
 						</div>
+					</div> -->
+										<div class="container" id="zoomDiv">
+						<div class="row" >
+							<div class="col" >
+								<div id="zoomDescription">
+									<b>Description : </b>
+									<p id="zoomDescriptionText"></p>
+									<img id="zoomPicture">
+								</div>
+							</div>
+							<div class="col">
+								<div id="zoomComments"></div>
+								<div id="zoomAddComments"></div>
+							</div>
+							<div class="w-100" ></div>>
+							<div class="col"> Column</div>
+						</div>
 					</div>
 
-				<div id="successloginDiv"></div>
-				<div id="failloginDiv"></div>
-				<div id="successsubscribeDiv"></div>
-				<div id="failsubscribeDiv"></div>
 
-		    </div>
-
-
-	</body>
-	<footer class="row">
-						<div class="col-lg-12">
-							Pied de page
-						</div>
-					</footer> 
+				<div class="container row">
+					<div class="col-lg-12" id="infoMessage"></div>
+				</div>
+		</div>
+	</body> 
 </html>
