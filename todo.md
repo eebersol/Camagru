@@ -70,7 +70,7 @@ mettre le sinpout mot de pass en hasher
 
 
 
-disconnect marche maintenant il faut pouvoir modifier les infornations\
+disconnect marche maintenant il faut pouvoir modifier les infornations\ OK
 
 
 
@@ -81,20 +81,24 @@ disconnect marche maintenant il faut pouvoir modifier les infornations\
 
 TODO ::: 
 
-- creer l'interface de modifications des donnees
-- creer des pages perso quand on clique sur une photo
+- creer l'interface de modifications des donnees OK
+- creer des pages perso quand on clique sur une photo OK
 - peut etre essayer de faire un system de card
 - faire aussi la modification du mot de passe via l;envoi d;un mail\
+- Logout dans footer -> OK
+- faire meelange de couleur pour les bulles de commentaire;
+-pic_liked ajouter 
 
 
 
-
-- Commentaire :: on peut voir et ecrire un commentaire, pour l'ajouter il faut finir le systeme de login\
-
+- Commentaire :: on peut voir et ecrire un commentaire, pour l'ajouter il faut finir le systeme de logi OK
 
 
+systeme de like -> bouttons avec deux etat le fait de liker ajoute la reference de l'image
 
 
+
+LE UNLIKE n;est pas au point il faut recuperer le tableaud e like et split le login qui veut delike.
 
 
 
