@@ -110,22 +110,14 @@ function loadXMLSuccessLogin(email, login, passwd)
 
 function loadXMLSubscribe(email, login, passwd, url)
 {
-	console.log("BOOOM")
 	var xhr = new XMLHttpRequest();
-	xhr.open('GET', '/models/user.create.php?create=true&&email='+email+'&&login='+login+'&&passwd='+passwd, false);
+	xhr.open('GET', '/models/user.create.php?create=true&&email='+email+'&&login='+login+'&&passwd='+passwd);
 	xhr.onload = function() {
 		if (xhr.status === 200) {
-			console.log(xhr.responseText)
 			if (xhr.responseText == "TRUE")
-			{
-				console.log("1");
 				resultSubscribeLogin("✓ Bienvenu " + login + " votre compte a été créé, un email de vérification à été envoyé à l'adresse suivante : " + email + ".", "subscribe", false);
-			}
-			else if (xhr.responseText == "FALSE")
-			{
-				console.log("2");
+			else
 				resultSubscribeLogin("✘ Cette adresse email/login est déja utilisé.", "subscribe", true);
-			}
 		}
 		else {
 			alert('Request failed.  Returned status of ' + xhr.status);
@@ -224,7 +216,7 @@ function login_user()
 
 function resetPage(element)
 {	
-	var paras = document.getElementsByClassName(element);
+	let paras = document.getElementsByClassName(element);
 
 	while(paras[0])
 		paras[0].parentNode.removeChild(paras[0]);
@@ -252,7 +244,8 @@ function changePage(page)
 		this.page = page;
 	resetPage("galleryPaginationNumber");
 	resetPage("galleryPicture");
-	loadXMLgetImage(this.page);
+	displayMiniature(this.page);
+	getLikedPicture();
 }
 
 function create_div_pagination(i, char)
@@ -266,10 +259,10 @@ function create_div_pagination(i, char)
  	return (iDiv)
 }
 
-function make_pagination(length, page)
+function makePagination(page)
 {
 	let galleryPagination 	= document.getElementById("galleryPagination");
- 	this.nbr_page 			= Math.round(length/9);
+ 	this.nbr_page 			= Math.round(this.pictures.length/9);
  	let iDiv 				= create_div_pagination(-1, "<<");
 
  	galleryPagination.appendChild(iDiv);
@@ -285,48 +278,56 @@ function make_pagination(length, page)
 
 }
 
-function parse_pictures(pictures, page)
+function displayMiniature(page)
 {
-	let galleryDivFPicture 		= document.getElementById("galleryDivPicture");
-	let i 						= 0
-    
-    this.pictures = JSON.parse(pictures);
-    if (page == 0)
-    	i = 0;
-    else
-    	i = page * 10
-    let limit = i + 9
-    for (i; i < limit; i++)
-    {
-    	if (i >= this.pictures.length)
-    		break;
-    	let iDiv 		= document.createElement("IMG");
-    	let category 	= this.pictures[i][4];
-    	let path 		= this.pictures[i][5];
-    	iDiv.setAttribute("src", path);
-    	iDiv.setAttribute("class", "galleryPicture");
-		iDiv.setAttribute("width", "300");
-		iDiv.setAttribute("onclick", "displayPicture("+i+");");
-		iDiv.setAttribute("height", "200");
-		galleryDivFPicture.appendChild(iDiv);
-    }
-    make_pagination(this.pictures.length, page);
+	loadXMLgetMiniature(page, (data, err) => {
+		this.pictures = [];
+
+		for (let j = 0; j < data.length;j++)
+		{
+			let picture = {
+				'id' 			: data[j]['id'],
+				'date' 			: data[j]['date_creation'],
+				'likess' 		: data[j]['like_reference'],
+				'comments'		: parse_comments(data[j]['comment_reference']),
+				'category'		: data[j]['category'],
+				'path'			: data[j]['picture_path'],
+				'description'	: data[j]['description']
+			}
+			this.pictures.push(picture);
+		}
+		let galleryDivFPicture 		= document.getElementById("galleryDivPicture");
+		let i 						= 0
+	    
+	    if (page == 0)
+	    	i = 0;
+	    else
+	    	i = page * 10
+	    let limit = i + 9
+	    for (i; i < limit; i++)
+	    {
+	    	if (i >= this.pictures.length)
+	    		break;
+	    	let iDiv 		= document.createElement("IMG");
+	    	iDiv.setAttribute("src", this.pictures[i].path);
+	    	iDiv.setAttribute("class", "galleryPicture");
+			iDiv.setAttribute("width", "300");
+			iDiv.setAttribute("onclick", "displayPicture("+i+");");
+			iDiv.setAttribute("height", "200");
+			galleryDivFPicture.appendChild(iDiv);
+	    }
+	    makePagination(page);
+	});
 }
 
-function loadXMLgetImage(page)
+function loadXMLgetMiniature(page, callback)
 {
-	console.log("PAGE ::", page)
 	var xhr = new XMLHttpRequest();
 	xhr.open('GET', '/models/picture.get.php?getImage=true&&page='+page+'', false);
 	xhr.onload= function() {
 		if (xhr.status === 200) {
 			if (xhr.responseText !== null)
-			{
-				parse_pictures(xhr.responseText, page);
-				return xhr.responseText;
-			}
-			else if (xhr.responseText == null)
-				console.log("FAIL")
+				callback(JSON.parse(xhr.responseText));
 		}
 		else {
 			alert('Request failed.  Returned status of ' + xhr.status);
@@ -335,29 +336,62 @@ function loadXMLgetImage(page)
 	xhr.send();
 }
 
-function set_user(data)
+
+function getUser()
 {
-	this.user = JSON.parse(data)
+	getUserInformations((data, err) => {
+			this.user = {
+			'id' 			: data[0]['id'],
+			'email' 		: data[0]['email'],
+			'login' 		: data[0]['login'],
+			'passwd'		: data[0]['passwd'],
+			'subscribeMail'	: data[0]['subscribe_email'],
+			'tokenMail'		: data[0]['token_subscribe'],
+			'picture'		: {
+				'liked'	: data[0]['pic_reference'],
+				'added' : data[0]['pic_liked']
+			},
+			'notification' 	: {
+				'like': data[0]['notification_like'],
+				'comment': data[0]['notification_comment']
+			}
+		}
+
+		getUserPictureLike(function(data, err){
+			this.user.picture.liked = data[0];
+			return (this.user)
+		});
+	});
 }
 
-function getUserInformation()
+function getUserPictureLike(callback)
 {
 	var xhr = new XMLHttpRequest();
-	xhr.open('GET', '/models/user.informations.php?getInformation=true');
+	xhr.open('GET', '/models/user.informations.php?getUserPicureLike=true&&login='+this.user.login, false);
 	xhr.onload= function() {
-		if (xhr.status === 200) {
-			set_user(xhr.responseText);
-		}
-		else {
+		if (xhr.status === 200) 
+			callback(JSON.parse(xhr.responseText));
+		else
 			alert('Request failed.  Returned status of ' + xhr.status);
-		}
 	};
-	xhr.send();
+	xhr.send();	
 }
 
-function gallery(somethong)
+function getUserInformations(callback)
 {
-	console.log(somethong);
+	var xhr = new XMLHttpRequest();
+	xhr.open('GET', '/models/user.informations.php?getAllInformations=true', false);
+	xhr.onload= function() {
+		if (xhr.status === 200) 
+			callback(JSON.parse(xhr.responseText));
+		else
+			alert('Request failed.  Returned status of ' + xhr.status);
+	};
+	xhr.send();	
+}
+
+function gallery(lol)
+{
 	let optionDiv 				= document.getElementById("optionDiv");
 	let galleryDiv 				= document.getElementById("galleryDiv");
 	let page 					= 0;
@@ -365,25 +399,23 @@ function gallery(somethong)
 	optionDiv.style.display 	= "none";
 	galleryDiv.style.display 	= "block";
 
-
-	loadXMLgetImage(page);
-	getUserInformation();
+	displayMiniature(page);
+	getLikedPicture();
+	getUser();
 }
 
 
 
 // VUE DETAILLE PHOTO //
 
-function parse_comments()
+function parse_comments(comments)
 {
-	let tmpTab 		= this.pictures;
-
-	for (let i = 0; i < tmpTab.length; i++)
+	if (comments)
 	{
 		let tmpObjTab 	= [];
-		if (tmpTab[i][3].search("&&") > 0)
+		if (comments.search("&&") > 0)
 		{
-			let comment = tmpTab[i][3].split("&&");
+			let comment = comments.split("&&");
 
 			for (let j = 0; j < comment.length; j++)
 			{
@@ -397,14 +429,16 @@ function parse_comments()
 		else
 		{
 			let obj_comment = {
-				'auteur':tmpTab[i][3].split("||")[0] 	|| null,
-				'text':tmpTab[i][3].split("||")[1] 		|| null
+				'auteur':comments.split("||")[0] 	|| null,
+				'text':comments.split("||")[1] 		|| null
 			}
 			tmpObjTab.push(obj_comment);
 		}
-		tmpTab[i][3] = tmpObjTab
+		comments = tmpObjTab
+		return (comments)
 	}
-	this.pictures = tmpTab;
+	else
+		return '';
 }
 
 function add_comment ()
@@ -413,16 +447,7 @@ function add_comment ()
 	let login 	= this.user.login;
 
 	let xhr = new XMLHttpRequest();
-	xhr.open('GET', '/models/user.informations.php?addComment=true&&auteur='+login+'&&text='+text+'&&photoUrl='+this.currentPicture);
-	xhr.onload= function() {
-		if (xhr.status === 200) {
-			console.log(xhr.responseText);
-			console.log("OK");
-		}
-		else {
-			alert('Request failed.  Returned status of ' + xhr.status);
-		}
-	};
+	xhr.open('GET', '/models/user.informations.php?addComment=true&&auteur='+login+'&&text='+text+'&&photoUrl='+this.pictures[this.currentPictureIndex].path);
 	xhr.send();
 }
 
@@ -433,8 +458,8 @@ function checkKey(event)
 
 	if (textComment.value.length > 21)
 	{
-		textComment.style.padding = "3% 1% 1% 3%";
-		textComment.style.lineHeight = "1em";
+		textComment.style.padding 		= "3% 1% 1% 3%";
+		textComment.style.lineHeight 	= "1em";
 	}
 	if (event.keyCode === 13 && event.shiftKey === false) 
 	{
@@ -513,40 +538,36 @@ function displayPicture(index)
 	let galleryDiv 					= document.getElementById("galleryDiv");
 	let zoomDiv 					= document.getElementById("zoomDiv");	
 	let zoomPicture 				= document.getElementById("zoomPicture");
-	let user 						= getUserInformation();
 	
 	galleryDiv.style.display 		= "none";
 	zoomDiv.style.display 			= "block";
 	zoomPicture.style.width 		= "100%";
 	zoomPicture.style.height 		= "auto";
-	zoomPicture.setAttribute("src", this.pictures[index][5]);
-	this.currentPicture 			= this.pictures[index][5];
-	this.pictureLike 				= getLikedPicture();
+	zoomPicture.setAttribute("src", this.pictures[index].path);
+	this.currentPictureIndex 		= index;	
 
-	if (this.pictures[index][6] != '')
+	if (this.pictures[index]['description'] != '')
 	{
 		let zoomDescription					= document.getElementById("zoomDescription");
 		let zoomDescriptionText 			= document.getElementById("zoomDescriptionText");
 
 		zoomDescription.style.display 		= "block";
 		zoomDescriptionText.style.display 	= "inline-block";
-		zoomDescriptionText.textContent 	= this.pictures[index][6];
+		zoomDescriptionText.textContent 	= this.pictures[index]['description'];
 	}
 
-	if (this.pictures[index][3] != '')
+	if (this.pictures[index].comments != '')
 	{
 		let zoomComments	= document.getElementById("zoomComments");
 		let zoomAddComments = document.getElementById("zoomAddComments");
 
-		parse_comments();
 		zoomComments.style.margin = "9% 0 0 0";
 
-		for (let i = 0; i < this.pictures[index][3].length; i++)
+		for (let i = 0; i < this.pictures[index].comments.length; i++)
 		{
-			let comment = this.pictures[index][3][i];
+			let comment = this.pictures[index].comments[i];
 			if (comment.auteur && comment.text)
 			{
-				let comment 					= this.pictures[index][3][i];
 				let cell						= document.createElement("div");
 				let cellAuteur 					= document.createElement("p");
 				let cellComments 				= document.createElement("p");
@@ -602,6 +623,11 @@ function displayPicture(index)
 			let cellAddComment 		= document.createElement("div");
 			let textareaComments 	= document.createElement("textarea");
 
+
+			if (this.user.picture.liked.indexOf(this.pictures[this.currentPictureIndex].path) != -1)
+				document.getElementById("liked").style.display = "block";
+			else
+				document.getElementById("no_like").style.display = "block";
 			cellAddComment.style.margin 			= "6% 0 0 0";
 			cellAddComment.style.borderRadius 		= "500px";
 			cellAddComment.style.backgroundColor 	= "#BDBDBD";
@@ -614,6 +640,7 @@ function displayPicture(index)
 			textareaComments.style.backgroundColor 	= '#FAFAFA';
 			textareaComments.style.textIndent 		= "0%";
 			textareaComments.style.lineHeight		= "2.3em";
+
 			textareaComments.setAttribute("id", "textComment");
 			textareaComments.setAttribute("maxlength", "100");
 			textareaComments.setAttribute("cols", "20");
@@ -631,17 +658,32 @@ function displayPicture(index)
 
 function getLikedPicture () 
 {
-	console.log("ICI : " + this.currentPicture)
+	let tabPathPicture 	= [];
+	let tabObj 			= [];
+
+	for (let i = 0; i < this.pictures.length; i++)
+	{
+		tabPathPicture.push(this.pictures[i].path);
+		tabObj.push({'path':this.pictures[i].path,'count':0})
+	}
+	XMLgetLikePage(tabPathPicture, (data, error) => {
+		for (let i = 0; i < data.length; i++)
+		{
+			let index = tabPathPicture.indexOf(data[i]['picture_path'])
+			tabObj[index].count++;
+		}
+	});
+}
+
+function XMLgetLikePage(tab,  callback)
+{
 	let xhr 	= new XMLHttpRequest();
-	xhr.open('GET', '/models/user.informations.php?getLikedPicture=true&&login='+this.user.login+'&&picturePath='+this.currentPicture);
+	xhr.open('GET', '/models/user.informations.php?getLikePicturePage=true&&tabPath='+tab, false);
 	xhr.onload= function() {
-		if (xhr.status === 200) {
-			console.log(xhr.responseText)
-			display_like(xhr.responseText);
-		}
-		else {
+		if (xhr.status === 200)
+			callback(JSON.parse(xhr.responseText));
+		else
 			alert('Request failed.  Returned status of ' + xhr.status);
-		}
 	};
 	xhr.send();
 }
@@ -650,15 +692,13 @@ function display_like (data)
 {
 	let liked 					= document.getElementById("liked");	
 	let no_like 				= document.getElementById("no_like")
+
 	if (data == 'like')
-	{
 		this.picturesLike = this.user.login + "&&";
-		console.log(this.picturesLike.includes(this.user.login + '&&'))
-	}
 	else
 	{
-		this.pictureLike 			= JSON.parse(data);
-		this.picturesLike 			= this.pictureLike[0]['like_reference']
+		this.pictureLike 		= JSON.parse(data);
+		this.picturesLike 		= this.pictureLike[0]['like_reference']
 	}
 	if (this.picturesLike.includes(this.user.login + '&&'))
 	{
@@ -668,44 +708,3 @@ function display_like (data)
 
 }
 
-function likePicture() 
-{
-	if (this.user)
-	{
-		let xhr 	= new XMLHttpRequest();
-		xhr.open('GET', '/models/user.informations.php?unLikePicture=true&&login='+this.user.login+'&&picturePath='+this.currentPicture);
-		xhr.onload= function() {
-			if (xhr.status === 200) {
-				console.log(xhr.responseText);
-				display_like("like");
-			}
-			else {
-				alert('Request failed.  Returned status of ' + xhr.status);
-			}
-		};
-		xhr.send();
-	}
-	else
-		return;
-}
-
-function unlikePicture() 
-{
-	console.log("ICICICICICCI");
-	if (this.user)
-	{
-		let xhr 	= new XMLHttpRequest();
-		xhr.open('GET', '/models/user.informations.php?unLikePicture=true&&login='+this.user.login+'&&picturePath='+this.currentPicture);
-		xhr.onload= function() {
-			if (xhr.status === 200) {
-				console.log(xhr.responseText);
-			}
-			else {
-				alert('Request failed.  Returned status of ' + xhr.status);
-			}
-		};
-		xhr.send();
-	}
-	else
-		return;
-}

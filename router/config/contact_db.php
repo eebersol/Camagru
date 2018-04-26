@@ -19,7 +19,7 @@ function execute_sql_query($query)
 function execute_sql_query_with_value($query)
 {
 	require("database.php");
-
+	
 	$conn = new PDO($DB_DSN, $DB_USER, $DB_PASS);
 	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 	$SQL_QUERY = $conn->prepare($query);

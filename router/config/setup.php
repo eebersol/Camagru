@@ -55,4 +55,19 @@ catch (PDOException $e) {
 	echo "ERROR CREATING TABLE: pictures : " . $e->getMessage() . "\nAborting process\n";
 }
 
+
+try
+{
+	$SQL_QUERY = "CREATE TABLE likes (
+		id 					INT 			NOT NULL AUTO_INCREMENT PRIMARY KEY,
+		login 				VARCHAR(120)	NOT NULL,
+		picture_path 		TEXT			NOT NULL
+	)";
+	$ret_value = $conn->exec($SQL_QUERY);
+	echo "DB_NAME : pictures -> created : " . $ret_value . "\n";
+}
+catch (PDOException $e) {
+	echo "ERROR CREATING TABLE: pictures : " . $e->getMessage() . "\nAborting process\n";
+}
+
 ?>

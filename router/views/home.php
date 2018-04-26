@@ -112,6 +112,16 @@
 
 				    <!-- GALLERIE PHOTO -->
 					<div class="row" id="galleryDiv">
+						<section  id="filtered" class="col">
+							<b class="filter" onclick="filter('mostLike');">. Les plus liké</b>
+							<b class="filter" onclick="filter('myLike');">. Vos likes</b>
+							<br/>
+							<b class="filter" onclick="filter('myLike');">. Les plus vues</b>
+							<b class="filter" onclick="filter('myLike');">. Les nouveautées</b>
+							<br/>
+							<b class="filter" onclick="filter('myLike');">. All</b>
+							<b class="filter" onclick="filter('myLike');">. Mes photos</b>
+						</section>
 						<section  class="col-lg-12">
 							<div id="galleryDivPicture"></div>
 						</section>
@@ -120,25 +130,7 @@
 
 
 					<!-- VUE DETAILLEE -->
-<!-- 					<div class="container" id="zoomDiv">
-						<div class="row" >
-							<div  class="col"> <img id="zoomPicture"> </div>
-							<div class="col">
-								<div id="zoomComments"></div>
-								<div id="zoomAddComments"></div>
-							</div>
-							<div class="w-100" ></div>
-							<div class="col" >
-								<div class="col" >Column 11 </div>
-								<div id="zoomDescription">
-									<b>Description : </b>
-									<p id="zoomDescriptionText"></p>
-								</div>
-							</div>
-							<div class="col" >Column</div>
-						</div>
-					</div> -->
-										<div class="container" id="zoomDiv">
+					<div class="container" id="zoomDiv">
 						<div class="row" >
 							<div class="col" >
 								<div id="zoomDescription">

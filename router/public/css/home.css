@@ -1,4 +1,19 @@
 
+.filter {
+	font-size: 2em;
+	width: 40%;
+	display: inline-block;
+}
+#filtered {
+	height: 10%;
+	width: 90%;
+	margin: 0 0 0 15%
+}
+
+.filter:hover { background-color: #BDBDBD }
+
+
+
 #liked {
 	width: 50px
 }
@@ -29,6 +44,7 @@
 #galleryDiv {
 	margin: 0 0 0 15%;
 }
+
 
 .galleryPicture {
 	margin: 1% 0 0 1%;
