@@ -95,32 +95,16 @@ function resultSubscribeLogin (message, type, err)
 
 // AJAX //
 
-function loadXMLSuccessLogin(email, login, passwd)
-{
-	var xhr = new XMLHttpRequest();
-	xhr.open('GET', '/models/user.login.php?success=true&&email='+email+'&&login='+login+'&&passwd='+passwd, false);
-	xhr.onload = function() {
-		if (xhr.status === 200)
-			resultSubscribeLogin("Bienvenue " + login + " !", "login", false);
-		else
-			alert('Request failed.  Returned status of ' + xhr.status);
-	};
-	xhr.send();
-}
-
 function loadXMLSubscribe(email, login, passwd, url)
 {
-	var xhr = new XMLHttpRequest();
-	xhr.open('GET', '/models/user.create.php?create=true&&email='+email+'&&login='+login+'&&passwd='+passwd);
+	let xhr = new XMLHttpRequest();
+	xhr.open('GET', '/models/user.create.php?action=user.create&&email='+email+'&&login='+login+'&&passwd='+passwd, true);
 	xhr.onload = function() {
 		if (xhr.status === 200) {
-			if (xhr.responseText == "TRUE")
+			if (xhr.responseText != "FALSE")
 				resultSubscribeLogin("✓ Bienvenu " + login + " votre compte a été créé, un email de vérification à été envoyé à l'adresse suivante : " + email + ".", "subscribe", false);
 			else
 				resultSubscribeLogin("✘ Cette adresse email/login est déja utilisé.", "subscribe", true);
-		}
-		else {
-			alert('Request failed.  Returned status of ' + xhr.status);
 		}
 	};
 	xhr.send();
@@ -128,13 +112,14 @@ function loadXMLSubscribe(email, login, passwd, url)
 
 function loadXMLLogin(email, login, passwd, url)
 {
-	var xhr = new XMLHttpRequest();
-	xhr.open('GET', '/models/user.login.php?login=true&&login='+login+'&&passwd='+passwd, false);
+	let xhr = new XMLHttpRequest();
+
+	xhr.open('GET', '/models/user.informations.php?action=user.login&&login='+login+'&&passwd='+passwd, false);
 	xhr.onload = function() {
 		if (xhr.status === 200) {
-			if (xhr.responseText == "TRUE")
-				loadXMLSuccessLogin(email, login, passwd);
-			else if (xhr.responseText == "FALSE")
+			if (xhr.responseText != "FALSE")
+				resultSubscribeLogin("Bienvenue " + login + " !", "login", false);
+			else
 				resultSubscribeLogin("✘ login / mot de passe incorrect", "login", true);
 		}
 		else
@@ -235,8 +220,10 @@ function changePage(page)
 	}
 	else if (page == 66.66)
 	{
-		if (this.page < this.nbr_page - 1)
+		if (this.page <= this.nbr_page - 1)
+		{
 			this.page += 1;
+		}
 		else
 			return;
 	}
@@ -280,32 +267,29 @@ function makePagination(page)
 
 function displayMiniature(page)
 {
-	loadXMLgetMiniature(page, (data, err) => {
-		this.pictures = [];
+	loadXMLgetMiniature(page, (data, err) => 
+	{
+		this.pictures 				= [];
+		let galleryDivFPicture 		= document.getElementById("galleryDivPicture");
 
 		for (let j = 0; j < data.length;j++)
 		{
 			let picture = {
 				'id' 			: data[j]['id'],
 				'date' 			: data[j]['date_creation'],
-				'likess' 		: data[j]['like_reference'],
-				'comments'		: parse_comments(data[j]['comment_reference']),
+				'likes' 		: data[j]['like_reference'],
+				'comments'		: [],
 				'category'		: data[j]['category'],
 				'path'			: data[j]['picture_path'],
 				'description'	: data[j]['description']
 			}
 			this.pictures.push(picture);
+
 		}
-		let galleryDivFPicture 		= document.getElementById("galleryDivPicture");
-		let i 						= 0
 	    
-	    if (page == 0)
-	    	i = 0;
-	    else
-	    	i = page * 10
-	    let limit = i + 9
-	    for (i; i < limit; i++)
+	    for (i = 0; i < this.pictures.length; i++)
 	    {
+
 	    	if (i >= this.pictures.length)
 	    		break;
 	    	let iDiv 		= document.createElement("IMG");
@@ -320,10 +304,26 @@ function displayMiniature(page)
 	});
 }
 
+function loadXMLgetComments(page, callback)
+{
+	let xhr = new XMLHttpRequest();
+	xhr.open('GET', '/models/picture.model.php?action=picture.get.comment&&page='+page+'', false);
+	xhr.onload= function() {
+		if (xhr.status === 200) {
+			if (xhr.responseText !== null)
+				callback(JSON.parse(xhr.responseText));
+		}
+		else {
+			alert('Request failed.  Returned status of ' + xhr.status);
+		}
+	};
+	xhr.send();
+}
+
 function loadXMLgetMiniature(page, callback)
 {
-	var xhr = new XMLHttpRequest();
-	xhr.open('GET', '/models/picture.get.php?getImage=true&&page='+page+'', false);
+	let xhr = new XMLHttpRequest();
+	xhr.open('GET', '/models/picture.model.php?action=picture.get.miniature&&page='+page+'', false);
 	xhr.onload= function() {
 		if (xhr.status === 200) {
 			if (xhr.responseText !== null)
@@ -339,7 +339,10 @@ function loadXMLgetMiniature(page, callback)
 
 function getUser()
 {
-	getUserInformations((data, err) => {
+	getUserInformations((data, err) => 
+	{
+		if (data[0])
+		{
 			this.user = {
 			'id' 			: data[0]['id'],
 			'email' 		: data[0]['email'],
@@ -357,17 +360,18 @@ function getUser()
 			}
 		}
 
-		getUserPictureLike(function(data, err){
-			this.user.picture.liked = data[0];
-			return (this.user)
-		});
+			getUserPictureLike(function(data, err){
+				this.user.picture.liked = data[0];
+				return (this.user)
+			});
+		}
 	});
 }
 
 function getUserPictureLike(callback)
 {
 	var xhr = new XMLHttpRequest();
-	xhr.open('GET', '/models/user.informations.php?getUserPicureLike=true&&login='+this.user.login, false);
+	xhr.open('GET', '/models/user.informations.php?action=user.get.picutre.like&&login='+this.user.login, false);
 	xhr.onload= function() {
 		if (xhr.status === 200) 
 			callback(JSON.parse(xhr.responseText));
@@ -380,12 +384,10 @@ function getUserPictureLike(callback)
 function getUserInformations(callback)
 {
 	var xhr = new XMLHttpRequest();
-	xhr.open('GET', '/models/user.informations.php?getAllInformations=true', false);
+	xhr.open('GET', '/models/user.informations.php?action=user.get.information', false);
 	xhr.onload= function() {
-		if (xhr.status === 200) 
+		if (xhr.status === 200)
 			callback(JSON.parse(xhr.responseText));
-		else
-			alert('Request failed.  Returned status of ' + xhr.status);
 	};
 	xhr.send();	
 }
@@ -447,7 +449,7 @@ function add_comment ()
 	let login 	= this.user.login;
 
 	let xhr = new XMLHttpRequest();
-	xhr.open('GET', '/models/user.informations.php?addComment=true&&auteur='+login+'&&text='+text+'&&photoUrl='+this.pictures[this.currentPictureIndex].path);
+	xhr.open('GET', '/models/user.informations.php?action=user.add.comment&&auteur='+login+'&&text='+text+'&&picture='+this.pictures[this.currentPictureIndex].path);
 	xhr.send();
 }
 
@@ -556,7 +558,7 @@ function displayPicture(index)
 		zoomDescriptionText.textContent 	= this.pictures[index]['description'];
 	}
 
-	if (this.pictures[index].comments != '')
+	if (this.pictures[index].comments.length > 0)
 	{
 		let zoomComments	= document.getElementById("zoomComments");
 		let zoomAddComments = document.getElementById("zoomAddComments");
@@ -566,7 +568,8 @@ function displayPicture(index)
 		for (let i = 0; i < this.pictures[index].comments.length; i++)
 		{
 			let comment = this.pictures[index].comments[i];
-			if (comment.auteur && comment.text)
+
+			if (comment.login && comment.text)
 			{
 				let cell						= document.createElement("div");
 				let cellAuteur 					= document.createElement("p");
@@ -580,10 +583,10 @@ function displayPicture(index)
 				cell.style.borderRadius 		= "500px";
 				cell.style.backgroundColor 		= this.colorMaterialize[pickRandomColor()];
 
-				if (this.user.login == comment.auteur)
+				if (this.user && this.user.login == comment.login)
 					cellAuteur.textContent 		= "you :\xa0";
 				else
-					cellAuteur.textContent 		= comment.auteur + ":\xa0";
+					cellAuteur.textContent 		= comment.login + ":\xa0";
 				cellAuteur.style.display 		= "inline-block";
 				cellAuteur.style.padding 		= comment.text.length > 30 ? "3% 0 0 5%" : "3% 0 0 25%"
 				cellAuteur.style.fontWeight 	= "bold";
@@ -618,40 +621,40 @@ function displayPicture(index)
 				}
 			}
 		}
-		if (this.user.email)
-		{
-			let cellAddComment 		= document.createElement("div");
-			let textareaComments 	= document.createElement("textarea");
+	}
+	if (this.user && this.user.email)
+	{
+		let cellAddComment 		= document.createElement("div");
+		let textareaComments 	= document.createElement("textarea");
 
 
-			if (this.user.picture.liked.indexOf(this.pictures[this.currentPictureIndex].path) != -1)
-				document.getElementById("liked").style.display = "block";
-			else
-				document.getElementById("no_like").style.display = "block";
-			cellAddComment.style.margin 			= "6% 0 0 0";
-			cellAddComment.style.borderRadius 		= "500px";
-			cellAddComment.style.backgroundColor 	= "#BDBDBD";
-			cellAddComment.setAttribute("id", "cellComment");
+		if (this.user.picture.liked.indexOf(this.pictures[this.currentPictureIndex].path) != -1)
+			document.getElementById("liked").style.display = "block";
+		else
+			document.getElementById("no_like").style.display = "block";
+		cellAddComment.style.margin 			= "6% 0 0 0";
+		cellAddComment.style.borderRadius 		= "500px";
+		cellAddComment.style.backgroundColor 	= "#BDBDBD";
+		cellAddComment.setAttribute("id", "cellComment");
 
-			textareaComments.style.border 			= 'none';
-			textareaComments.style.width 			= '90%';
-			textareaComments.style.margin 			= '3% 0 3% 5%';
-			textareaComments.style.padding 			= "0 0 0 5%";
-			textareaComments.style.backgroundColor 	= '#FAFAFA';
-			textareaComments.style.textIndent 		= "0%";
-			textareaComments.style.lineHeight		= "2.3em";
+		textareaComments.style.border 			= 'none';
+		textareaComments.style.width 			= '90%';
+		textareaComments.style.margin 			= '3% 0 3% 5%';
+		textareaComments.style.padding 			= "0 0 0 5%";
+		textareaComments.style.backgroundColor 	= '#FAFAFA';
+		textareaComments.style.textIndent 		= "0%";
+		textareaComments.style.lineHeight		= "2.3em";
 
-			textareaComments.setAttribute("id", "textComment");
-			textareaComments.setAttribute("maxlength", "100");
-			textareaComments.setAttribute("cols", "20");
-			textareaComments.setAttribute("rows", "2");
-			textareaComments.setAttribute("onkeypress", "checkKey(event);");
-			textareaComments.setAttribute("placeHolder", "ajouter un commentaire ...");
+		textareaComments.setAttribute("id", "textComment");
+		textareaComments.setAttribute("maxlength", "100");
+		textareaComments.setAttribute("cols", "20");
+		textareaComments.setAttribute("rows", "2");
+		textareaComments.setAttribute("onkeypress", "checkKey(event);");
+		textareaComments.setAttribute("placeHolder", "ajouter un commentaire ...");
 
 
-			zoomAddComments.appendChild(cellAddComment);
-			cellAddComment.appendChild(textareaComments);
-		}
+		zoomAddComments.appendChild(cellAddComment);
+		cellAddComment.appendChild(textareaComments);
 	}
 
 }
@@ -666,19 +669,28 @@ function getLikedPicture ()
 		tabPathPicture.push(this.pictures[i].path);
 		tabObj.push({'path':this.pictures[i].path,'count':0})
 	}
-	XMLgetLikePage(tabPathPicture, (data, error) => {
+	XMLgetLikePage(tabPathPicture, (data, error) => 
+	{
 		for (let i = 0; i < data.length; i++)
 		{
 			let index = tabPathPicture.indexOf(data[i]['picture_path'])
 			tabObj[index].count++;
 		}
+		XMLgetCommentPage(tabPathPicture, (data, err) => {
+			for (let i = 0; i < data.length; i++)
+			{
+				let index = tabPathPicture.indexOf(data[i]['picture_path'])
+				this.pictures[index].comments.push({'login':data[i].login,'text':data[i].comment});
+			}
+
+		})
 	});
 }
 
 function XMLgetLikePage(tab,  callback)
 {
 	let xhr 	= new XMLHttpRequest();
-	xhr.open('GET', '/models/user.informations.php?getLikePicturePage=true&&tabPath='+tab, false);
+	xhr.open('GET', '/models/picture.model.php?action=picture.get.page.like&&tabPath='+tab, false);
 	xhr.onload= function() {
 		if (xhr.status === 200)
 			callback(JSON.parse(xhr.responseText));
@@ -688,6 +700,16 @@ function XMLgetLikePage(tab,  callback)
 	xhr.send();
 }
 
+function XMLgetCommentPage(tab,  callback)
+{
+	let xhr 	= new XMLHttpRequest();
+	xhr.open('GET', '/models/picture.model.php?action=picture.get.page.comment&&tabPath='+tab, false);
+	xhr.onload= function() {
+		if (xhr.status === 200)
+			callback(JSON.parse(xhr.responseText));
+	};
+	xhr.send();
+} 
 function display_like (data)
 {
 	let liked 					= document.getElementById("liked");	

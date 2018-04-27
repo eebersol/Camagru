@@ -21,13 +21,19 @@
 #liked {
 	display: none;
 	margin: 2% 0 0 20%;
-	width: 30px
+	width: 30px;
+	border-radius: 500px;
 }
+#like:hover { background-color: #BDBDBD }
+
 #no_like {
 	display: none;
 	margin: 2% 0 0 20%;
-	width: 30px
+	width: 30px;
+	border-radius: 500px;
 }
+#no_like:hover { background-color: #BDBDBD }
+
 
 /* --- FOOTER --- */
 #photoDisconnect {

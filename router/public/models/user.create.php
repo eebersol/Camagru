@@ -1,29 +1,40 @@
 <?php
 
 require("../../config/contact_db.php");
-require("../../config/database.php");
 
-if (isset($_GET['create']))
+
+if (isset($_GET['action']))
 {
-	if (check_user_subscribe($_GET['email'], $_GET['login']) == 0)
+	$action = $_GET['action'];
+	if ($action == 'user.create')
 	{
-		create_user($_GET['email'], $_GET['login'], $_GET['passwd']);
-		echo "TRUE";
+		if (is_subscribe($_GET['email'], $_GET['login']) == true)
+		{
+			create_user($_GET['email'], $_GET['login'], $_GET['passwd']);
+			echo "TRUE";
+		}
+		else
+			echo "FALSE 2";
 	}
 	else
-		echo "FALSE";
-
+		echo "FALSE 1";
 }
 
-function check_user_subscribe($email, $login)
+
+function is_subscribe($email, $login)
 {
 
-	return (execute_sql_query('
+	$ret = execute_sql_query('
 		SELECT *
 		FROM users
 		WHERE email="'.$email.'" 
 		AND login="'.$login.'"
-	'));
+	') ;
+
+	if ($ret == 0)
+		return true;
+	else
+		return false;
 }
 
 

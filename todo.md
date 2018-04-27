@@ -98,7 +98,6 @@ systeme de like -> bouttons avec deux etat le fait de liker ajoute la reference 
 
 
 
-LE UNLIKE n;est pas au point il faut recuperer le tableaud e like et split le login qui veut delike.
 
 
 
@@ -109,4 +108,12 @@ LE UNLIKE n;est pas au point il faut recuperer le tableaud e like et split le lo
 
 
 
--- Les commentaires ne marche pas encore il faut changer le champ dans user.informations
+
+
+
+
+
+
+Commentaire + Like -> OK
+
+il faut maintenant s'attaquer a la prise de photo -> CANVAS drag and drop picture //

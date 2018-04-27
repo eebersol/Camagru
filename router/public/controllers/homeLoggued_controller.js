@@ -11,7 +11,8 @@ function returnHome()
 
 function getUser()
 {
-	getUserInformations((data, err) => {
+	getUserInformations((data, err) => 
+	{
 			this.user = {
 			'id' 			: data[0]['id'],
 			'email' 		: data[0]['email'],
@@ -36,6 +37,7 @@ function getUser()
 		});
 	});
 }
+
 
 getUser();
 
@@ -69,18 +71,18 @@ function modifyInformationProfil ()
 	let passwd 	= document.getElementById("userProfilPasswdInput");
 	let xhr 	= new XMLHttpRequest();
 
+	emailTmp 	= email.value 	== ""  ? this.user.email 	: email.value;
+	loginTmp 	= login.value 	== ""  ? this.user.login 	: login.value;
+	passwdTmp 	= passwd.value  == ""  ? this.user.passwd 	: passwd.value;
 	
-	emailTmp 	= !email.value ? this.user.email 	: email.value;
-	loginTmp 	= !login.value ? this.user.login 	: login.value;
-	passwdTmp 	= !login.value ? this.user.passwd 	: passwd.value;
-	
-	if (!validateEmail(email.value))
+
+	if (!validateEmail(emailTmp))
 		email.style.borderColor = 'red';
-	else if (login.value.length < 6)
+	else if (loginTmp.length < 6)
 		login.style.borderColor = 'red';
 	else
 	{
-		xhr.open('GET', '/models/user.informations.php?refreshInformation=true&&login='+loginTmp+'&&email='+emailTmp+'&&passwd='+passwdTmp);
+		xhr.open('GET', '/models/user.informations.php?action=user.update.information&&login='+loginTmp+'&&email='+emailTmp+'&&passwd='+passwdTmp);
 		xhr.send();		
 	}
 }
@@ -92,13 +94,10 @@ function modifyInformationProfil ()
 function disconnect()
 {
 	var xhr = new XMLHttpRequest();
-	xhr.open('GET', '/models/user.disconnect.php?disconnect=true');
+	xhr.open('GET', '/models/user.informations.php?action=user.disconnect', true);
 	xhr.onload= function() {
 		if (xhr.status === 200) {
 			location.reload()
-		}
-		else {
-			alert('Request failed.  Returned status of ' + xhr.status);
 		}
 	};
 	xhr.send();
@@ -107,12 +106,10 @@ function disconnect()
 function getUserPictureLike(callback)
 {
 	var xhr = new XMLHttpRequest();
-	xhr.open('GET', '/models/user.informations.php?getUserPicureLike=true&&login='+this.user.login, false);
+	xhr.open('GET', '/models/user.informations.php?action=user.get.picture.like&&login='+this.user.login, false);
 	xhr.onload= function() {
 		if (xhr.status === 200) 
 			callback(JSON.parse(xhr.responseText));
-		else
-			alert('Request failed.  Returned status of ' + xhr.status);
 	};
 	xhr.send();	
 }
@@ -120,12 +117,10 @@ function getUserPictureLike(callback)
 function getUserInformations(callback)
 {
 	var xhr = new XMLHttpRequest();
-	xhr.open('GET', '/models/user.informations.php?getAllInformations=true', false);
+	xhr.open('GET', '/models/user.informations.php?action=user.get.information', false);
 	xhr.onload= function() {
 		if (xhr.status === 200) 
 			callback(JSON.parse(xhr.responseText));
-		else
-			alert('Request failed.  Returned status of ' + xhr.status);
 	};
 	xhr.send();	
 }
@@ -145,12 +140,14 @@ function changeLikeIcon(id)
 		document.getElementById("liked").style.display 	= "none";
 	document.getElementById(id).style.display 		= "block";
 }
+
 function likePicture() 
 {
 	let currentPicture 	= document.getElementById('zoomPicture');
 	let path 			= '../' + currentPicture.src.substring(22, currentPicture.src.length);
 
-	modifyLike("likePicture", path, (data, error) => {
+	modifyLike("user.update.like", path, (data, error) => 
+	{
 			this.user.picture.liked.push(path);
 			changeLikeIcon("liked");
 	});
@@ -161,8 +158,13 @@ function unlikePicture()
 	let currentPicture 	= document.getElementById('zoomPicture');
 	let path 			= '../' + currentPicture.src.substring(22, currentPicture.src.length);
 
-	modifyLike("unLikePicture", path, (data, error) => {
-		this.user.picture.liked.slice(this.user.picture.liked.indexOf(path), 1);
+	modifyLike("user.update.unlike", path, (data, error) => 
+	{
+		console.log(data)
+		if (this.user.picture.liked.indexOf(path)+1 == this.user.picture.liked.length)
+			this.user.picture.liked.pop()
+		else
+			this.user.picture.liked.slice(this.user.picture.liked.indexOf(path), 1);
 		changeLikeIcon("no_like");
 	});
 
@@ -174,7 +176,8 @@ function modifyLike(type, path, callback)
 {
 	let xhr 			= new XMLHttpRequest();
 
-	xhr.open('GET', '/models/user.informations.php?'+type+'=true&&login='+this.user.login+'&&path='+path);
+	console.log(this.user.login)
+	xhr.open('GET', '/models/user.informations.php?action='+type+'&&login='+this.user.login+'&&path='+path);
 	xhr.onload= function() {
 		if (xhr.status === 200) {
 			callback(xhr.responseText);
@@ -185,5 +188,11 @@ function modifyLike(type, path, callback)
 	};
 	xhr.send();	
 }
-/////////////////////////////
+///////////////////////////// AJAX ////////////////////////
+
+
+
+
+
+
 

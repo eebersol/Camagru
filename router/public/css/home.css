@@ -1,4 +1,5 @@
 
+
 .filter {
 	font-size: 2em;
 	width: 40%;
@@ -14,12 +15,7 @@
 
 
 
-#liked {
-	width: 50px
-}
-#no_like {
-	width: 50px
-}
+
 #infoMessage {
 	display:none;
 	border-radius: 500px;

@@ -1,6 +1,6 @@
 <?php
 
-require("../models/mail.subscribe.php");
+require("../public/models/mail.subscribe.php");
 
 if (verify_token($_GET['token']) === true)
 {
