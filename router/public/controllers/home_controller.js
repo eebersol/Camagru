@@ -1,21 +1,13 @@
 
 this.colorMaterialize = {
-	'red' 			: '#F44336',
+	'red' 			: '#EF5350',
 	'pink'			: '#F48FB1',
-	'purple'		: '#9C27B0',
-	'deep-purple'	: '#7E57C2',
-	'indigo'		: '#5C6BC0',
+	'purple'		: '#CE93D8',
 	'blue'			: '#7986CB',
-	'light-blue'	: '#4FC3F7',
-	'cyan'			: '#4DD0E1',
-	'teal'			: '#80CBC4',
 	'light-green'	: '#AED581',
-	'green'			: '#81C784',
-	'lime'			: '#DCE775',
-	'yellow'		: '#FFEE58',
-	'amber'			: '#FFCA28',
+	'yellow'		: '#FFF176',
 	'orange'		: '#FFA726',
-	'brown'			: '#8D6E63',
+	'brown'			: '#A1887F',
 	'grey'			:'#BDBDBD'
 };
 
