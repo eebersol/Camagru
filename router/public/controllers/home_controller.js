@@ -69,12 +69,16 @@ function resultSubscribeLogin (message, type, err)
 	let messageNode 				= document.createElement("p");
 	
 	if (type == "login")
+	{
 		loginDiv.style.display = "none";
+	}
 	else if (type == "subscribe")
+	{
 		subscribeDiv.style.display = "none";
+		if (err == false)
+			infoMessage.style.height = "20%";
+	}
 
-	if (type == "subscribe" && err == false)
-		infoMessage.style.height = "20%";
 	if (err == true)
 		infoMessage.style.backgroundColor = "#F44336";
 	else
@@ -98,13 +102,16 @@ function resultSubscribeLogin (message, type, err)
 function loadXMLSubscribe(email, login, passwd, url)
 {
 	let xhr = new XMLHttpRequest();
-	xhr.open('GET', '/models/user.create.php?action=user.create&&email='+email+'&&login='+login+'&&passwd='+passwd, true);
-	xhr.onload = function() {
-		if (xhr.status === 200) {
-			if (xhr.responseText != "FALSE")
-				resultSubscribeLogin("✓ Bienvenu " + login + " votre compte a été créé, un email de vérification à été envoyé à l'adresse suivante : " + email + ".", "subscribe", false);
+	xhr.open('GET', '/models/user.model.php?action=user.create&&email='+email+'&&login='+login+'&&passwd='+passwd, true);
+	xhr.onload = function() 
+	{
+		if (xhr.status === 200) 
+		{
+			console.log("Subscribe : ", xhr.responseText)
+ 			if (JSON.parse(xhr.responseText) != "✘ Cette adresse email/login est déja utilisé.")
+				resultSubscribeLogin(JSON.parse(xhr.responseText), "subscribe",  false);
 			else
-				resultSubscribeLogin("✘ Cette adresse email/login est déja utilisé.", "subscribe", true);
+				resultSubscribeLogin(JSON.parse(xhr.responseText), "subscribe", true);
 		}
 	};
 	xhr.send();
@@ -114,16 +121,17 @@ function loadXMLLogin(email, login, passwd, url)
 {
 	let xhr = new XMLHttpRequest();
 
-	xhr.open('GET', '/models/user.informations.php?action=user.login&&login='+login+'&&passwd='+passwd, false);
-	xhr.onload = function() {
-		if (xhr.status === 200) {
-			if (xhr.responseText != "FALSE")
-				resultSubscribeLogin("Bienvenue " + login + " !", "login", false);
+	xhr.open('GET', '/models/user.model.php?action=user.login&&login='+login+'&&passwd='+passwd, false);
+	xhr.onload = function() 
+	{
+		if (xhr.status === 200) 
+		{
+			console.log("Se conecter : ", xhr.responseText)
+			if (JSON.parse(xhr.responseText) != "✘ login / mot de passe incorrect")
+				resultSubscribeLogin(JSON.parse(xhr.responseText), "login", false);
 			else
-				resultSubscribeLogin("✘ login / mot de passe incorrect", "login", true);
+				resultSubscribeLogin(JSON.parse(xhr.responseText), "login", true);
 		}
-		else
-			alert('Request failed.  Returned status of ' + xhr.status);
 	};
 	xhr.send();
 }
@@ -327,7 +335,10 @@ function loadXMLgetMiniature(page, callback)
 	xhr.onload= function() {
 		if (xhr.status === 200) {
 			if (xhr.responseText !== null)
+			{
+				console.log(xhr.responseText);
 				callback(JSON.parse(xhr.responseText));
+			}
 		}
 		else {
 			alert('Request failed.  Returned status of ' + xhr.status);
@@ -341,27 +352,29 @@ function getUser()
 {
 	getUserInformations((data, err) => 
 	{
-		if (data[0])
+		if (data)
 		{
 			this.user = {
-			'id' 			: data[0]['id'],
-			'email' 		: data[0]['email'],
-			'login' 		: data[0]['login'],
-			'passwd'		: data[0]['passwd'],
-			'subscribeMail'	: data[0]['subscribe_email'],
-			'tokenMail'		: data[0]['token_subscribe'],
+			'id' 			: data['id'],
+			'email' 		: data['email'],
+			'login' 		: data['login'],
+			'passwd'		: data['passwd'],
+			'subscribeMail'	: data['subscribe_email'],
+			'tokenMail'		: data['token_subscribe'],
 			'picture'		: {
-				'liked'	: data[0]['pic_reference'],
-				'added' : data[0]['pic_liked']
+				'liked'	: data['pic_reference'],
+				'added' : data['pic_liked']
 			},
 			'notification' 	: {
-				'like': data[0]['notification_like'],
-				'comment': data[0]['notification_comment']
+				'like': data['notification_like'],
+				'comment': data['notification_comment']
 			}
 		}
 
-			getUserPictureLike(function(data, err){
-				this.user.picture.liked = data[0];
+			getUserPictureLike((data, err) =>
+			{
+				if (data)
+					this.user.picture.liked = data;
 				return (this.user)
 			});
 		}
@@ -371,7 +384,7 @@ function getUser()
 function getUserPictureLike(callback)
 {
 	var xhr = new XMLHttpRequest();
-	xhr.open('GET', '/models/user.informations.php?action=user.get.picutre.like&&login='+this.user.login, false);
+	xhr.open('GET', '/models/user.model.php?action=user.get.picutre.like&&login='+this.user.login, false);
 	xhr.onload= function() {
 		if (xhr.status === 200) 
 			callback(JSON.parse(xhr.responseText));
@@ -384,7 +397,7 @@ function getUserPictureLike(callback)
 function getUserInformations(callback)
 {
 	var xhr = new XMLHttpRequest();
-	xhr.open('GET', '/models/user.informations.php?action=user.get.information', false);
+	xhr.open('GET', '/models/user.model.php?action=user.get.information', false);
 	xhr.onload= function() {
 		if (xhr.status === 200)
 			callback(JSON.parse(xhr.responseText));
@@ -403,7 +416,7 @@ function gallery(lol)
 
 	displayMiniature(page);
 	getLikedPicture();
-	getUser();
+	// getUser();
 }
 
 
@@ -443,34 +456,7 @@ function parse_comments(comments)
 		return '';
 }
 
-function add_comment ()
-{
-	let text 	= document.getElementById("textComment").value;
-	let login 	= this.user.login;
 
-	let xhr = new XMLHttpRequest();
-	xhr.open('GET', '/models/user.informations.php?action=user.add.comment&&auteur='+login+'&&text='+text+'&&picture='+this.pictures[this.currentPictureIndex].path);
-	xhr.send();
-}
-
-function checkKey(event)
-{
-	let textComment = document.getElementById("textComment")
-	let cellComment = document.getElementById("cellComment");
-
-	if (textComment.value.length > 21)
-	{
-		textComment.style.padding 		= "3% 1% 1% 3%";
-		textComment.style.lineHeight 	= "1em";
-	}
-	if (event.keyCode === 13 && event.shiftKey === false) 
-	{
-		event.preventDefault();
-		add_comment();
-	}
-	else if (event.keyCode === 13 && event.shiftKey === true)
-		textComment.value = textComment.value + "\n";
-}
 
 function commentSeeLess(idComment, idAuteur, idCell, idMoreMore, idMoreLess)
 {
@@ -655,6 +641,7 @@ function displayPicture(index)
 
 		zoomAddComments.appendChild(cellAddComment);
 		cellAddComment.appendChild(textareaComments);
+		display_like()
 	}
 
 }
@@ -671,19 +658,25 @@ function getLikedPicture ()
 	}
 	XMLgetLikePage(tabPathPicture, (data, error) => 
 	{
-		for (let i = 0; i < data.length; i++)
+		if (data)
 		{
-			let index = tabPathPicture.indexOf(data[i]['picture_path'])
-			tabObj[index].count++;
-		}
-		XMLgetCommentPage(tabPathPicture, (data, err) => {
 			for (let i = 0; i < data.length; i++)
 			{
 				let index = tabPathPicture.indexOf(data[i]['picture_path'])
-				this.pictures[index].comments.push({'login':data[i].login,'text':data[i].comment});
+				tabObj[index].count++;
 			}
-
-		})
+		}
+		XMLgetCommentPage(tabPathPicture, (data, err) => 
+		{
+			if (data)
+			{
+				for (let i = 0; i < data.length; i++)
+				{
+					let index = tabPathPicture.indexOf(data[i]['picture_path'])
+					this.pictures[index].comments.push({'login':data[i].login,'text':data[i].comment});
+				}
+			}
+		});
 	});
 }
 
@@ -693,7 +686,10 @@ function XMLgetLikePage(tab,  callback)
 	xhr.open('GET', '/models/picture.model.php?action=picture.get.page.like&&tabPath='+tab, false);
 	xhr.onload= function() {
 		if (xhr.status === 200)
+		{
+			console.log('XMLgetLikePage : ', xhr.responseText)
 			callback(JSON.parse(xhr.responseText));
+		}
 		else
 			alert('Request failed.  Returned status of ' + xhr.status);
 	};
@@ -706,26 +702,28 @@ function XMLgetCommentPage(tab,  callback)
 	xhr.open('GET', '/models/picture.model.php?action=picture.get.page.comment&&tabPath='+tab, false);
 	xhr.onload= function() {
 		if (xhr.status === 200)
+		{
+			console.log("XMLgetCommentPage : ", xhr.responseText);
 			callback(JSON.parse(xhr.responseText));
+		}
 	};
 	xhr.send();
 } 
+
 function display_like (data)
 {
 	let liked 					= document.getElementById("liked");	
 	let no_like 				= document.getElementById("no_like")
 
-	if (data == 'like')
-		this.picturesLike = this.user.login + "&&";
-	else
-	{
-		this.pictureLike 		= JSON.parse(data);
-		this.picturesLike 		= this.pictureLike[0]['like_reference']
-	}
-	if (this.picturesLike.includes(this.user.login + '&&'))
+	if (this.user.picture.liked.indexOf(this.pictures[this.currentPictureIndex].path) != -1)
 	{
 		liked.style.display 	= "block";
 		no_like.style.display 	= "none";
+	}
+	else
+	{
+		liked.style.display 	= "none";
+		no_like.style.display 	= "block";
 	}
 
 }

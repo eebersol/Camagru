@@ -117,3 +117,38 @@ systeme de like -> bouttons avec deux etat le fait de liker ajoute la reference 
 Commentaire + Like -> OK
 
 il faut maintenant s'attaquer a la prise de photo -> CANVAS drag and drop picture //
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+UPDATE information Verifier quand deux comptes sont cree si on verifie bien que l'on prend pas l'adress mail ou le mot de passe de quelqu'un
+COMMENTAIRE quand on appuy sur enter apres avoir ecris son commentaire il faut reload la pga e et vide le textarea
+
+
+
+
+
+
+
+
+
+
