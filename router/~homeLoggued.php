@@ -1,35 +1,19 @@
 <html>
 	<head>
-		<?php session_start(); ?>
 		 <link rel="stylesheet" type="text/css" href="/css/homeLoggued.css">
 		 <link rel="stylesheet" type="text/css" href="/css/materialize_button.css">
 		 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
 		 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
-		 <script type="text/javascript" src="/controllers/home_controller.js"></script>
 		 <script type="text/javascript" src="/controllers/homeLoggued_controller.js"></script>
 	</head>
 
 	<body>
 			<div class="container">
 			<!-- HEADER style="background-color: red" -->
-				<header class="row">
-				    <div class="col-lg-3">
-				     		<img id="photoPicture" onclick="troll(1);" src="https://image.freepik.com/icones-gratuites/appareil-photo-avec-un-flash_318-60075.jpg">
-				     		<img id="trollPicture" onclick="troll(2);" src="https://img.20mn.fr/sIChN5W-TCG0VWSpGYJYLw/310x190_tous-trolls">
-				    </div>
-					<div class="col-lg-9" id="titleDiv">
-							<h1 id="title"  onclick="returnHome();">Camagru </h1>
-					</div>
-				</header>
+			<?php require("views/includes/header.inc.html"); ?>
 
 		      <!-- OPIONS -->
-			      <div class="row" id="optionDiv">
-			      	<section class="col-lg-12" >
-			            	<h1 id="optionText" onclick="modifyInformation()">Modifier mes informations</h1>
-			            	<h1 id="optionText" onclick="gallery(getUser());">Parcourir la galerie</h1>
-			            	<h1 id="optionText" onclick="disconnect();">Se déconnecter</h1>
-			          </section>
-			      </div>
+			  <?php require("views/includes/option.inc.html"); ?>
 
 
 
@@ -116,4 +100,5 @@
 			<img id="photoDisconnect" src="/ressources/images/disconnect.png" onclick="disconnect();">
 		</div>
 	</footer> 
+	<?php require("views/includes/script.inc.html"); ?>
 </html>

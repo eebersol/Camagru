@@ -13,8 +13,19 @@
 
 .filter:hover { background-color: #BDBDBD }
 
+#optionDivLogin {
+	margin: 13% 0 0 12.5%;
+	display: none;
+}
 
-
+#optionTextLogin {
+	width: 75%;
+	margin: 2% 0 0 12.5%;
+	text-align: center;
+	font-size: 4em;
+	font-family: "Verdana";
+	animation: colorblink 3s infinite;
+}
 
 #infoMessage {
 	display:none;
@@ -23,11 +34,31 @@
 	margin: 15% 0 0 5%;
 }
 
+#liked {
+	display: none;
+	margin: 2% 0 0 20%;
+	width: 30px;
+	border-radius: 500px;
+}
+#like:hover { background-color: #BDBDBD }
+
+#no_like {
+	display: none;
+	margin: 2% 0 0 20%;
+	width: 30px;
+	border-radius: 500px;
+}
+#no_like:hover { background-color: #BDBDBD }
+
+
 #zoomDescription
 {
 	display: none;
 }
-
+#userProfilDiv {
+	display: none;
+	animation: colorblink 3s infinite;
+}
 #zoomDiv {
 	display: none;
 	border: 1px solid black;
@@ -80,13 +111,14 @@
 }
 
 #enter {
-		text-align: center;
-		font-size: 6em;
-		font-family: "Verdana";
-		padding: 0 0 0 0;
+	text-align: center;
+	font-size: 6em;
+	font-family: "Verdana";
+	padding: 0 0 0 0;
 }
 
 #enterDiv {
+	display: none;
 	width: 75%;
 	margin: 15% 0 0 12.5%;
 	animation: colorblink 3s infinite;
@@ -195,6 +227,12 @@
 	overflow: auto;
 }
 
+
+/* --- FOOTER --- */
+#photoDisconnect {
+	width: 10%;
+	float: right;
+}
 
 
 

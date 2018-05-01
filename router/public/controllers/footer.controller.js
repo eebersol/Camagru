@@ -1,10 +1,4 @@
 
-function returnHome()
-{
-	location.reload()
-}
-
-
 function disconnect()
 {
 	var xhr = new XMLHttpRequest();
@@ -16,25 +10,3 @@ function disconnect()
 	};
 	xhr.send();
 }
-
-// ON LOAD //
-
-
-////////////////////////
-
-
- 						// AJAX //
-
-
-
-
-
-///////////////////////////////////////////
-
-
-
-
-
-
-
-

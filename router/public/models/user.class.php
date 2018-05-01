@@ -9,6 +9,7 @@ class User {
 	public $_ret;
 	public $_message;
 	public $_is_subscribe;
+	public $_is_login = false;
 
 	function __construct() 
 	{
@@ -96,6 +97,7 @@ class User {
        	 	$this->user_card = $ret;
        	 	$this->set_session($this->_email, $this->_login, $this->_passwd);
 			$this->_message = "Bienvenue " . $this->_login . " !";
+			$this->_is_login = true;
 		}
 		else
 			$this->_message = "✘ login / mot de passe incorrect";

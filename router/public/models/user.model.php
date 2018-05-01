@@ -52,6 +52,10 @@ if (isset($_GET['action']))
 		$_SESSION['login'] = null;
 		session_destroy();
 	}
+	else if ($action == 'user.is_login')
+	{
+		print_r(json_encode($user->_is_login));
+	}
 	else
 		print_r(json_encode("ERROR"));
 

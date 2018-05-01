@@ -6,10 +6,7 @@ $request_uri = explode('?', $_SERVER['REQUEST_URI'], 2);
 switch ($request_uri[0]) {
 	// Home page
 	case '/':
-		if (isset($_SESSION['login']))
-			require '../views/homeLoggued.php';
-		else
-			require '../views/home.php';
+			require '../home.php';
 		break;
 	// About page
 	case '/about':
