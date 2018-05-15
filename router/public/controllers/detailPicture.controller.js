@@ -101,6 +101,7 @@ function commentSeeLess(idComment, idAuteur, idCell, idMoreMore, idMoreLess)
 
 function commentSeeMore(idComment, idAuteur, idCell, idMoreMore, idMoreLess, text)
 {
+	console.log('ID : ', idMoreLess)
 	let commentDiv 	= document.getElementById("zoomComments")
 	let comment 	= document.getElementById(idComment);
 	let auteur 		= document.getElementById(idAuteur);
@@ -120,12 +121,12 @@ function commentSeeMore(idComment, idAuteur, idCell, idMoreMore, idMoreLess, tex
 
 	moreMore.style.display 	= "none";
 	moreLess.style.display 	= "inline-block";
-	moreLess.style.margin 	= "0 0 0 80%";
+	moreLess.style.margin 	= "0 0 0 10%";
 
 	comment.textContent  	= text;
 	comment.style.wordWrap 	= "break-word";
 	comment.style.display 	= "block";
-	comment.style.padding 	= "0 5% 5% 5%";
+	comment.style.padding 	= "0 5% 0 5%";
 
 	cell.style.maxWidth 	= "400px";
 	cell.style.height 		= 125 * text/45 + "px";
@@ -135,6 +136,61 @@ function commentSeeMore(idComment, idAuteur, idCell, idMoreMore, idMoreLess, tex
 
 }
 
+function create_node_comment(login, text, i)
+{
+	if (login && text)
+	{
+		let cell						= document.createElement("div");
+		let cellAuteur 					= document.createElement("p");
+		let cellComments 				= document.createElement("p");
+		let idComment 					= 'comment-'+i;
+		let idAuteur 					= 'auteur-'+i;
+		let idCell 						= 'cell-'+i;
+
+		cell.style.margin 				= "1% 0 0 0";
+		cell.style.opcatity 			= "0.1";
+		cell.style.borderRadius 		= "500px";
+		cell.style.backgroundColor 		= this.colorMaterialize[pickRandomColor()];
+
+		if (this.user && this.user.login == login)
+			cellAuteur.textContent 		= "you :\xa0";
+		else
+			cellAuteur.textContent 		= login + ":\xa0";
+		cellAuteur.style.display 		= "inline-block";
+		cellAuteur.style.padding 		= text.length > 30 ? "3% 0 0 5%" : "3% 0 0 25%"
+		cellAuteur.style.fontWeight 	= "bold";
+		cellAuteur.style.textAlign 		= "center";
+		cellAuteur.setAttribute("id", 'auteur-'+i);
+		
+		cellComments.textContent 		= text.length > 30 ? text.substr(0, 30) : text;
+		cellComments.style.display 		= "inline-block";
+		cellComments.setAttribute("id", 'comment-'+i);
+
+		
+		zoomComments.appendChild(cell);
+		cell.appendChild(cellAuteur);
+		cell.appendChild(cellComments);
+		cell.setAttribute("id", 'cell-'+i);
+
+		if (text.length > 30)
+		{
+			let more 				= document.createElement("a");
+			let moreLess 			= document.createElement("a");
+
+
+			more.textContent 		= " ... ";
+			more.setAttribute("id", "moreMore-"+idComment.split('-')[1]);
+			more.setAttribute("onclick", "commentSeeMore('"+idComment+"', '"+idAuteur+"', '"+idCell+"', '"+"moreMore-"+idComment.split('-')[1]+"', '"+"moreLess-"+idComment.split('-')[1]+"', '"+text+"');");
+			cell.appendChild(more)
+
+			moreLess.textContent	= " ... ";
+			moreLess.style.display 	= 'none';
+			moreLess.setAttribute("id", "moreLess-"+idComment.split('-')[1]);
+			moreLess.setAttribute("onclick", "commentSeeLess('"+idComment+"', '"+idAuteur+"', '"+idCell+"', '"+"moreMore-"+idComment.split('-')[1]+"', '"+"moreLess-"+idComment.split('-')[1]+"');");
+			cell.appendChild(moreLess)
+		}
+	}
+}
 
 function add_comment ()
 {
@@ -144,6 +200,9 @@ function add_comment ()
 	let xhr = new XMLHttpRequest();
 	xhr.open('GET', '/models/user.model.php?action=user.add.comment&&text='+text+'&&picture='+this.pictures[this.currentPictureIndex].path, false);
 	xhr.send();
+
+		let len 	= this.pictures[this.currentPictureIndex].comments.length
+		create_node_comment(login, text, this.pictures[this.currentPictureIndex].comments.length)
 }
 
 function checkKey(event)
@@ -181,8 +240,9 @@ function likePicture()
 
 	modifyLike("user.update.like", path, (data, error) => 
 	{
-			this.user.picture.liked.push(path);
-			changeLikeIcon("liked");
+		this.pictures[this.currentPictureIndex].likes++;
+		this.user.picture.liked.push(path);
+		changeLikeIcon("liked");
 	});
 }
 
@@ -193,6 +253,7 @@ function unlikePicture()
 
 	modifyLike("user.update.unlike", path, (data, error) => 
 	{
+		this.pictures[this.currentPictureIndex].likes--;
 		if (this.user.picture.liked.indexOf(path)+1 == this.user.picture.liked.length)
 			this.user.picture.liked.pop()
 		else
@@ -270,57 +331,58 @@ function displayPicture(index)
 		{
 			let comment = this.pictures[index].comments[i];
 
-			if (comment.login && comment.text)
-			{
-				let cell						= document.createElement("div");
-				let cellAuteur 					= document.createElement("p");
-				let cellComments 				= document.createElement("p");
-				let idComment 					= 'comment-'+i;
-				let idAuteur 					= 'auteur-'+i;
-				let idCell 						= 'cell-'+i;
+			create_node_comment(comment.login, comment.text, i)
+		// 	if (comment.login && comment.text)
+		// 	{
+		// 		let cell						= document.createElement("div");
+		// 		let cellAuteur 					= document.createElement("p");
+		// 		let cellComments 				= document.createElement("p");
+		// 		let idComment 					= 'comment-'+i;
+		// 		let idAuteur 					= 'auteur-'+i;
+		// 		let idCell 						= 'cell-'+i;
 
-				cell.style.margin 				= "1% 0 0 0";
-				cell.style.opcatity 			= "0.1";
-				cell.style.borderRadius 		= "500px";
-				cell.style.backgroundColor 		= this.colorMaterialize[pickRandomColor()];
+		// 		cell.style.margin 				= "1% 0 0 0";
+		// 		cell.style.opcatity 			= "0.1";
+		// 		cell.style.borderRadius 		= "500px";
+		// 		cell.style.backgroundColor 		= this.colorMaterialize[pickRandomColor()];
 
-				if (this.user && this.user.login == comment.login)
-					cellAuteur.textContent 		= "you :\xa0";
-				else
-					cellAuteur.textContent 		= comment.login + ":\xa0";
-				cellAuteur.style.display 		= "inline-block";
-				cellAuteur.style.padding 		= comment.text.length > 30 ? "3% 0 0 5%" : "3% 0 0 25%"
-				cellAuteur.style.fontWeight 	= "bold";
-				cellAuteur.style.textAlign 		= "center";
-				cellAuteur.setAttribute("id", 'auteur-'+i);
+		// 		if (this.user && this.user.login == comment.login)
+		// 			cellAuteur.textContent 		= "you :\xa0";
+		// 		else
+		// 			cellAuteur.textContent 		= comment.login + ":\xa0";
+		// 		cellAuteur.style.display 		= "inline-block";
+		// 		cellAuteur.style.padding 		= comment.text.length > 30 ? "3% 0 0 5%" : "3% 0 0 25%"
+		// 		cellAuteur.style.fontWeight 	= "bold";
+		// 		cellAuteur.style.textAlign 		= "center";
+		// 		cellAuteur.setAttribute("id", 'auteur-'+i);
 				
-				cellComments.textContent 		= comment.text.length > 30 ? comment.text.substr(0, 30) : comment.text;
-				cellComments.style.display 		= "inline-block";
-				cellComments.setAttribute("id", 'comment-'+i);
+		// 		cellComments.textContent 		= comment.text.length > 30 ? comment.text.substr(0, 30) : comment.text;
+		// 		cellComments.style.display 		= "inline-block";
+		// 		cellComments.setAttribute("id", 'comment-'+i);
 
 				
-				zoomComments.appendChild(cell);
-				cell.appendChild(cellAuteur);
-				cell.appendChild(cellComments);
-				cell.setAttribute("id", 'cell-'+i);
+		// 		zoomComments.appendChild(cell);
+		// 		cell.appendChild(cellAuteur);
+		// 		cell.appendChild(cellComments);
+		// 		cell.setAttribute("id", 'cell-'+i);
 
-				if (comment.text.length > 30)
-				{
-					let more 				= document.createElement("a");
-					let moreLess 			= document.createElement("a");
+		// 		if (comment.text.length > 30)
+		// 		{
+		// 			let more 				= document.createElement("a");
+		// 			let moreLess 			= document.createElement("a");
 
 
-					more.textContent 		= " ... ";
-					more.setAttribute("id", "moreMore-"+idComment.split('-')[1]);
-					more.setAttribute("onclick", "commentSeeMore('"+idComment+"', '"+idAuteur+"', '"+idCell+"', '"+"moreMore-"+idComment.split('-')[1]+"', '"+"moreLess-"+idComment.split('-')[1]+"', '"+comment.text+"');");
-					cell.appendChild(more)
+		// 			more.textContent 		= " ... ";
+		// 			more.setAttribute("id", "moreMore-"+idComment.split('-')[1]);
+		// 			more.setAttribute("onclick", "commentSeeMore('"+idComment+"', '"+idAuteur+"', '"+idCell+"', '"+"moreMore-"+idComment.split('-')[1]+"', '"+"moreLess-"+idComment.split('-')[1]+"', '"+comment.text+"');");
+		// 			cell.appendChild(more)
 
-					moreLess.style.display 	= 'none';
-					moreLess.setAttribute("id", "moreLess-"+idComment.split('-')[1]);
-					moreLess.setAttribute("onclick", "commentSeeLess('"+idComment+"', '"+idAuteur+"', '"+idCell+"', '"+"moreMore-"+idComment.split('-')[1]+"', '"+"moreLess-"+idComment.split('-')[1]+"');");
-					cell.appendChild(moreLess)
-				}
-			}
+		// 			moreLess.style.display 	= 'none';
+		// 			moreLess.setAttribute("id", "moreLess-"+idComment.split('-')[1]);
+		// 			moreLess.setAttribute("onclick", "commentSeeLess('"+idComment+"', '"+idAuteur+"', '"+idCell+"', '"+"moreMore-"+idComment.split('-')[1]+"', '"+"moreLess-"+idComment.split('-')[1]+"');");
+		// 			cell.appendChild(moreLess)
+		// 		}
+		// 	}
 		}
 	}
 	if (this.is_loggued === true)

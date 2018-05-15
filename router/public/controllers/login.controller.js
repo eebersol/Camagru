@@ -29,3 +29,13 @@ function loadXMLLogin(email, login, passwd, url)
 	};
 	xhr.send();
 }
+
+
+function reinitPassword()
+{
+	let reinitPassword 				= document.getElementById("userReinitPassword");
+	let loginDiv 					= document.getElementById("loginDiv");
+
+	reinitPassword.style.display 	= "block";
+	loginDiv.style.display 			= "none";
+}

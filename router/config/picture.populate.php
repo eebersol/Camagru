@@ -19,7 +19,8 @@ function create_picture($category, $picture_path, $desc)
 			date_creation,
 			category,
 			picture_path,
-			description
+			description,
+			nbr_like
 		) 
 		VALUE 
 		(
@@ -27,7 +28,8 @@ function create_picture($category, $picture_path, $desc)
 			"'.$date.'",
 			"'.$category.'",
 			"'.$picture_path.'",
-			"'.$desc.'"
+			"'.$desc.'",
+			0
 		)'
 	;
 	return ($SQL_QUERY);
@@ -38,20 +40,20 @@ function create_picture($category, $picture_path, $desc)
 try {
 
 	$array = [
-		"0,'',nature,../ressources/images/nature_1.jpeg,COUCOU JE TEST",
-		"0,'',nature,../ressources/images/nature_2.jpeg,''",
-		"0,'',nature,../ressources/images/nature_3.jpeg,''",
-		"0,'',nature,../ressources/images/nature_4.jpeg,''",
-		"0,'',nature,../ressources/images/nature_5.jpeg,''",
-		"0,'',nature,../ressources/images/nature_6.jpeg,''",
-		"0,'',nature,../ressources/images/nature_7.jpeg,''",
-		"0,'',nature,../ressources/images/nature_8.jpeg,''",
-		"0,'',nature,../ressources/images/nature_9.jpeg,''",
-		"0,'',nature,../ressources/images/nature_10.jpeg,''",
-		"0,'',nature,../ressources/images/nature_11.jpeg,''",
-		"0,'',nature,../ressources/images/nature_12.jpeg,''",
-		"0,'',nature,../ressources/images/nature_13.jpeg,''",
-		"0,'',nature,../ressources/images/nature_14.jpeg,''",
+		"0,'',nature,../ressources/images/nature_1.jpeg,COUCOU JE TEST,0",
+		"0,'',nature,../ressources/images/nature_2.jpeg,'',0",
+		"0,'',nature,../ressources/images/nature_3.jpeg,'',0",
+		"0,'',nature,../ressources/images/nature_4.jpeg,'',0",
+		"0,'',nature,../ressources/images/nature_5.jpeg,'',0",
+		"0,'',nature,../ressources/images/nature_6.jpeg,'',0",
+		"0,'',nature,../ressources/images/nature_7.jpeg,'',0",
+		"0,'',nature,../ressources/images/nature_8.jpeg,'',0",
+		"0,'',nature,../ressources/images/nature_9.jpeg,'',0",
+		"0,'',nature,../ressources/images/nature_10.jpeg,'',0",
+		"0,'',nature,../ressources/images/nature_11.jpeg,'',0",
+		"0,'',nature,../ressources/images/nature_12.jpeg,'',0",
+		"0,'',nature,../ressources/images/nature_13.jpeg,'',0",
+		"0,'',nature,../ressources/images/nature_14.jpeg,'',0",
 		];
 
 	echo "Connection établie.\n";

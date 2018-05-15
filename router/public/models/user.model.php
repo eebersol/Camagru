@@ -6,7 +6,7 @@ if (isset($_GET['action']))
 {
 	$action = $_GET['action'];
 
-	if ($action != 'user.create' && $action != 'user.login')
+	if ($action != 'user.create' && $action != 'user.login' && $action != 'user.update.reinit')
 	{
 		$user = unserialize($_SESSION['user']);
 	}
@@ -29,7 +29,9 @@ if (isset($_GET['action']))
 		$user->get_return_value();
 	}
 	else if ($action == 'user.get.information')
+	{
 		print_r(json_encode($user->user_card));
+	}
 	else if ($action == 'user.update.unlike' && isset($_GET['login']) && isset($_GET['path']))
 	{
 		$user->dislike($_GET['path']);
@@ -38,6 +40,12 @@ if (isset($_GET['action']))
 	else if ($action == 'user.update.like' && isset($_GET['login']) && isset($_GET['path']))
 	{
 		$user->like($_GET['path']);
+		$user->get_return_value();
+	}
+	else if ($action == 'user.update.reinit' && isset($_GET['email']))
+	{
+		$user = new User();
+		$user->reinit_password($_GET['email']);
 		$user->get_return_value();
 	}
 	else if ($action == 'user.get.picture.like')
@@ -59,7 +67,7 @@ if (isset($_GET['action']))
 	else
 		print_r(json_encode("ERROR"));
 
-	if ($action != 'user.create')
+	if ($action != 'user.create' && $action != 'user.update.reinit')
 		$_SESSION['user'] = serialize($user);
 }
 

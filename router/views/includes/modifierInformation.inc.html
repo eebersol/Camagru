@@ -1,33 +1,36 @@
 <!-- MES INFORMATIONS -->
 <div class="row" id="userProfilDiv">
 	<section  class="col-lg-12">
-	<aside> <h1 id="mediumTitle">Mes informations : </h1> </aside>
-	<aside >
-		<div class="group">
-			<input id="userProfilLoginInput"  name="login" type="text" required>
-			<span class="highlight"></span>
-			<span class="bar"></span>
-			<label id="userProfilLogin">Login</label>
-		</div>
-	</aside>
-	<aside>
-		<div class="group">
-			<input id="userProfilEmailInput" name="email" type="text" required>
-			<span class="highlight"></span>
-			<span class="bar"></span>
-			<label id="userProfilEmail" style="display: inline-block;">Email</label>
-		</div>
-	</aside>
-	<aside >
-		<div class="group">
-			<input id="userProfilPasswdInput" name="passwd" type="text" required>
-			<span class="highlight"></span>
-			<span class="bar"></span>
-			<label id="userProfilPasswd">Mot de passe</label>
-		</div>
-	</aside>
-	<aside >
-		<input id="submitButton" type="submit" value="modifier mes informations" placeholder="password" onclick="modifyInformationProfil();">
-	</aside>
-</section>
+		<aside> 
+			<div class="infoMessage"> <p class="infoMessageText"></p></div>
+			<h1 id="mediumTitle">Mes informations : </h1>
+		</aside>
+		<aside >
+			<div class="group">
+				<input id="userProfilLoginInput"  name="login" type="text" required>
+				<span class="highlight"></span>
+				<span class="bar"></span>
+				<label id="userProfilLogin">Login</label>
+			</div>
+		</aside>
+		<aside>
+			<div class="group">
+				<input id="userProfilEmailInput" name="email" type="text" required>
+				<span class="highlight"></span>
+				<span class="bar"></span>
+				<label id="userProfilEmail" style="display: inline-block;">Email</label>
+			</div>
+		</aside>
+		<aside >
+			<div class="group">
+				<input id="userProfilPasswdInput" name="passwd" type="password" required>
+				<span class="highlight"></span>
+				<span class="bar"></span>
+				<label id="userProfilPasswd">Mot de passe</label>
+			</div>
+		</aside>
+		<aside >
+			<input id="submitButton" type="submit" value="modifier mes informations" placeholder="password" onclick="modifyInformationProfil();">
+		</aside>
+	</section>
 </div>

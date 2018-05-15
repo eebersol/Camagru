@@ -15,11 +15,16 @@ class User {
 	{
 	}
 
-	public function set_session($email, $login, $passwd)
+	public function set_session($email, $login, $passwd, $flag)
 	{
 		$_SESSION['login'] 	= $this->_login;
 		$_SESSION['email'] 	= $this->_email;
 		$_SESSION['passwd'] = $this->_passwd;
+
+		if ($flag == true)
+		{
+			$this->user_card = execute_sql_query_with_value("SELECT * FROM users WHERE login = '" .$login. "' AND email= '" .$email. "'")[0];
+		}
 	}
 
 	public function get_return_value() {
@@ -28,7 +33,7 @@ class User {
 
 	public function create_user($email, $login, $passwd)
 	{
-		$this->is_subscribe($email, $passwd);
+		$this->is_subscribe($email, $login);
 		if (count($this->_is_subscribe) == 0)
 		{
 			$this->_email 	= $email;
@@ -46,17 +51,17 @@ class User {
 			$this->_message = "✘ Cette adresse email/login est déja utilisé.";
 	}
 
+	private function generate_token($length) {
+		$pull = [];
+		while (count($pull) < $length)
+			$pull = array_merge($pull, range(0, 9), range('a', 'z'), range('A', 'Z'));
+		shuffle($pull);
+		return (implode("", $pull));
+	}
+
 	public function send_subscribe_email()
 	{
-		function generate_token($length) {
-			$pull = [];
-			while (count($pull) < $length)
-				$pull = array_merge($pull, range(0, 9), range('a', 'z'), range('A', 'Z'));
-			shuffle($pull);
-			return (implode("", $pull));
-		}
-
-		$this->_token 	= generate_token(90);
+		$this->_token 	= $this->generate_token(90);
 		$subject 		= "[-CAMAGRU-] - Email verification";
 		$headers  		= 'MIME-Version: 1.0' . "\r\n";
 		$headers 		.= 'Content-type: text/html; charset=UTF-8' . "\r\n";
@@ -65,7 +70,7 @@ class User {
 		$html_page 		= str_replace("HERE", $this->_token, $html_page);
 		$html_page 		= str_replace("LOGIN", $this->_login, $html_page);
 		$message 		= $html_page;
-		mail($this->_email, $subject, $message, $headers); 
+		mail($this->_email, $subject, $message, $headers);
 	}
 
 	public function push_user()
@@ -77,8 +82,15 @@ class User {
 		);	
 	}
 
-	public function is_subscribe($email) {
-		$this->_is_subscribe = execute_sql_query_with_value("SELECT * FROM users WHERE email = '" .$email."'");
+	public function is_subscribe($email, $login)
+	{
+		if ($email)
+		{
+			$this->_is_subscribe = execute_sql_query_with_value("SELECT * FROM users WHERE email = '" .$email."'");
+			if (count($this->_is_subscribe) == 0 && $login)
+				$this->_is_subscribe = execute_sql_query_with_value("SELECT * FROM users WHERE login = '" .$login."'");
+
+		}
 	}
 
 	private function check_login ($login)
@@ -91,13 +103,13 @@ class User {
 		$ret = execute_sql_query_with_value("SELECT * FROM users WHERE subscribe_email = 0 AND login = '" .$login. "' AND passwd= '" .$passwd. "'")[0];
 		if ($ret['email'])
 		{
-			$this->_email 	= $ret['email'];
-        	$this->_login 	= $login;
-       	 	$this->_passwd 	= $passwd;
-       	 	$this->user_card = $ret;
-       	 	$this->set_session($this->_email, $this->_login, $this->_passwd);
-			$this->_message = "Bienvenue " . $this->_login . " !";
-			$this->_is_login = true;
+			$this->_email 		= $ret['email'];
+        	$this->_login 		= $login;
+       	 	$this->_passwd 		= $passwd;
+       	 	$this->user_card 	= $ret;
+			$this->_message 	= "Bienvenue " . $this->_login . " !";
+			$this->_is_login 	= true;
+			$this->set_session($this->_email, $this->_login, $this->_passwd, false);
 		}
 		else
 			$this->_message = "✘ login / mot de passe incorrect";
@@ -109,25 +121,25 @@ class User {
 	{
 		$oldInformation = explode(',', $oldInformation);
 		$newInformation = explode(',', $newInformation);
-
-		$new_email 	= $newInformation[0];
-		$new_login 	= $newInformation[1];
-		$new_passwd = $newInformation[2];
-		$old_email 	= $oldInformation[0];
-		$old_login 	= $oldInformation[1];
-		$old_passwd = $oldInformation[2];
+		$new_email 		= $newInformation[0];
+		$new_login 		= $newInformation[1];
+		$new_passwd	 	= $newInformation[2];
+		$old_email 		= $oldInformation[0];
+		$old_login 		= $oldInformation[1];
+		$old_passwd	 	= $oldInformation[2];
 
 		if ($new_email == '')
 			$this->_email = $old_email;
 		else if ($old_email != $new_email)
 		{
-			$this->is_subscribe($new_email);
+			$this->is_subscribe($new_email, null);
 			if (count($this->_is_subscribe) == 0)
 				$this->_email = $new_email;
 			else
 			{
 				$this->_email = $old_email;
 				$this->_message = "Email déjà utilisé.";
+				return ;
 			}
 		}
 		else
@@ -149,10 +161,11 @@ class User {
 			{
 				$this->_login = $old_login;
 				$this->_message = "Login déjà utilisé.";
+				return ;
 			}
 		}
 		else
-			$this->_email = $old_login;
+			$this->_login = $old_login;
 
 
 		if ($new_passwd == '')
@@ -167,7 +180,7 @@ class User {
 
 		if ($ret == 1)
 		{
-			$this->set_session($this->_email, $this->_login, $this->_passwd);
+			$this->set_session($this->_email, $this->_login, $this->_passwd, true);
 			$this->_message = "Informations modifiées.";
 		}
 		else
@@ -179,19 +192,26 @@ class User {
 		$ret = exec_sql_query('DELETE FROM likes WHERE login = "' .$this->_login. '" AND picture_path = "' .$picture_path. '"');
 
 		if ($ret == 1)
+		{
+			exec_sql_query('UPDATE pictures SET nbr_like = nbr_like - 1 WHERE picture_path = "'.$picture_path.'";');
 			$this->_message = "Vous n'aimez plus cette image.";
+		}
 		else
 			$this->_message = "Une erreur est survenue.";
 	}
 
 	public function like($picture_path)
 	{
-		$ret = exec_sql_query('SELECT * FROM likes WHERE login = "' .$_GET['login']. '" AND picture_path = "' .$_GET['path']. '" ');
+		$ret = exec_sql_query('SELECT * FROM likes WHERE login = "' .$this->_login. '" AND picture_path = "' .$picture_path. '" ');
 		if (!$ret)
 		{
 			$ret = exec_sql_query('INSERT INTO likes (id, login, picture_path) VALUES (0, "' .$this->_login. '", "' .$picture_path. '");');
 			if ($ret)
+			{
+				exec_sql_query('UPDATE pictures SET nbr_like = nbr_like + 1 WHERE picture_path = "'.$picture_path.'";');
+
 				$this->_message = "Vous aimez cette image.";
+			}
 			else
 				$this->_message = "Une erreur est survenue.";
 		}
@@ -203,6 +223,27 @@ class User {
 
 	public function add_comment($text, $picture_path) {
 		$this->_picture_comment = exec_sql_query('INSERT INTO comments (id, login, comment, picture_path) VALUE (0, "'.$this->_login.'", "'.$text.'", "'.$picture_path.'")');
+	}
+	public function reinit_password($email)
+	{
+		$this->is_subscribe($email, null);
+		if (count($this->_is_subscribe) != 0)
+		{
+			$this->_token_password 	= $this->generate_token(1);
+			exec_sql_query('UPDATE users SET passwd="' .hash('whirlpool', $this->_token_password). '" WHERE email="'. $email . '"');
+			$subject 		= "[-CAMAGRU-] - Réinitialisation mot de passe";
+			$headers  		= 'MIME-Version: 1.0' . "\r\n";
+			$headers 		.= 'Content-type: text/html; charset=UTF-8' . "\r\n";
+			$headers 		.= 'From: <eebersol@student.42.fr>' . "\r\n";
+			$html_page 		= file_get_contents("../../ressources/mails/mail.reinit_password.html");
+			$html_page 		= str_replace("LOGIN", $email, $html_page);
+			$html_page 		= str_replace("TOKEN", $this->_token_password, $html_page);
+			$message 		= $html_page;
+			$this->_message = "Email envoyé.";
+			mail($email, $subject, $message, $headers); 
+		}
+		else
+			$this->_message = "Addresse email incorrect.";
 	}
 
 }

@@ -35,7 +35,7 @@ try {
 
 	$array = [
 		"0,edouard,../ressources/images/nature_3.jpeg",
-		"0,edouard,../ressources/images/nature_1.jpeg",
+		"0,edouard,../ressources/images/nature_3.jpeg",
 		"0,edouard,../ressources/images/nature_2.jpeg",
 		];
 

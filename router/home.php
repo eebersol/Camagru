@@ -17,6 +17,8 @@
 			<?php require("views/includes/modifierInformation.inc.html"); ?>
 		    <!-- LOGIN -->
 		    <?php require("views/includes/login.inc.html"); ?>
+		    <!-- REINIT PASSWORD -->
+		    <?php require("views/includes/reinitPassword.inc.html"); ?>
 			<!-- GALLERIE PHOTO -->
 			<?php require("views/includes/gallery.inc.html"); ?>
 			<!-- VUE DETAILLEE -->

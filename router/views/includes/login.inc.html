@@ -13,7 +13,7 @@
 		</aside>
 		<aside >
 			<div class="group">
-				<input id="passwdLogin" name="passwd" type="text" required>
+				<input id="passwdLogin" name="passwd" type="password" required>
 				<span class="highlight"></span>
 				<span onclick="check_input('passwd')" class="bar"></span>
 				<label>Mot de passe</label>
@@ -21,6 +21,9 @@
 		</aside>
 		<aside >
 			<input id="submitButton" type="submit" placeholder="password" onclick="login_user()">
+		</aside>
+		<aside id="reinitPassword">
+			<a href="#" onclick="reinitPassword();">Mot de passe oublié ? </a>
 		</aside>
 	</section>
 </div>

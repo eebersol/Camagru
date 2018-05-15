@@ -162,7 +162,7 @@ function displayMiniature(page)
 			let picture = {
 				'id' 			: data[j]['id'],
 				'date' 			: data[j]['date_creation'],
-				'likes' 		: data[j]['like_reference'],
+				'likes' 		: data[j]['nbr_like'],
 				'comments'		: [],
 				'category'		: data[j]['category'],
 				'path'			: data[j]['picture_path'],
@@ -178,13 +178,30 @@ function displayMiniature(page)
 	    	if (i >= this.pictures.length)
 	    		break;
 	    	let iDiv 		= document.createElement("IMG");
+	    	let id 			= 'picture-'+i
+	    	iDiv.setAttribute('id', id)
 	    	iDiv.setAttribute("src", this.pictures[i].path);
 	    	iDiv.setAttribute("class", "galleryPicture");
 			iDiv.setAttribute("width", "300");
 			iDiv.setAttribute("onclick", "displayPicture("+i+");");
+			iDiv.setAttribute("onmouseout", "hoverHome('"+id+"', false)")
+			iDiv.setAttribute("onmouseover", "hoverHome('"+id+"', true)")
 			iDiv.setAttribute("height", "200");
 			galleryDivFPicture.appendChild(iDiv);
-	    }
-	    makePagination(page);
+		}
+		    makePagination(page);
 	});
+}
+
+
+function hoverHome(id, flag)
+{
+	let div 		= document.getElementById(id);
+	if (flag == false)
+		div.style.opacity = '1';
+	else
+		div.style.opacity = '0.5';
+
+	console.log(id.split('-')[1])
+	console.log(this.pictures[id.split('-')[1]])
 }

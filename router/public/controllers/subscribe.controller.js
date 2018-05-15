@@ -60,6 +60,8 @@ function resultSubscribeLogin (message, type, err)
 	messageNode.style.fontSize 		= "2em"
 	messageNode.style.textAlign		= "center";
 	messageNode.style.padding 		= "3% 0 0 0";
+	if (type == 'login')
+		messageNode.style.padding 		= "1.5% 0 0 0"
 	messageNode.style.fontWeight 	= "bold";
 	infoMessage.style.display 		= "block";
 	infoMessage.appendChild(messageNode);

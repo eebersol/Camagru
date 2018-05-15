@@ -44,7 +44,8 @@ try
 		date_creation 		DATE	NOT NULL,
 		category			TEXT 	NOT NULL,
 		picture_path 		TEXT 	NOT NULL,
-		description 		TEXT 	NOT NULL
+		description 		TEXT 	NOT NULL,
+		nbr_like 			INT 	NOT NULL
 	)";
 	$ret_value = $conn->exec($SQL_QUERY);
 	echo "DB_NAME : pictures -> created : " . $ret_value . "\n";

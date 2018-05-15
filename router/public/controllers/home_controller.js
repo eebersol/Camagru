@@ -43,15 +43,18 @@ function getUser()
 			}
 		}
 
-		getUserPictureLike((data, err) =>
+		if (this.user)
 		{
-			if (data)
+			getUserPictureLike((data, err) =>
 			{
-				for (let i = 0; i < data.length; i++)
-					this.user.picture.liked.push(data[i].picture_path)
-			}
-			return (this.user);
-		});
+				if (data)
+				{
+					for (let i = 0; i < data.length; i++)
+						this.user.picture.liked.push(data[i].picture_path)
+				}
+				return (this.user);
+			});
+		}
 	});
 }
 

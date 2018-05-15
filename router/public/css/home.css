@@ -1,4 +1,28 @@
 
+#userReinitPassword
+{
+	display: none;
+	animation: colorblink 3s infinite;
+	margin: 10% 0 0 5%;
+}
+#reinitPassword {
+	width: 50%;
+	margin: 0 0 0 25%;
+	text-align: center;
+}
+.infoMessageText {
+	color:black;
+	font-size: 1.5em;
+	text-align: center;
+}
+
+.infoMessage {
+	background-color: #ef5350;
+	display:none;
+	border-radius: 500px;
+	width: 50%;
+	margin: 0 0 0 25%;
+}
 
 .filter {
 	font-size: 2em;
@@ -10,8 +34,6 @@
 	width: 90%;
 	margin: 0 0 0 15%
 }
-
-.filter:hover { background-color: #BDBDBD }
 
 #optionDivLogin {
 	margin: 13% 0 0 12.5%;
@@ -31,7 +53,7 @@
 	display:none;
 	border-radius: 500px;
 	height: 10%;
-	margin: 15% 0 0 5%;
+	margin: 5% 0 0 5%;
 }
 
 #liked {
@@ -64,10 +86,6 @@
 	border: 1px solid black;
 }
 
-#fakeBody {
-	background-color: black;
-}
-
 #galleryDiv {
 	margin: 0 0 0 15%;
 }
@@ -76,6 +94,7 @@
 .galleryPicture {
 	margin: 1% 0 0 1%;
 }
+
 #galleryPagination {
     display: inline-block;
     margin: 3% 0 0 39%;
@@ -92,10 +111,6 @@
 	text-align: center;
 	width: 75%;
 	margin: 1% 0 0 12.5%;
-}
-
-#loginDiv {
-	display: none;
 }
 
 #trollPicture {
