@@ -40,12 +40,13 @@ catch (PDOException $e) {
 try
 {
 	$SQL_QUERY = "CREATE TABLE pictures (
-		id 					INT 	NOT NULL AUTO_INCREMENT PRIMARY KEY,
-		date_creation 		DATE	NOT NULL,
-		category			TEXT 	NOT NULL,
-		picture_path 		TEXT 	NOT NULL,
-		description 		TEXT 	NOT NULL,
-		nbr_like 			INT 	NOT NULL
+		id 					INT 			NOT NULL AUTO_INCREMENT PRIMARY KEY,
+		date_creation 		DATE			NOT NULL,
+		category			TEXT 			NOT NULL,
+		picture_path 		TEXT 			NOT NULL,
+		description 		TEXT 			NOT NULL,
+		nbr_like 			INT 			NOT NULL,
+		auteur 				VARCHAR(20) 	NOT NULL
 	)";
 	$ret_value = $conn->exec($SQL_QUERY);
 	echo "DB_NAME : pictures -> created : " . $ret_value . "\n";
@@ -75,7 +76,8 @@ try
 		id 					INT 			NOT NULL AUTO_INCREMENT PRIMARY KEY,
 		login 				VARCHAR(120)	NOT NULL,
 		comment 			TEXT 			NOT NULL,
-		picture_path 		TEXT			NOT NULL
+		picture_path 		TEXT			NOT NULL,
+		posted_date 		DATE 			NOT NULL
 	)";
 	$ret_value = $conn->exec($SQL_QUERY);
 	echo "DB_NAME : pictures -> created : " . $ret_value . "\n";

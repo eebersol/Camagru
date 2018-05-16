@@ -45,10 +45,13 @@ function getLikedPicture ()
 	{
 		if (data)
 		{
+			console.log(data)
 			for (let i = 0; i < data.length; i++)
 			{
 				let index = tabPathPicture.indexOf(data[i]['picture_path'])
-				tabObj[index].count++;
+				console.log('Index : ', index, data[i]['picture_path'])
+				if (index != -1)
+					tabObj[index].count++;
 			}
 		}
 		XMLgetCommentPage(tabPathPicture, (data, err) => 
@@ -58,7 +61,7 @@ function getLikedPicture ()
 				for (let i = 0; i < data.length; i++)
 				{
 					let index = tabPathPicture.indexOf(data[i]['picture_path'])
-					this.pictures[index].comments.push({'login':data[i].login,'text':data[i].comment});
+					this.pictures[index].comments.push({'login':data[i].login,'text':data[i].comment, 'date':data[i]['posted_date']});
 				}
 			}
 		});
@@ -166,7 +169,8 @@ function displayMiniature(page)
 				'comments'		: [],
 				'category'		: data[j]['category'],
 				'path'			: data[j]['picture_path'],
-				'description'	: data[j]['description']
+				'description'	: data[j]['description'],
+				'auteur'		: data[j]['auteur']
 			}
 			this.pictures.push(picture);
 

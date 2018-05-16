@@ -136,13 +136,15 @@ function commentSeeMore(idComment, idAuteur, idCell, idMoreMore, idMoreLess, tex
 
 }
 
-function create_node_comment(login, text, i)
+function create_node_comment(login, text, i, date)
 {
 	if (login && text)
 	{
 		let cell						= document.createElement("div");
 		let cellAuteur 					= document.createElement("p");
 		let cellComments 				= document.createElement("p");
+		let cellDate 					= document.createElement("p");
+		let idDate						= 'date-'+i;
 		let idComment 					= 'comment-'+i;
 		let idAuteur 					= 'auteur-'+i;
 		let idCell 						= 'cell-'+i;
@@ -160,17 +162,24 @@ function create_node_comment(login, text, i)
 		cellAuteur.style.padding 		= text.length > 30 ? "3% 0 0 5%" : "3% 0 0 25%"
 		cellAuteur.style.fontWeight 	= "bold";
 		cellAuteur.style.textAlign 		= "center";
-		cellAuteur.setAttribute("id", 'auteur-'+i);
+		cellAuteur.setAttribute("id", idAuteur);
 		
 		cellComments.textContent 		= text.length > 30 ? text.substr(0, 30) : text;
 		cellComments.style.display 		= "inline-block";
-		cellComments.setAttribute("id", 'comment-'+i);
+		cellComments.style.minWidth 	= "160px";
+		cellComments.setAttribute("id", idComment );
+
+		cellDate.textContent 			= "Posté le : "  + (!date ? this.pictures[this.currentPictureIndex].comments[i].date : "Maintenant ..");
+		cellDate.style.fontSize 		= "0.7em";
+		cellDate.style.display 			= "inline-block";
+		cellDate.setAttribute("id", idDate);
 
 		
 		zoomComments.appendChild(cell);
 		cell.appendChild(cellAuteur);
 		cell.appendChild(cellComments);
-		cell.setAttribute("id", 'cell-'+i);
+		cell.appendChild(cellDate);
+		cell.setAttribute("id", idCell);
 
 		if (text.length > 30)
 		{
@@ -196,13 +205,14 @@ function add_comment ()
 {
 	let text 	= document.getElementById("textComment").value;
 	let login 	= this.user.login;
+	let date 	= new Date("Y-m-d");
 
 	let xhr = new XMLHttpRequest();
 	xhr.open('GET', '/models/user.model.php?action=user.add.comment&&text='+text+'&&picture='+this.pictures[this.currentPictureIndex].path, false);
 	xhr.send();
 
 		let len 	= this.pictures[this.currentPictureIndex].comments.length
-		create_node_comment(login, text, this.pictures[this.currentPictureIndex].comments.length)
+		create_node_comment(login, text, this.pictures[this.currentPictureIndex].comments.length, date)
 }
 
 function checkKey(event)
@@ -314,76 +324,33 @@ function displayPicture(index)
 	{
 		let zoomDescription					= document.getElementById("zoomDescription");
 		let zoomDescriptionText 			= document.getElementById("zoomDescriptionText");
+		let zoomDescriptionDate 			= document.getElementById("zoomDescriptionDate");
+		let zoomDescriptionAuteur 			= document.getElementById("zoomDescriptionAuteur");
 
 		zoomDescription.style.display 		= "block";
+
 		zoomDescriptionText.style.display 	= "inline-block";
 		zoomDescriptionText.textContent 	= this.pictures[index]['description'];
-	}
 
+
+		zoomDescriptionAuteur.style.display 	= "inline-block";
+		zoomDescriptionAuteur.textContent 	= this.pictures[index]['auteur'];
+
+		zoomDescriptionDate.style.display 	= "inline-block";
+		zoomDescriptionDate.style.fontSize  = "0.7em";
+		zoomDescriptionDate.textContent 	= this.pictures[index].date ? this.pictures[index].date : new Date("Y-m-d");
+	}
+	if (this.user.login == this.pictures[index]['auteur'])
+		document.getElementById("deleteImage").style.display = "block";
 	if (this.pictures[index].comments.length > 0)
 	{
 		let zoomComments	= document.getElementById("zoomComments");
 		let zoomAddComments = document.getElementById("zoomAddComments");
 
-		zoomComments.style.margin = "9% 0 0 0";
+		zoomComments.style.margin = "24% 0 0 0";
 
 		for (let i = 0; i < this.pictures[index].comments.length; i++)
-		{
-			let comment = this.pictures[index].comments[i];
-
-			create_node_comment(comment.login, comment.text, i)
-		// 	if (comment.login && comment.text)
-		// 	{
-		// 		let cell						= document.createElement("div");
-		// 		let cellAuteur 					= document.createElement("p");
-		// 		let cellComments 				= document.createElement("p");
-		// 		let idComment 					= 'comment-'+i;
-		// 		let idAuteur 					= 'auteur-'+i;
-		// 		let idCell 						= 'cell-'+i;
-
-		// 		cell.style.margin 				= "1% 0 0 0";
-		// 		cell.style.opcatity 			= "0.1";
-		// 		cell.style.borderRadius 		= "500px";
-		// 		cell.style.backgroundColor 		= this.colorMaterialize[pickRandomColor()];
-
-		// 		if (this.user && this.user.login == comment.login)
-		// 			cellAuteur.textContent 		= "you :\xa0";
-		// 		else
-		// 			cellAuteur.textContent 		= comment.login + ":\xa0";
-		// 		cellAuteur.style.display 		= "inline-block";
-		// 		cellAuteur.style.padding 		= comment.text.length > 30 ? "3% 0 0 5%" : "3% 0 0 25%"
-		// 		cellAuteur.style.fontWeight 	= "bold";
-		// 		cellAuteur.style.textAlign 		= "center";
-		// 		cellAuteur.setAttribute("id", 'auteur-'+i);
-				
-		// 		cellComments.textContent 		= comment.text.length > 30 ? comment.text.substr(0, 30) : comment.text;
-		// 		cellComments.style.display 		= "inline-block";
-		// 		cellComments.setAttribute("id", 'comment-'+i);
-
-				
-		// 		zoomComments.appendChild(cell);
-		// 		cell.appendChild(cellAuteur);
-		// 		cell.appendChild(cellComments);
-		// 		cell.setAttribute("id", 'cell-'+i);
-
-		// 		if (comment.text.length > 30)
-		// 		{
-		// 			let more 				= document.createElement("a");
-		// 			let moreLess 			= document.createElement("a");
-
-
-		// 			more.textContent 		= " ... ";
-		// 			more.setAttribute("id", "moreMore-"+idComment.split('-')[1]);
-		// 			more.setAttribute("onclick", "commentSeeMore('"+idComment+"', '"+idAuteur+"', '"+idCell+"', '"+"moreMore-"+idComment.split('-')[1]+"', '"+"moreLess-"+idComment.split('-')[1]+"', '"+comment.text+"');");
-		// 			cell.appendChild(more)
-
-		// 			moreLess.style.display 	= 'none';
-		// 			moreLess.setAttribute("id", "moreLess-"+idComment.split('-')[1]);
-		// 			moreLess.setAttribute("onclick", "commentSeeLess('"+idComment+"', '"+idAuteur+"', '"+idCell+"', '"+"moreMore-"+idComment.split('-')[1]+"', '"+"moreLess-"+idComment.split('-')[1]+"');");
-		// 			cell.appendChild(moreLess)
-		// 		}
-		// 	}
-		}
+			create_node_comment(this.pictures[index].comments[i].login, this.pictures[index].comments[i].text, i, null)
 	}
 	if (this.is_loggued === true)
 	{
@@ -420,5 +387,35 @@ function displayPicture(index)
 		cellAddComment.appendChild(textareaComments);
 		display_like()
 	}
+
+}
+
+
+function deleteImage()
+{
+	let xhr = new XMLHttpRequest();
+	xhr.open('GET', '/models/picture.model.php?action=picture.delete&&login='+this.user.login+'&&url='+this.pictures[this.currentPictureIndex].path, false);
+	xhr.onload= function() {
+		if (xhr.status === 200) {
+			console.log("delete : ", xhr.responseText);
+			if (xhr.responseText == 'true')
+			{
+				let infoMessage = document.getElementById("infoMessage");
+				let zoomDiv 	= document.getElementById("zoomDiv");
+
+				infoMessage.textContent 			= "Suppression réussie."
+				infoMessage.style.backgroundColor 	= "#9CCC65";
+				infoMessage.style.display 			= "block";
+				infoMessage.style.width 			= "50%";
+				infoMessage.style.height 			= "auto";
+				infoMessage.style.padding 			= "1% 0% 1% 0%";
+				infoMessage.style.textAlign 		= "center";
+				infoMessage.style.margin 			= "0 0 0 35%";
+				zoomDiv.style.margin 				= "5% 0 0 25%";
+				setTimeout(function(){ location.reload(); }, 500);
+			}
+		}
+	};
+	xhr.send();
 
 }

@@ -45,6 +45,41 @@ class Picture {
 		$this->print_result();
 	}
 
+	private function generate_token($length) {
+		$pull = [];
+		while (count($pull) < $length)
+			$pull = array_merge($pull, range(0, 9), range('a', 'z'), range('A', 'Z'));
+		shuffle($pull);
+		return (implode("", $pull));
+	}
+
+	public function save_picture($login, $url, $description)
+	{
+ 		if (!ini_get('date.timezone'))
+			date_default_timezone_set('GMT');
+		$category 		= "unknow";
+		$date 			= date("Y-m-d");
+		$token 			=  $this->generate_token(2);
+		$url 			= str_replace('data:image/png;base64','',$url);
+		file_put_contents("../ressources/" .$token.".png", base64_decode($url));
+		exec_sql_query('
+			INSERT INTO pictures 
+			(id, date_creation, category, picture_path, description, nbr_like, auteur) 
+			VALUES 
+			(0,  "' .$date. '", "' .$category. '", "' . '../ressources/' . $token.  '.png' . '", "' .$description. '", 0, "' .$login. '");');
+	}
+
+
+	public function delete_picture($login, $url)
+	{
+		exec_sql_query('DELETE FROM pictures 	WHERE auteur 		= "' .$login. '" AND picture_path = "' .$url. '"');
+		exec_sql_query('DELETE FROM comments 	WHERE picture_path 	= "' .$url. '"');
+		exec_sql_query('DELETE FROM likes 		WHERE picture_path 	= "' .$url. '"');
+		unlink($url);
+		echo "true";
+
+	}
+
 
 }
 

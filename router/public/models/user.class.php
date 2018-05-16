@@ -209,7 +209,6 @@ class User {
 			if ($ret)
 			{
 				exec_sql_query('UPDATE pictures SET nbr_like = nbr_like + 1 WHERE picture_path = "'.$picture_path.'";');
-
 				$this->_message = "Vous aimez cette image.";
 			}
 			else
@@ -222,7 +221,8 @@ class User {
 	}
 
 	public function add_comment($text, $picture_path) {
-		$this->_picture_comment = exec_sql_query('INSERT INTO comments (id, login, comment, picture_path) VALUE (0, "'.$this->_login.'", "'.$text.'", "'.$picture_path.'")');
+		$date = date("Y-m-d");
+		$this->_picture_comment = exec_sql_query('INSERT INTO comments (id, login, comment, picture_path, posted_date) VALUE (0, "'.$this->_login.'", "'.$text.'", "'.$picture_path.'", "'.$date.'")');
 	}
 	public function reinit_password($email)
 	{

@@ -13,6 +13,8 @@
 			<?php require("views/includes/option.inc.html"); ?>
 			<!-- SUBSCRIBE -->
 			<?php require("views/includes/subscribe.inc.html"); ?>
+			<!-- TAKE PICTURE -->
+			<?php require("views/includes/takePicture.inc.html"); ?>
 			<!-- MODIFIER INFORMATION -->
 			<?php require("views/includes/modifierInformation.inc.html"); ?>
 		    <!-- LOGIN -->

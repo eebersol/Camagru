@@ -65,7 +65,6 @@ function resultSubscribeLogin (message, type, err)
 	messageNode.style.fontWeight 	= "bold";
 	infoMessage.style.display 		= "block";
 	infoMessage.appendChild(messageNode);
-
 	if (type == "login" && err == false)
 		setTimeout(function(){ location.reload(); }, 1000);
 

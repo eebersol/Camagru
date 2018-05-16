@@ -20,7 +20,8 @@ function create_picture($category, $picture_path, $desc)
 			category,
 			picture_path,
 			description,
-			nbr_like
+			nbr_like,
+			auteur
 		) 
 		VALUE 
 		(
@@ -29,7 +30,8 @@ function create_picture($category, $picture_path, $desc)
 			"'.$category.'",
 			"'.$picture_path.'",
 			"'.$desc.'",
-			0
+			0,
+			"edouard"
 		)'
 	;
 	return ($SQL_QUERY);
@@ -40,7 +42,6 @@ function create_picture($category, $picture_path, $desc)
 try {
 
 	$array = [
-		"0,'',nature,../ressources/images/nature_1.jpeg,COUCOU JE TEST,0",
 		"0,'',nature,../ressources/images/nature_2.jpeg,'',0",
 		"0,'',nature,../ressources/images/nature_3.jpeg,'',0",
 		"0,'',nature,../ressources/images/nature_4.jpeg,'',0",

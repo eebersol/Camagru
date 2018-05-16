@@ -18,14 +18,16 @@ function create_comment($login, $picture_path, $comment)
 			id,
 			login,
 			comment,
-			picture_path
+			picture_path,
+			posted_date
 		) 
 		VALUE 
 		(
 			0,
 			"'.$login.'",
 			"'.$comment.'",
-			"'.$picture_path.'"
+			"'.$picture_path.'",
+			"'.$date.'"
 		)'
 	;
 	return ($SQL_QUERY);

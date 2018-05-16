@@ -17,7 +17,7 @@ function subscribe()
 }
 
 
-function gallery(lol)
+function gallery()
 {
 	let optionDiv;
 
@@ -31,7 +31,7 @@ function gallery(lol)
 	optionDiv.style.display 	= "none";
 	galleryDiv.style.display 	= "block";
 
+	getUser();
 	displayMiniature(page);
 	getLikedPicture();
-	// getUser();
 }

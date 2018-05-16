@@ -1,20 +1,27 @@
+<b id="infoMessage"></b>
 <div class="container" id="zoomDiv">
 	<div class="row" >
 		<div class="col" >
 			<div id="zoomDescription">
-				<b>Description : </b>
-				<p id="zoomDescriptionText"></p>
+				<div style="text-align: center">
+					<img onclick="deleteImage()" id="deleteImage" src="../../ressources/images/delete_image.png"></img>
+					<b>Auteur : </b>
+					<p id="zoomDescriptionAuteur"></p>
+					<br />
+					<b>Description : </b>
+					<p id="zoomDescriptionText"></p>
+					<br />
+					<b>Posté le :</b>
+					<p id="zoomDescriptionDate"></p>
+				</div>
 				<img id="zoomPicture">
+				<img id="liked" class="like" onclick="unlikePicture() ;" src="/ressources/images/liked.svg">
+				<img id="no_like" class="like" onclick="likePicture();" src="/ressources/images/no_like.svg">
 			</div>
 		</div>
 		<div class="col">
 			<div id="zoomComments"></div>
 			<div id="zoomAddComments"></div>
-		</div>
-		<div class="w-100"></div>
-		<div class="col">
-			<img id="liked" onclick="unlikePicture() ;" src="/ressources/images/liked.svg">
-			<img id="no_like" onclick="likePicture();" src="/ressources/images/no_like.svg">
 		</div>
 	</div>
 </div>
