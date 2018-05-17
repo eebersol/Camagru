@@ -1,11 +1,18 @@
 
+#filterList {
+	overflow: auto;
+	max-height: 85%
+}
+#filterListDiv {
+	display: none;
+	width: 100%;
+}
+
 #deleteImage {
 	display: none;
 }
 #takePictureDiv
 {
-	width: 75%;
-	margin: 0 0 0 25%; 
 	display: none;
 	border: 2px solid black;
 }
@@ -353,6 +360,7 @@ h3{
 .app video#camera-stream{
     display: none;
     width: 100%;
+    padding: 0 5% 2% 5%;
 }
 
 .app img#snap{

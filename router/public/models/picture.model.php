@@ -13,8 +13,23 @@ if (isset($_GET['action']))
 		$picture->get_picture_page($_GET['tabPath']);
 	else if ($action == 'picture.get.page.comment' && isset($_GET['tabPath']))
 		$picture->get_comment_page($_GET['tabPath']);
-	if ($action == 'picture.delete' && isset($_GET['login']) && isset($_GET['url']))
+	else if ($action == 'picture.delete' && isset($_GET['login']) && isset($_GET['url']))
 		$picture->delete_picture($_GET['login'], $_GET['url']);
+	else if ($action == 'picture.get.filter')
+	{
+		if ($handle = opendir('../ressources/filtre')) 
+		{
+			$array = [];
+    		/* Ceci est la façon correcte de traverser un dossier. */
+    		while (false !== ($entry = readdir($handle))) 
+    		{
+        		#echo "$entry\n";
+        		array_push($array, $entry);
+        	}
+        }
+         closedir($handle);
+         echo (json_encode(array_slice($array, 2)));
+    }
 }
 if ($_POST)
 {	

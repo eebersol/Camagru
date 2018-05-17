@@ -1,16 +1,173 @@
 function takePicture()
 {
-	let takePictureDiv 			= document.getElementById("takePictureDiv");
-	let optionDiv 				= document.getElementById("optionDivLogin");
+	let takePictureDiv 					= document.getElementById("takePictureDiv");
+	let optionDiv 						= document.getElementById("optionDivLogin");
+	this.filterListDiv 					= document.getElementById("filterListDiv");
 
-	optionDiv.style.display 		= "none";
-	takePictureDiv.style.display 	= "block";
+	optionDiv.style.display 			= "none";
+	takePictureDiv.style.display 		= "block";
+	this.filterListDiv.style.display	= "block";
 
-	active_cam();
+	this.pictureTake = active_cam();
+	display_filter();
+}
+
+
+function refresh_picture(pic)
+{
+	let hidden_canvas 			= document.querySelector('canvas');
+	let context 				= hidden_canvas.getContext('2d');
+	let video 					= document.querySelector('#camera-stream');
+	let image 					= document.querySelector('#snap');
+	let delete_photo_btn 		= document.querySelector('#delete-photo');
+	let download_photo_btn 		= document.querySelector('#download-photo');
+	let save_photo_btn 			= document.querySelector('#save-photo')
+	let width 					= video.videoWidth;
+	let height 					= video.videoHeight;
+
+
+	this.pictureTake = pic;
+
+	this.imgPic = new Image ();
+	this.imgPic.src = pic;
+	this.imgPic.onload = () =>
+	{
+		if (width && height)
+		{
+			// Setup a canvas with the same dimensions as the video.
+			hidden_canvas.width 	= width;
+			hidden_canvas.height 	= height;
+			// Make a copy of the current frame in the video on the canvas.
+			context.drawImage(this.imgPic, 0, 0, width, height);
+			// Turn the canvas image into a dataURL that can be used as a src for our photo.
+			this.pictureTake =  hidden_canvas.toDataURL('image/png');
+
+			image.setAttribute('src', this.pictureTake);
+			image.classList.add("visible");
+
+			delete_photo_btn.classList.remove("disabled");
+			save_photo_btn.classList.remove("disabled");
+			download_photo_btn.classList.remove("disabled");
+
+
+			download_photo_btn.href = this.pictureTake;
+
+			video.pause();
+		}
+	}
+
+
+}
+function upload_picture()
+{
+		var file = document.getElementById("submitfile").files[0];
+   		var reader = new FileReader();
+   		reader.onloadend = function(){
+   			refresh_picture(reader.result); 
+   		}
+   		if(file){
+      		reader.readAsDataURL(file);
+   		 }else{
+    	}
+}
+
+function apply_filter(i)
+{
+	let filterRef 				= document.getElementById(this.filter[i].split('.')[0]);
+	let hidden_canvas 			= document.querySelector('canvas');
+	let context 				= hidden_canvas.getContext('2d');
+	let video 					= document.querySelector('#camera-stream');
+	let image 					= document.querySelector('#snap');
+	let width 					= video.videoWidth;
+	let height 					= video.videoHeight;
+	let delete_photo_btn 		= document.querySelector('#delete-photo');
+	let download_photo_btn 		= document.querySelector('#download-photo');
+	let save_photo_btn 			= document.querySelector('#save-photo')
+
+	if (typeof this.pictureTake != 'string')
+		return ;
+	let imageObj1 = new Image();
+	let imageObj2 = new Image();
+
+	imageObj1.src = this.pictureTake
+		imageObj1.onload = () =>
+		{
+			imageObj2.src = "ressources/filtre/" + this.filter[i]
+			imageObj2.onload = () =>
+			{
+				context.drawImage(imageObj2, width/2, height/2, filterRef.offsetWidth, filterRef.offsetHeight);
+				let img = hidden_canvas.toDataURL("image/png");
+				image.setAttribute('src', img);
+				image.classList.add("visible");
+
+				delete_photo_btn.classList.remove("disabled");
+				save_photo_btn.classList.remove("disabled");
+				download_photo_btn.classList.remove("disabled");
+
+
+				download_photo_btn.href = img;
+
+				video.pause();
+			}
+		};
+}
+
+function get_filter(cb)
+{
+	let xhr = new XMLHttpRequest();
+	xhr.open('GET', '/models/picture.model.php?action=picture.get.filter', true);
+	xhr.onload= function() {
+		if (xhr.status === 200) {
+		
+			if (xhr.responseText)
+			{
+				console.log("get_filter : ", xhr.responseText)
+				cb(JSON.parse(xhr.responseText))
+			}
+		}
+	};
+	xhr.send();
+}
+
+function display_filter () {
+
+	get_filter ((data, err) =>
+	{
+		if (data)
+		{
+			this.filter 		= data;
+			let filterList 		= document.getElementById("filterList");
+			let path			= "../ressources/filtre/"
+
+			for (let i = 0; i < this.filter.length; i++)
+			{
+				let filterDiv 	= document.createElement("div");
+				let filterImg 	= document.createElement("img");
+				let filterName 	= this.filter[i];
+				let filterId  	= filterName.split('.')[0] + 'i';
+
+				if (i == 0 || i < this.filter.length)
+					filterDiv.style.padding	 = "1% 0 1% 15%";
+				else
+					filterDiv.style.padding	 = "0 0 1% 15%";
+				filterDiv.setAttribute("id", filterId);
+				filterImg.setAttribute("src", path + filterName);
+				filterImg.setAttribute("onclick", "apply_filter("+i+")");
+				filterImg.style.maxWidth	 = "200px";
+				filterImg.setAttribute("id", filterName.split('.')[0]);
+
+				filterList.appendChild(filterDiv);
+				filterDiv.appendChild(filterImg);
+
+				this.index 					= i;
+			}
+		}
+	});
 }
 
 function active_cam()
 {
+	display_filter();
 	// References to all the element we will need.
 	let video 				= document.querySelector('#camera-stream');
 	let image 				= document.querySelector('#snap');
@@ -62,6 +219,7 @@ function active_cam()
 		e.preventDefault();
 
 		let snap = takeSnapshot();
+		this.pictureTake = snap;
 
 		image.setAttribute('src', snap);
 		image.classList.add("visible");
@@ -74,7 +232,10 @@ function active_cam()
 		download_photo_btn.href = snap;
 
 		video.pause();
+		return (snap);
+
 	});
+
 
 	save_photo_btn.addEventListener("click", (e) => 
 	{
@@ -103,7 +264,6 @@ function active_cam()
 		video.classList.add("visible");
 		controls.classList.add("visible");
 	}
-
 
 	function takeSnapshot()
 	{
