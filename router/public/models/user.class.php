@@ -156,6 +156,7 @@ class User {
 				$this->_login = $new_login;
 				exec_sql_query('UPDATE likes SET login="' .$this->_login. '"WHERE login="'. $old_login. '"');
 				exec_sql_query('UPDATE comments SET login="' .$this->_login. '"WHERE login="'. $old_login. '"');
+				exec_sql_query('UPDATE pictures SET auteur="' .$this->_login. '"WHERE auteur="'. $old_login. '"');
 			}
 			else
 			{
@@ -220,9 +221,49 @@ class User {
 		$this->_picture_liked = execute_sql_query_with_value('SELECT picture_path FROM likes WHERE login = "' .$this->_login. '"');
 	}
 
-	public function add_comment($text, $picture_path) {
+	public function add_comment($text, $picture_path, $auteur) 
+	{
+		if( ! ini_get('date.timezone') )
+		{
+    		date_default_timezone_set('GMT');
+		}
 		$date = date("Y-m-d");
 		$this->_picture_comment = exec_sql_query('INSERT INTO comments (id, login, comment, picture_path, posted_date) VALUE (0, "'.$this->_login.'", "'.$text.'", "'.$picture_path.'", "'.$date.'")');
+
+		$path = $picture_path;
+		$type = pathinfo($path, PATHINFO_EXTENSION);
+		$data = file_get_contents($path);
+		$base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
+		$this->_token_password 	= $this->generate_token(1);
+		exec_sql_query('UPDATE users SET passwd="' .hash('whirlpool', $this->_token_password). '" WHERE email="'. $email . '"');
+		$subject 		= "[-CAMAGRU-] - Notification";
+		$headers  		= 'MIME-Version: 1.0' . "\r\n";
+		$headers 		.= 'Content-type: text/html; charset=UTF-8' . "\r\n";
+		$headers 		.= 'From: <eebersol@student.42.fr>' . "\r\n";
+		// $headers		.= "Content-ID: <my50kphoto>" . "\r\n";
+		// $headers		.= "Content-Type: image/jpeg" . "\r\n";
+		// $headers		.= "Content-Transfer-Encoding: Base64" . "\r\n";
+		// $headers		.= $base64 . "\r\n";
+		$html_page 		= file_get_contents("../../ressources/mails/mail.new_comment.html");
+		$html_page 		= str_replace("LOGIN", $auteur, $html_page);
+		$html_page 		= str_replace("AUTEUR", $this->_login, $html_page);
+		$html_page 		= str_replace("PICTURE",$picture_path, $html_page);
+		$message 		= $html_page;
+		$this->_message = "Email envoyé.";
+		$this->_message = execute_sql_query_with_value('SELECT email FROM users WHERE login = "' .$auteur. '"');
+		$auteurEmail = $this->_message[0]['email'];
+		mail($auteurEmail, $subject, $message, $headers); 
+
+
+
+
+
+
+
+
+
+
+
 	}
 	public function reinit_password($email)
 	{

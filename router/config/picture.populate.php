@@ -55,7 +55,7 @@ try {
 		"0,'',nature,../ressources/images/nature_12.jpeg,'',0",
 		"0,'',nature,../ressources/images/nature_13.jpeg,'',0",
 		"0,'',nature,../ressources/images/nature_14.jpeg,'',0",
-		];
+	];
 
 	echo "Connection établie.\n";
 	for ($i = 0; $i < count($array); $i++)

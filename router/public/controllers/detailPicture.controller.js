@@ -201,19 +201,7 @@ function create_node_comment(login, text, i, date)
 	}
 }
 
-function add_comment ()
-{
-	let text 	= document.getElementById("textComment").value;
-	let login 	= this.user.login;
-	let date 	= new Date("Y-m-d");
 
-	let xhr = new XMLHttpRequest();
-	xhr.open('GET', '/models/user.model.php?action=user.add.comment&&text='+text+'&&picture='+this.pictures[this.currentPictureIndex].path, false);
-	xhr.send();
-
-		let len 	= this.pictures[this.currentPictureIndex].comments.length
-		create_node_comment(login, text, this.pictures[this.currentPictureIndex].comments.length, date)
-}
 
 function checkKey(event)
 {
@@ -227,8 +215,16 @@ function checkKey(event)
 	}
 	if (event.keyCode === 13 && event.shiftKey === false) 
 	{
+		let text 	= document.getElementById("textComment").value;
+		let login 	= this.user.login;
+		let auteur 	= this.pictures[this.currentPictureIndex].auteur;
+		let date 	= new Date("Y-m-d");
+
 		event.preventDefault();
-		add_comment();
+		getData('/models/user.model.php', '?action=user.add.comment&&text='+text+'&&picture='+this.pictures[this.currentPictureIndex].path+'&&auteur='+auteur, 'POST', (data) => {
+			let len 	= this.pictures[this.currentPictureIndex].comments.length
+			create_node_comment(login, text, this.pictures[this.currentPictureIndex].comments.length, date)
+		});
 	}
 	else if (event.keyCode === 13 && event.shiftKey === true)
 		textComment.value = textComment.value + "\n";
@@ -248,7 +244,8 @@ function likePicture()
 	let currentPicture 	= document.getElementById('zoomPicture');
 	let path 			= '../' + currentPicture.src.substring(22, currentPicture.src.length);
 
-	modifyLike("user.update.like", path, (data, error) => 
+
+	getData('/models/user.model.php', '?action=user.update.like&&login='+this.user.login+'&&path='+path, 'GET', (data) => 
 	{
 		this.pictures[this.currentPictureIndex].likes++;
 		this.user.picture.liked.push(path);
@@ -261,7 +258,7 @@ function unlikePicture()
 	let currentPicture 	= document.getElementById('zoomPicture');
 	let path 			= '../' + currentPicture.src.substring(22, currentPicture.src.length);
 
-	modifyLike("user.update.unlike", path, (data, error) => 
+	getData('/models/user.model.php', '?action=user.update.unlike&&login='+this.user.login+'&&path='+path, 'GET', (data) => 
 	{
 		this.pictures[this.currentPictureIndex].likes--;
 		if (this.user.picture.liked.indexOf(path)+1 == this.user.picture.liked.length)
@@ -272,21 +269,7 @@ function unlikePicture()
 	});
 
 
-}
 
-
-function modifyLike(type, path, callback)
-{
-	let xhr 			= new XMLHttpRequest();
-
-	xhr.open('GET', '/models/user.model.php?action='+type+'&&login='+this.user.login+'&&path='+path);
-	xhr.onload= function() {
-		if (xhr.status === 200) {
-			console.log("modifyLike : ", xhr.responseText);
-			callback(xhr.responseText);
-		}
-	};
-	xhr.send();	
 }
 
 function display_like (data)
@@ -393,29 +376,22 @@ function displayPicture(index)
 
 function deleteImage()
 {
-	let xhr = new XMLHttpRequest();
-	xhr.open('GET', '/models/picture.model.php?action=picture.delete&&login='+this.user.login+'&&url='+this.pictures[this.currentPictureIndex].path, false);
-	xhr.onload= function() {
-		if (xhr.status === 200) {
-			console.log("delete : ", xhr.responseText);
-			if (xhr.responseText == 'true')
-			{
-				let infoMessage = document.getElementById("infoMessage");
-				let zoomDiv 	= document.getElementById("zoomDiv");
+	getData('/models/picture.model.php', '?action=picture.delete&&login='+this.user.login+'&&url='+this.pictures[this.currentPictureIndex].path, 'GET', (data) => {
+		if (data == 'true')
+		{
+			let infoMessage = document.getElementById("infoMessage");
+			let zoomDiv 	= document.getElementById("zoomDiv");
 
-				infoMessage.textContent 			= "Suppression réussie."
-				infoMessage.style.backgroundColor 	= "#9CCC65";
-				infoMessage.style.display 			= "block";
-				infoMessage.style.width 			= "50%";
-				infoMessage.style.height 			= "auto";
-				infoMessage.style.padding 			= "1% 0% 1% 0%";
-				infoMessage.style.textAlign 		= "center";
-				infoMessage.style.margin 			= "0 0 0 35%";
-				zoomDiv.style.margin 				= "5% 0 0 25%";
-				setTimeout(function(){ location.reload(); }, 500);
-			}
+			infoMessage.textContent 			= "Suppression réussie."
+			infoMessage.style.backgroundColor 	= "#9CCC65";
+			infoMessage.style.display 			= "block";
+			infoMessage.style.width 			= "50%";
+			infoMessage.style.height 			= "auto";
+			infoMessage.style.padding 			= "1% 0% 1% 0%";
+			infoMessage.style.textAlign 		= "center";
+			infoMessage.style.margin 			= "0 0 0 35%";
+			zoomDiv.style.margin 				= "5% 0 0 25%";
+			setTimeout(function(){ location.reload(); }, 500);
 		}
-	};
-	xhr.send();
-
+	});
 }

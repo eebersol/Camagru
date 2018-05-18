@@ -53,8 +53,11 @@ if (isset($_GET['action']))
 		$user->get_picture_liked();
 		print_r(json_encode($user->_picture_liked));
 	}
-	else if ($action == 'user.add.comment' && isset($_GET['text']) && isset($_GET['picture']))
-		$user->add_comment($_GET['text'], $_GET['picture']);
+	else if ($action == 'user.add.comment' && isset($_GET['text']) && isset($_GET['picture']) && isset($_GET['auteur']))
+	{
+		$user->add_comment($_GET['text'], $_GET['picture'], $_GET['auteur']);
+		$user->get_return_value();
+	}
 	else if ($action == 'user.disconnect')
 	{
 		$_SESSION['login'] = null;

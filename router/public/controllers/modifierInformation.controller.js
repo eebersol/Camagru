@@ -38,27 +38,21 @@ function modifyInformationProfil ()
 	{
 		let oldInformation = [this.user.email, this.user.login, this.user.passwd];
 		let newInformation = [emailTmp, loginTmp, passwdTmp];
-		xhr.open('GET', '/models/user.model.php?action=user.update.information&&oldInformation='+oldInformation+'&&newInformation='+newInformation, false);
-		xhr.onload = function() 
-		{ 
-			if (xhr.status === 200)
-			{
-				let message 	= JSON.parse(xhr.responseText);
-				let messageDiv 	= document.getElementsByClassName("infoMessage")[0];
-				let messageText = document.getElementsByClassName("infoMessageText")[0];
+		getData('/models/user.model.php', '?action=user.update.information&&oldInformation='+oldInformation+'&&newInformation='+newInformation, 'GET', (data) =>{
+			let message 	= data;
+			let messageDiv 	= document.getElementsByClassName("infoMessage")[0];
+			let messageText = document.getElementsByClassName("infoMessageText")[0];
 
-				messageDiv.style.display 	= "block";
-				messageText.textContent 	= message;
+			messageDiv.style.display 	= "block";
+			messageText.textContent 	= message;
 
-				if (JSON.parse(xhr.responseText) == "Informations modifiées.")
-					messageDiv.style.backgroundColor = "#9CCC65";
-				else
-					messageDiv.style.backgroundColor = "#F44336";
-				getUser();
-				setTimeout(function(){ location.reload(); }, 1000);
-			}
-		};
-		xhr.send();		
+			if (data == "Informations modifiées.")
+				messageDiv.style.backgroundColor = "#9CCC65";
+			else
+				messageDiv.style.backgroundColor = "#F44336";
+			getUser();
+			setTimeout(function(){ location.reload(); }, 1000);
+		});
 	}
 }
 

@@ -32,6 +32,7 @@ function gallery()
 	galleryDiv.style.display 	= "block";
 
 	getUser();
-	displayMiniature(page);
-	getLikedPicture();
+	displayMiniature(page, (data, err)=> {
+		getLikedPicture(() => {return ;});
+	});
 }

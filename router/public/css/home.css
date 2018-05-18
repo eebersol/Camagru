@@ -1,7 +1,19 @@
 
+#contentUploadPicture {
+    padding: 5% 0 0 10%;
+}
+#uploadPicture {
+	display:none;
+	border: 2px solid;
+	margin: 3% 0 0 26%;
+}
+#oldPicture{
+	overflow: auto;
+	max-height: 40%
+}
 #filterList {
 	overflow: auto;
-	max-height: 85%
+	max-height: 40%
 }
 #filterListDiv {
 	display: none;
@@ -48,6 +60,7 @@
 	display: inline-block;
 }
 #filtered {
+	display: none;
 	height: 10%;
 	width: 90%;
 	margin: 0 0 0 15%

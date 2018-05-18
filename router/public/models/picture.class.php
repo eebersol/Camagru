@@ -22,10 +22,11 @@ class Picture {
 
 	public function get_picture_page($page)
 	{
-		$begin 	= (($page + 1) * 9) - 8;
-		$end 	=  (($page + 1) * 9) + 1;
+		$page = ($page + 1) * 9 - 9 + 1;
+		if ($page == 1)
+			$page = 0;
 
-		$this->_result = execute_sql_query_with_value('SELECT * FROM pictures WHERE id >= '.$begin.' AND id <'.$end);
+		 $this->_result = execute_sql_query_with_value('SELECT * FROM pictures ORDER BY id LIMIT 9 OFFSET '.$page.'');
 		$this->print_result();
 	}
 
@@ -78,6 +79,18 @@ class Picture {
 		unlink($url);
 		echo "true";
 
+	}
+
+	public function get_picture_total ()
+	{
+		$this->_result = execute_sql_query_with_value("SELECT COUNT(*) FROM pictures");
+		$this->print_result();
+	}
+
+	public function get_picture_user ($login)
+	{
+		$this->_result = execute_sql_query_with_value("SELECT * FROM pictures WHERE auteur= '".$login."'");
+		$this->print_result();
 	}
 
 

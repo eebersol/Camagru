@@ -1,37 +1,7 @@
-function XMLgetCommentPage(tab,  callback)
-{
-	let xhr 	= new XMLHttpRequest();
-	xhr.open('GET', '/models/picture.model.php?action=picture.get.page.comment&&tabPath='+tab, false);
-	xhr.onload= function() {
-		if (xhr.status === 200)
-		{
-			console.log("XMLgetCommentPage : ", xhr.responseText);
-			callback(JSON.parse(xhr.responseText));
-		}
-	};
-	xhr.send();
-} 
+this.page = 0;
 
 
-
-function XMLgetLikePage(tab,  callback)
-{
-	let xhr 	= new XMLHttpRequest();
-	xhr.open('GET', '/models/picture.model.php?action=picture.get.page.like&&tabPath='+tab, false);
-	xhr.onload= function() {
-		if (xhr.status === 200)
-		{
-			console.log('XMLgetLikePage : ', xhr.responseText)
-			callback(JSON.parse(xhr.responseText));
-		}
-		else
-			alert('Request failed.  Returned status of ' + xhr.status);
-	};
-	xhr.send();
-}
-
-
-function getLikedPicture () 
+function getLikedPicture (callback) 
 {
 	let tabPathPicture 	= [];
 	let tabObj 			= [];
@@ -41,20 +11,18 @@ function getLikedPicture ()
 		tabPathPicture.push(this.pictures[i].path);
 		tabObj.push({'path':this.pictures[i].path,'count':0})
 	}
-	XMLgetLikePage(tabPathPicture, (data, error) => 
+	getData('/models/picture.model.php','?action=picture.get.page.like&&tabPath=' +tabPathPicture, 'GET', (data, error) => 
 	{
 		if (data)
 		{
-			console.log(data)
 			for (let i = 0; i < data.length; i++)
 			{
 				let index = tabPathPicture.indexOf(data[i]['picture_path'])
-				console.log('Index : ', index, data[i]['picture_path'])
 				if (index != -1)
 					tabObj[index].count++;
 			}
 		}
-		XMLgetCommentPage(tabPathPicture, (data, err) => 
+		getData('/models/picture.model.php', '?action=picture.get.page.comment&&tabPath='+tabPathPicture, 'GET', (data, err) => 
 		{
 			if (data)
 			{
@@ -64,6 +32,7 @@ function getLikedPicture ()
 					this.pictures[index].comments.push({'login':data[i].login,'text':data[i].comment, 'date':data[i]['posted_date']});
 				}
 			}
+			callback();
 		});
 	});
 }
@@ -89,7 +58,7 @@ function changePage(page)
 	}
 	else if (page == 66.66)
 	{
-		if (this.page <= this.nbr_page - 1)
+		if (this.page < this.nbr_page - 1)
 		{
 			this.page += 1;
 		}
@@ -100,8 +69,9 @@ function changePage(page)
 		this.page = page;
 	resetPage("galleryPaginationNumber");
 	resetPage("galleryPicture");
-	displayMiniature(this.page);
-	getLikedPicture();
+	displayMiniature(this.page, (data) => {
+		getLikedPicture(() => { return ;});
+	});
 }
 
 function create_div_pagination(i, char)
@@ -118,45 +88,27 @@ function create_div_pagination(i, char)
 function makePagination(page)
 {
 	let galleryPagination 	= document.getElementById("galleryPagination");
- 	this.nbr_page 			= Math.round(this.pictures.length/9);
- 	let iDiv 				= create_div_pagination(-1, "<<");
 
- 	galleryPagination.appendChild(iDiv);
- 	for (let i = 0; i < nbr_page; i++)
+	galleryPagination.appendChild(create_div_pagination(-1, "<<"));
+
+	if (this.nbr_page >= 11)
+		galleryPagination.style.margin = '0 0 0 15%';
+	for (let i = 0; i < this.nbr_page -1; i++)
  	{
- 		iDiv = create_div_pagination(i, i);
+ 		iDiv = create_div_pagination(i, i.toString());
  		if (page == i)
  			iDiv.style.backgroundColor = "#BDBDBD";
     	galleryPagination.appendChild(iDiv);
  	}
- 	iDiv = create_div_pagination(66.66, ">>");
- 	galleryPagination.appendChild(iDiv);
-
+ 	galleryPagination.appendChild(create_div_pagination(66.66, ">>"));
 }
 
-function loadXMLgetMiniature(page, callback)
-{
-	let xhr = new XMLHttpRequest();
-	xhr.open('GET', '/models/picture.model.php?action=picture.get.miniature&&page='+page+'', false);
-	xhr.onload= function() {
-		if (xhr.status === 200) {
-			if (xhr.responseText !== null)
-			{
-				console.log(xhr.responseText);
-				callback(JSON.parse(xhr.responseText));
-			}
-		}
-		else {
-			alert('Request failed.  Returned status of ' + xhr.status);
-		}
-	};
-	xhr.send();
-}
 
-function displayMiniature(page)
+function displayMiniature(page, callback)
 {
-	loadXMLgetMiniature(page, (data, err) => 
+	getData('/models/picture.model.php', '?action=picture.get.miniature&&page='+page, 'GET', (data) =>
 	{
+    	console.log("DATA : ", data)
 		this.pictures 				= [];
 		let galleryDivFPicture 		= document.getElementById("galleryDivPicture");
 
@@ -173,28 +125,39 @@ function displayMiniature(page)
 				'auteur'		: data[j]['auteur']
 			}
 			this.pictures.push(picture);
-
 		}
-	    
-	    for (i = 0; i < this.pictures.length; i++)
-	    {
+		getData	('/models/picture.model.php', '?action=picture.get.totalPicture', 'GET', (data) =>
+		{;
+			this.nbrPicture = data[0][0]-1;
 
-	    	if (i >= this.pictures.length)
-	    		break;
-	    	let iDiv 		= document.createElement("IMG");
-	    	let id 			= 'picture-'+i
-	    	iDiv.setAttribute('id', id)
-	    	iDiv.setAttribute("src", this.pictures[i].path);
-	    	iDiv.setAttribute("class", "galleryPicture");
-			iDiv.setAttribute("width", "300");
-			iDiv.setAttribute("onclick", "displayPicture("+i+");");
-			iDiv.setAttribute("onmouseout", "hoverHome('"+id+"', false)")
-			iDiv.setAttribute("onmouseover", "hoverHome('"+id+"', true)")
-			iDiv.setAttribute("height", "200");
-			galleryDivFPicture.appendChild(iDiv);
-		}
-		    makePagination(page);
-	});
+			console.log("Il y a ", this.nbrPicture, 'images on peut mettre 9 images par page donc ', this.nbrPicture,'/ 9=', this.nbrPicture/9)
+			console.log(this.nbrPicture/9, Math.round(this.nbrPicture/9))
+			if (this.nbrPicture/9 > Math.round(this.nbrPicture/9))
+				this.nbr_page = (this.nbrPicture/9)+1;
+			else
+				this.nbr_page = (this.nbrPicture/9)+1;
+			console.log("Nombre de page : ", this.nbr_page, data[0][0]%9, data[0][0])
+		    for (i = 0; i < this.pictures.length; i++)
+		    {
+
+		    	if (i >= this.pictures.length)
+		    		break;
+		    	let iDiv 		= document.createElement("IMG");
+		    	let id 			= 'picture-'+i
+		    	iDiv.setAttribute('id', id)
+		    	iDiv.setAttribute("src", this.pictures[i].path);
+		    	iDiv.setAttribute("class", "galleryPicture");
+				iDiv.setAttribute("width", "300");
+				iDiv.setAttribute("onclick", "displayPicture("+i+");");
+				iDiv.setAttribute("onmouseout", "hoverHome('"+id+"', false)")
+				iDiv.setAttribute("onmouseover", "hoverHome('"+id+"', true)")
+				iDiv.setAttribute("height", "200");
+				galleryDivFPicture.appendChild(iDiv);
+			}
+			makePagination(page);
+			callback();
+		});
+	}); 
 }
 
 
@@ -205,7 +168,4 @@ function hoverHome(id, flag)
 		div.style.opacity = '1';
 	else
 		div.style.opacity = '0.5';
-
-	console.log(id.split('-')[1])
-	console.log(this.pictures[id.split('-')[1]])
 }

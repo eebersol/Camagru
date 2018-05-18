@@ -1,13 +1,13 @@
 
 <div class="row">
-	<b id="infoMessage"></b>
+	<b class="infoMessage"></b>
 	<div class="col-sm-3">
 		<div id="filterListDiv">
 			<div id="filterList">	
 			</div>
 		</div>
 	</div>
-	<div class="col-sm-9">
+	<div class="col-sm-6">
 		<div  id="takePictureDiv">
 			<h3>Souriez, vous êtes filmé</h3>
 			<div >
@@ -32,11 +32,20 @@
 			</div>
 		</div>
 	</div>
-	<div class="col-sm-12">
+	<div class="col-sm-3">
+		<div id="oldPictureDiv">
+			<div id="oldPicture">	
+			</div>
+		</div>
+	</div>
+	<div class="col-sm-4" id="uploadPicture">
 
 			<form name="Upload" action="#" enctype="multipart/form-data" method="post">
-   				<p>Filename: <input type="file" accept="image/*" name="submitfile" id="submitfile" />
-   				<input type="button" value="Send" onClick="upload_picture();" />
+				<div id="contentUploadPicture">
+					<p> Photo à Upload </p>
+   					<input style="width:100%" type="file" accept="image/*" name="submitfile" id="submitfile"/>
+   					<input  style="width:100%" type="button" value="Send" onClick="upload_picture();"/>
+   				</div>
 			</form>
 	</div>
 </div>

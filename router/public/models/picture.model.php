@@ -30,6 +30,14 @@ if (isset($_GET['action']))
          closedir($handle);
          echo (json_encode(array_slice($array, 2)));
     }
+    else if ($action == 'picture.get.totalPicture')
+	{
+		$picture->get_picture_total();
+    }
+    else if ($action == 'picture.get.userPicture' && isset($_GET['login']))
+	{
+		$picture->get_picture_user($_GET['login']);
+    }
 }
 if ($_POST)
 {	

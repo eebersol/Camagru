@@ -30,7 +30,15 @@ function create_user()
 	else if (passwd.value != passwdClone.value)
 		passwd.style.borderColor = passwdClone.style.borderColor ='red';
 	else 
-		loadXMLSubscribe(email.value, login.value, passwd.value);
+	{
+		getData('/models/user.model.php', '?action=user.create&&email='+email.value+'&&login='+login.value+'&&passwd='+passwd.value, 'GET', (data) => {
+			console.log('data : ', data)
+			if (data != "✘ Cette adresse email/login est déja utilisé.")
+				resultSubscribeLogin(data, "subscribe",  false);
+			else
+				resultSubscribeLogin(data, "subscribe", true);
+		})
+	}
 }
 
 function resultSubscribeLogin (message, type, err)
@@ -68,22 +76,4 @@ function resultSubscribeLogin (message, type, err)
 	if (type == "login" && err == false)
 		setTimeout(function(){ location.reload(); }, 1000);
 
-}
-
-function loadXMLSubscribe(email, login, passwd, url)
-{
-	let xhr = new XMLHttpRequest();
-	xhr.open('GET', '/models/user.model.php?action=user.create&&email='+email+'&&login='+login+'&&passwd='+passwd, true);
-	xhr.onload = function() 
-	{
-		if (xhr.status === 200) 
-		{
-			console.log("Subscribe : ", xhr.responseText)
- 			if (JSON.parse(xhr.responseText) != "✘ Cette adresse email/login est déja utilisé.")
-				resultSubscribeLogin(JSON.parse(xhr.responseText), "subscribe",  false);
-			else
-				resultSubscribeLogin(JSON.parse(xhr.responseText), "subscribe", true);
-		}
-	};
-	xhr.send();
 }
