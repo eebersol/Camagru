@@ -27,6 +27,12 @@ h2 small {
   position:relative; 
   margin-bottom:45px; 
 }
+
+.groupTakePicture
+{ 
+  position:relative; 
+  margin: 0 0 0 0;
+}
 input 				{
   font-size:18px;
   padding:10px 10px 10px 5px;

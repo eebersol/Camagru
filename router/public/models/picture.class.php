@@ -26,14 +26,13 @@ class Picture {
 		if ($page == 1)
 			$page = 0;
 
-		 $this->_result = execute_sql_query_with_value('SELECT * FROM pictures ORDER BY id LIMIT 9 OFFSET '.$page.'');
+		 $this->_result = get_page($page, 9);
 		$this->print_result();
 	}
 
 	public function get_like_page ($paths)
 	{
 		$tab = explode(',', $paths);
-
 		$this->_result = execute_sql_query_with_value("SELECT * FROM likes WHERE picture_path IN ('" . implode("', '", $tab) . "')");
 		$this->print_result();
 	}
@@ -41,8 +40,8 @@ class Picture {
 	public function get_comment_page ($paths)
 	{
 		$tab = explode(',', $paths);
-
 		$this->_result = execute_sql_query_with_value("SELECT * FROM comments WHERE picture_path IN ('" . implode("', '", $tab) . "')");
+
 		$this->print_result();
 	}
 
@@ -54,42 +53,40 @@ class Picture {
 		return (implode("", $pull));
 	}
 
-	public function save_picture($login, $url, $description)
+	public function save_picture($login, $url, $description, $name)
 	{
  		if (!ini_get('date.timezone'))
 			date_default_timezone_set('GMT');
 		$category 		= "unknow";
 		$date 			= date("Y-m-d");
-		$token 			=  $this->generate_token(2);
+		if ($name == "random")
+			$token 			=  $this->generate_token(2);
+		else
+			$token 			= $name;
 		$url 			= str_replace('data:image/png;base64','',$url);
 		file_put_contents("../ressources/" .$token.".png", base64_decode($url));
-		exec_sql_query('
-			INSERT INTO pictures 
-			(id, date_creation, category, picture_path, description, nbr_like, auteur) 
-			VALUES 
-			(0,  "' .$date. '", "' .$category. '", "' . '../ressources/' . $token.  '.png' . '", "' .$description. '", 0, "' .$login. '");');
+		add_picture($date, $category, '../ressources/' . $token.  '.png', $description, $login);
 	}
 
 
 	public function delete_picture($login, $url)
 	{
-		exec_sql_query('DELETE FROM pictures 	WHERE auteur 		= "' .$login. '" AND picture_path = "' .$url. '"');
-		exec_sql_query('DELETE FROM comments 	WHERE picture_path 	= "' .$url. '"');
-		exec_sql_query('DELETE FROM likes 		WHERE picture_path 	= "' .$url. '"');
-		unlink($url);
-		echo "true";
+		delete_value('comments', 'picture_path', $url);
+		delete_value('likes', 'picture_path', $url);
+		delete_picture($login, $url);
+		echo 'true';
 
 	}
 
 	public function get_picture_total ()
 	{
-		$this->_result = execute_sql_query_with_value("SELECT COUNT(*) FROM pictures");
+		$this->_result = get_picture_nbr();
 		$this->print_result();
 	}
 
 	public function get_picture_user ($login)
 	{
-		$this->_result = execute_sql_query_with_value("SELECT * FROM pictures WHERE auteur= '".$login."'");
+		$this->_result = get_picture_user($login);
 		$this->print_result();
 	}
 

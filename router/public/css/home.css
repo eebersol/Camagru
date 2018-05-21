@@ -1,4 +1,3 @@
-
 #contentUploadPicture {
     padding: 5% 0 0 10%;
 }
@@ -8,12 +7,14 @@
 	margin: 3% 0 0 26%;
 }
 #oldPicture{
+	display: none;
 	overflow: auto;
-	max-height: 40%
+	height: 550px;
 }
 #filterList {
+	display: none;
 	overflow: auto;
-	max-height: 40%
+	height: 550px;
 }
 #filterListDiv {
 	display: none;
@@ -40,6 +41,7 @@
 	margin: 0 0 0 25%;
 	text-align: center;
 }
+
 .infoMessageText {
 	color:black;
 	font-size: 1.5em;
@@ -346,7 +348,7 @@ h3{
 
 
 .container{
-    max-width: 1000px;
+    max-width: 4000px !important;
     margin: 50px auto;
     padding: 20px;
     background-color: #efefef;
@@ -395,31 +397,22 @@ h3{
     display: none;
 }
 
-.app .controls{
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 20;
-
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    padding: 30px;
+.app .controls
+{
+	margin: 0 0 0 10%;
+    width: 80%;
+    height: 8%;
     display: none;
 }
 
-.app .controls a{
+.app .controls a
+{
+	text-align: center;
     border-radius: 50%;
-    color: #fff;
-    background-color: #111;
-    text-decoration: none;
-    padding: 15px;
-    line-height: 0;
-    opacity: 0.7;
-    outline: none;
-    -webkit-tap-highlight-color: transparent;
+    color: black;
+    background-color: #BDBDBD !important;
+    height: 30%;
+    width: 23%;
 }
 
 .app .controls a:hover{
@@ -438,11 +431,11 @@ h3{
 }
 
 .app .controls a i{
-    font-size: 18px;
+    font-size: 1em;
 }
 
 .app .controls #take-photo i{
-    font-size: 32px;
+    font-size: 1em;
 }
 
 .app canvas{
@@ -474,11 +467,11 @@ h3{
     }
 
     .app .controls a i{
-        font-size: 16px;
+        font-size: 0.9em;
     }
 
     .app .controls #take-photo i{
-        font-size: 24px;
+        font-size: 1em;
     }
 }
 
@@ -494,11 +487,12 @@ h3{
     }
 
     .app .controls a i{
-        font-size: 12px;
+        font-size: 0.8em;
     }
 
     .app .controls #take-photo i{
-        font-size: 18px;
+        font-size: 1em;
     }
+
 }
 

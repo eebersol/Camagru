@@ -36,5 +36,4 @@ TODO  18mai ::
 - quand un commentaire est posté on envoi un email a l'auteur de la photo pour le prevenir
 il faudrait que la photo apparaisse dans le mail, et il faudrait verifier que l'auteur du message ne sois pas l'auteur de la photo
 
-- Il ne faut pas pouvoir prendre de photo si aucun filtre n'a ete selectionne
 

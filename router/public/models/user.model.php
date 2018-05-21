@@ -1,7 +1,7 @@
 <?php
 session_start();
 require("user.class.php");
-require("../../config/contact_db.php");
+require("../../config/user.prepared.request.php");
 if (isset($_GET['action']))
 {
 	$action = $_GET['action'];

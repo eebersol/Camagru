@@ -30,6 +30,7 @@ function getUser()
 
 		if (this.user)
 		{
+			document.getElementById("photoDisconnect").style.display = "block";
 			getData('/models/user.model.php', '?action=user.get.picture.like', 'GET', (data) =>{
 				if (data)
 				{
@@ -38,6 +39,8 @@ function getUser()
 				}
 			});
 		}
+		else
+			document.getElementById("photoDisconnect").style.display = "none"
 	});
 }
 

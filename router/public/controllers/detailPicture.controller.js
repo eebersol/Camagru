@@ -21,6 +21,7 @@ function pickRandomColor()
 	return result;
 }
 
+
 function display_like (data)
 {
 	let liked 					= document.getElementById("liked");	
@@ -37,39 +38,6 @@ function display_like (data)
 		no_like.style.display 	= "block";
 	}
 
-}
-
-function parse_comments(comments)
-{
-	if (comments)
-	{
-		let tmpObjTab 	= [];
-		if (comments.search("&&") > 0)
-		{
-			let comment = comments.split("&&");
-
-			for (let j = 0; j < comment.length; j++)
-			{
-				let obj_comment = {
-					'auteur':comment[j].split("||")[0] 	|| null,
-					'text':comment[j].split("||")[1] 	|| null
-				}
-				tmpObjTab.push(obj_comment);
-			}
-		}
-		else
-		{
-			let obj_comment = {
-				'auteur':comments.split("||")[0] 	|| null,
-				'text':comments.split("||")[1] 		|| null
-			}
-			tmpObjTab.push(obj_comment);
-		}
-		comments = tmpObjTab
-		return (comments)
-	}
-	else
-		return '';
 }
 
 
@@ -323,7 +291,7 @@ function displayPicture(index)
 		zoomDescriptionDate.style.fontSize  = "0.7em";
 		zoomDescriptionDate.textContent 	= this.pictures[index].date ? this.pictures[index].date : new Date("Y-m-d");
 	}
-	if (this.user.login == this.pictures[index]['auteur'])
+	if (this.user && this.user.login == this.pictures[index]['auteur'])
 		document.getElementById("deleteImage").style.display = "block";
 	if (this.pictures[index].comments.length > 0)
 	{

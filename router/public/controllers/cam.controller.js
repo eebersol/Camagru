@@ -11,7 +11,9 @@ function takePicture()
 	this.save_photo_btn 				= document.querySelector('#save-photo');
 	this.error_message 					= document.querySelector('#error-message');
 	this.filterListDiv 					= document.getElementById("filterListDiv");
-	this.oldPictureDiv					= document.getElementById("oldPictureDiv");
+	this.filterList 					= document.getElementById("filterList");
+	this.oldPictureDiv					= document.getElementById("oldPicture");
+	this.oldPicture						= document.getElementById("oldPicture");
 	let takePictureDiv 					= document.getElementById("takePictureDiv");
 	let optionDiv 						= document.getElementById("optionDivLogin");
 	let uploadPictureDiv				= document.getElementById("uploadPicture");
@@ -20,7 +22,9 @@ function takePicture()
 	takePictureDiv.style.display 		= "block";
 	uploadPictureDiv.style.display 		= "block";
 	this.filterListDiv.style.display	= "block";
+	this.filterList.style.display   	= "block";
 	this.oldPictureDiv.style.display	= "block";
+	this.oldPicture.style.display		= "block";
 
 	active_cam();
 	active_event();
@@ -28,6 +32,26 @@ function takePicture()
 	display_old_picture();
 }
 
+
+function check_info_picture ()
+{
+	this.name			= document.getElementById("namePicture");
+	this.description	= document.getElementById("descriptionPicture");
+
+		console.log("Name : ", this.name.value)
+		if (this.name && this.name.value)
+			this.name = this.name.value;
+		else
+			this.name = "random";
+		if (this.description && this.description.value)
+			this.description = this.description.value;
+		else
+			this.description = "";
+
+		if (this.description.length > 100)
+			this.description = this.description.substr(0, 100);
+
+}
 
 function refresh_picture(pic)
 {
@@ -58,22 +82,34 @@ function upload_picture()
 		reader.readAsDataURL(file);
 }
 
-function apply_filter(i)
+function choose_filter(i)
 {
-	this.filterRef 		= document.getElementById(this.filter[i].split('.')[0]);
+	let div = document.getElementById(this.filter[i].split('.')[0])
+
+	this.filter = {
+		'src'   : "ressources/filtre/" + this.filter[i],
+		'name'  : this.filter[i],
+		'index' :i,
+		'width' : div.offsetWidth,
+		'height': div.offsetHeight
+	}
+}
+
+function draw_filter(src1)
+{
 	init_context();
 	let imageObj1 		= new Image();
 	let imageObj2 		= new Image();
 
-	if (!this.pictureTake)
-		this.take_photo_btn.click();
-	imageObj1.src = this.pictureTake
+	// if (!this.pictureTake)
+	// 	this.take_photo_btn.click();
+	imageObj1.src = src1
 		imageObj1.onload = () =>
 		{
-			imageObj2.src = "ressources/filtre/" + this.filter[i]
+			imageObj2.src = this.filter.src;
 			imageObj2.onload = () =>
 			{
-				this.context.drawImage(imageObj2, width/2, height/2, filterRef.offsetWidth, filterRef.offsetHeight);
+				this.context.drawImage(imageObj2, width/2, height/2, this.filter.width, this.filter.height);
 				buildImage();
 				showIUButton();
 				this.video.pause();
@@ -102,7 +138,6 @@ function display_old_picture()
 				picDiv.setAttribute("id", picName.split('/')[picName.split('/').length] + 'i');
 				
 				picImg.setAttribute("src", picName);
-				// picImg.setAttribute("onclick", "apply_filter("+i+")");
 				picImg.style.maxWidth	 = "200px";
 				picImg.setAttribute("id", picName.split('.')[0]);
 
@@ -133,7 +168,7 @@ function display_filter ()
 				filterDiv.setAttribute("id", filterName.split('.')[0] + 'i');
 				
 				filterImg.setAttribute("src", "../ressources/filtre/" + filterName);
-				filterImg.setAttribute("onclick", "apply_filter("+i+")");
+				filterImg.setAttribute("onclick", "choose_filter("+i+")");
 				filterImg.style.maxWidth	 = "200px";
 				filterImg.setAttribute("id", filterName.split('.')[0]);
 
@@ -186,7 +221,8 @@ function active_event()
 		if (this.pictureTake)
 			this.delete_photo_btn.click();
 		this.pictureTake = takeSnapshot();
-		this.image.setAttribute('src', this.pictureTake);
+			draw_filter(this.pictureTake)
+		// this.image.setAttribute('src', this.pictureTake);
 		showIUButton()
 		this.video.pause();
 	});
@@ -196,15 +232,12 @@ function active_event()
 	{
 		e.preventDefault();
 		this.dataPost 		= new FormData();
-		let description =  prompt("Enter une description (maximum 100 caractères)", "Aucune");
-		if (description && description.length > 100) 
-			description = description.substring(0, 100);
-		else if (!description)
-			description = ""
 
 		this.dataPost.append('login', this.user.login);
-		this.dataPost.append('description', description);
+		this.dataPost.append('name', this.name);
+		this.dataPost.append('description', this.description);
 		this.dataPost.append('file', this.download_photo_btn.href)
+		check_info_picture();
 		getData('/models/picture.model.php', '', 'POST', (data) => {
 		    let infoMessage 					= document.getElementById("infoMessage");
 			let takePictureDiv					= document.getElementById("takePictureDiv");

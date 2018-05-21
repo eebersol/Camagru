@@ -22,9 +22,7 @@ class User {
 		$_SESSION['passwd'] = $this->_passwd;
 
 		if ($flag == true)
-		{
-			$this->user_card = execute_sql_query_with_value("SELECT * FROM users WHERE login = '" .$login. "' AND email= '" .$email. "'")[0];
-		}
+			$this->user_card =  login_get_user(0, $login, $passwd);
 	}
 
 	public function get_return_value() {
@@ -45,7 +43,7 @@ class User {
         		. $this->_email 
         		. ".";
 			$this->send_subscribe_email();
-			$this->push_user();
+			add_user($this->_login, $this->_email, $this->_passwd, $this->_token);
 		}
 		else
 			$this->_message = "✘ Cette adresse email/login est déja utilisé.";
@@ -73,34 +71,20 @@ class User {
 		mail($this->_email, $subject, $message, $headers);
 	}
 
-	public function push_user()
-	{
-		exec_sql_query('
-			INSERT INTO
-			users (id, email, login, passwd, subscribe_email, token_subscribe, pic_reference, pic_liked, notification_like, notification_comment) 
-			VALUE (0, "'.$this->_email.'", "'.$this->_login.'", "'.$this->_passwd.'", 1, "'.$this->_token.'", "", "", 1, 1)'
-		);	
-	}
-
 	public function is_subscribe($email, $login)
 	{
 		if ($email)
 		{
-			$this->_is_subscribe = execute_sql_query_with_value("SELECT * FROM users WHERE email = '" .$email."'");
+			$this->_is_subscribe =  user_is_subscribe_email($email);
 			if (count($this->_is_subscribe) == 0 && $login)
-				$this->_is_subscribe = execute_sql_query_with_value("SELECT * FROM users WHERE login = '" .$login."'");
+				$this->_is_subscribe =  user_is_subscribe_login($login);
 
 		}
 	}
 
-	private function check_login ($login)
-	{
-		$this->_is_used_login = execute_sql_query_with_value("SELECT * FROM users WHERE login = '" .$login."'");
-	}
-
 	public function login_user($email, $login, $passwd)
 	{
-		$ret = execute_sql_query_with_value("SELECT * FROM users WHERE subscribe_email = 0 AND login = '" .$login. "' AND passwd= '" .$passwd. "'")[0];
+		$ret = login_get_user(0, $login, $passwd);
 		if ($ret['email'])
 		{
 			$this->_email 		= $ret['email'];
@@ -150,13 +134,13 @@ class User {
 			$this->_login = $old_login;
 		else if ($old_login != $new_login)
 		{
-			$this->check_login($new_login);
+			$this->_is_used_login = user_is_subscribe('login', $new_login);
 			if (count($this->_is_used_login) == 0)
 			{
 				$this->_login = $new_login;
-				exec_sql_query('UPDATE likes SET login="' .$this->_login. '"WHERE login="'. $old_login. '"');
-				exec_sql_query('UPDATE comments SET login="' .$this->_login. '"WHERE login="'. $old_login. '"');
-				exec_sql_query('UPDATE pictures SET auteur="' .$this->_login. '"WHERE auteur="'. $old_login. '"');
+				update_database_likes($new_login, $old_login);
+				update_database_comments($new_login, $old_login);
+				update_database_pictures($new_login, $old_login);
 			}
 			else
 			{
@@ -177,48 +161,29 @@ class User {
 			$this->_passwd = $old_passwd;
 
 
-		$ret = exec_sql_query('UPDATE users SET login="' .$this->_login. '", email="' .$this->_email. '", passwd="' .$this->_passwd. '" WHERE email="'. $old_email. '"');
-
-		if ($ret == 1)
-		{
-			$this->set_session($this->_email, $this->_login, $this->_passwd, true);
-			$this->_message = "Informations modifiées.";
-		}
-		else
-			$this->_message = "Une erreur est survenue veuillez contacter un administrateur.";
+		update_user($this->_login, $this->_email, $this->_passwd, $old_email);
+		$this->set_session($this->_email, $this->_login, $this->_passwd, true);
+		$this->_message = "Informations modifiées.";
 	}
 
 	public function dislike($picture_path)
 	{
-		$ret = exec_sql_query('DELETE FROM likes WHERE login = "' .$this->_login. '" AND picture_path = "' .$picture_path. '"');
-
-		if ($ret == 1)
-		{
-			exec_sql_query('UPDATE pictures SET nbr_like = nbr_like - 1 WHERE picture_path = "'.$picture_path.'";');
-			$this->_message = "Vous n'aimez plus cette image.";
-		}
-		else
-			$this->_message = "Une erreur est survenue.";
+		$ret = remove_like($this->_login, $picture_path);
+		$this->_message = decrease_like($picture_path);
 	}
 
 	public function like($picture_path)
 	{
-		$ret = exec_sql_query('SELECT * FROM likes WHERE login = "' .$this->_login. '" AND picture_path = "' .$picture_path. '" ');
+		$ret = is_like($this->_login, $picture_path);
 		if (!$ret)
 		{
-			$ret = exec_sql_query('INSERT INTO likes (id, login, picture_path) VALUES (0, "' .$this->_login. '", "' .$picture_path. '");');
-			if ($ret)
-			{
-				exec_sql_query('UPDATE pictures SET nbr_like = nbr_like + 1 WHERE picture_path = "'.$picture_path.'";');
-				$this->_message = "Vous aimez cette image.";
-			}
-			else
-				$this->_message = "Une erreur est survenue.";
+			$ret =  add_like ($this->_login, $picture_path);
+			$this->_message = increase_like($picture_path);
 		}
 	}
 
 	public function get_picture_liked() {
-		$this->_picture_liked = execute_sql_query_with_value('SELECT picture_path FROM likes WHERE login = "' .$this->_login. '"');
+		$this->_picture_liked = user_get_picture_like($this->_login);
 	}
 
 	public function add_comment($text, $picture_path, $auteur) 
@@ -228,14 +193,13 @@ class User {
     		date_default_timezone_set('GMT');
 		}
 		$date = date("Y-m-d");
-		$this->_picture_comment = exec_sql_query('INSERT INTO comments (id, login, comment, picture_path, posted_date) VALUE (0, "'.$this->_login.'", "'.$text.'", "'.$picture_path.'", "'.$date.'")');
+		$this->_picture_comment = add_comment($this->_login, $text, $picture_path, $date);
 
 		$path = $picture_path;
 		$type = pathinfo($path, PATHINFO_EXTENSION);
 		$data = file_get_contents($path);
 		$base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
 		$this->_token_password 	= $this->generate_token(1);
-		exec_sql_query('UPDATE users SET passwd="' .hash('whirlpool', $this->_token_password). '" WHERE email="'. $email . '"');
 		$subject 		= "[-CAMAGRU-] - Notification";
 		$headers  		= 'MIME-Version: 1.0' . "\r\n";
 		$headers 		.= 'Content-type: text/html; charset=UTF-8' . "\r\n";
@@ -250,28 +214,18 @@ class User {
 		$html_page 		= str_replace("PICTURE",$picture_path, $html_page);
 		$message 		= $html_page;
 		$this->_message = "Email envoyé.";
-		$this->_message = execute_sql_query_with_value('SELECT email FROM users WHERE login = "' .$auteur. '"');
+		$this->_message = email_user($auteur);
 		$auteurEmail = $this->_message[0]['email'];
 		mail($auteurEmail, $subject, $message, $headers); 
-
-
-
-
-
-
-
-
-
-
-
 	}
+
 	public function reinit_password($email)
 	{
 		$this->is_subscribe($email, null);
 		if (count($this->_is_subscribe) != 0)
 		{
 			$this->_token_password 	= $this->generate_token(1);
-			exec_sql_query('UPDATE users SET passwd="' .hash('whirlpool', $this->_token_password). '" WHERE email="'. $email . '"');
+			reinit_password_user(hash('whirlpool', $this->_token_password), $email);
 			$subject 		= "[-CAMAGRU-] - Réinitialisation mot de passe";
 			$headers  		= 'MIME-Version: 1.0' . "\r\n";
 			$headers 		.= 'Content-type: text/html; charset=UTF-8' . "\r\n";

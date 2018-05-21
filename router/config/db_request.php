@@ -21,10 +21,10 @@ function execute_sql_query_with_value($query)
 	require("database.php");
 	
 	// echo "query : " . $query . "<br/>";
+	echo "ICI";
 	$conn = new PDO($DB_DSN, $DB_USER, $DB_PASS);
 	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 	$SQL_QUERY = $conn->prepare($query);
-	if ($SQL_QUERY ==0)
 	$SQL_QUERY->execute();
 	$result = $SQL_QUERY->fetchAll();
 	$SQL_QUERY = null;
@@ -45,4 +45,15 @@ function exec_sql_query($query)
 	return ($result);
 }
 
+
+
+// function login_get_user($login, $passwd)
+// {
+// 	$conn = new PDO($DB_DSN, $DB_USER, $DB_PASS);
+// 	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+// 	$SQL_QUERY = $conn->prepare("SELECT * FROM users WHERE subscribe_email = 0 AND login=:login AND passwd=:passwd");
+// 	$SQL_QUERY->execute(array(':login', $login, ':passwd', $passwd));
+// 	$result = $SQL_QUERY->fetchAll();
+// 	return ($result[0]);
+// }
 ?>

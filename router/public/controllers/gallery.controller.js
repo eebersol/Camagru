@@ -127,7 +127,7 @@ function displayMiniature(page, callback)
 			this.pictures.push(picture);
 		}
 		getData	('/models/picture.model.php', '?action=picture.get.totalPicture', 'GET', (data) =>
-		{;
+		{
 			this.nbrPicture = data[0][0]-1;
 
 			console.log("Il y a ", this.nbrPicture, 'images on peut mettre 9 images par page donc ', this.nbrPicture,'/ 9=', this.nbrPicture/9)

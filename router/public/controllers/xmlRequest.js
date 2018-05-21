@@ -8,7 +8,7 @@ function requestData (url, arg, method, callback)
             content = xhr.responseText;
             if (content != '' && (content))
             {
-                console.log("CONTENT : ", content)
+                //console.log("CONTENT : ", content)
                 callback(JSON.parse(content));
             }
             else
@@ -25,7 +25,6 @@ function requestData (url, arg, method, callback)
 
 function getData(arg, url, method, callback) 
 {
-    console.log("Arg : ", arg, url, "Method : :", method)
     requestData(arg, url, method, (data) =>
     {
         if (data !== false)
