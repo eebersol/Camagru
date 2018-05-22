@@ -6,7 +6,7 @@ function get_page($offset, $page)
 
 	$conn = new PDO($DB_DSN, $DB_USER, $DB_PASS);
 	// $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-	$SQL_QUERY = $conn->prepare('SELECT * FROM pictures ORDER BY id LIMIT ?, ?');		
+	$SQL_QUERY = $conn->prepare('SELECT * FROM camagru.pictures ORDER BY id LIMIT ?, ?');		
 	$SQL_QUERY->bindParam(1, $offset,PDO::PARAM_INT);
 	$SQL_QUERY->bindParam(2, $page,PDO::PARAM_INT);
 	$SQL_QUERY->execute();
@@ -34,7 +34,7 @@ function get_picture_user($login)
 
 	$conn = new PDO($DB_DSN, $DB_USER, $DB_PASS);
 	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-	$SQL_QUERY = $conn->prepare("SELECT * FROM pictures WHERE auteur=?");
+	$SQL_QUERY = $conn->prepare("SELECT * FROM camagru.pictures WHERE auteur=?");
 	$SQL_QUERY->execute([$login]);
 	$result = $SQL_QUERY->fetchAll();
 	return ($result);	
@@ -45,7 +45,7 @@ function get_picture_nbr()
 
 	$conn = new PDO($DB_DSN, $DB_USER, $DB_PASS);
 	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-	$SQL_QUERY = $conn->prepare("SELECT COUNT(*) FROM pictures");
+	$SQL_QUERY = $conn->prepare("SELECT COUNT(*) FROM camagru.pictures");
 	$SQL_QUERY->execute();
 	$result = $SQL_QUERY->fetchAll();
 	return ($result);	
@@ -57,7 +57,7 @@ function add_picture($date, $category, $token, $description, $login)
 	$conn 		= new PDO($DB_DSN, $DB_USER, $DB_PASS);
 	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 	$SQL_QUERY 	= $conn->prepare('
-			INSERT INTO pictures 
+			INSERT INTO camagru.pictures 
 			(id, date_creation, category, picture_path, description, nbr_like, auteur) 
 			VALUES 
 			(0,  :date_create, :category, :token, :description, 0, :login)');
@@ -87,7 +87,7 @@ function delete_picture($login, $url)
 
 	$conn = new PDO($DB_DSN, $DB_USER, $DB_PASS);
 	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-	$SQL_QUERY = $conn->prepare('DELETE FROM pictures 	WHERE auteur=? AND picture_path=?');
+	$SQL_QUERY = $conn->prepare('DELETE FROM camagru.pictures WHERE auteur=? AND picture_path=?');
 	$SQL_QUERY->execute([$login, $url]);
 	$result = $SQL_QUERY->fetchAll();
 }

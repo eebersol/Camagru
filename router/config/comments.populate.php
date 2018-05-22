@@ -14,7 +14,7 @@ function create_comment($login, $picture_path, $comment)
 	$date = date("Y-m-d");
 	$SQL_QUERY = '
 		INSERT INTO
-		`comments` (
+		camagru.comments (
 			id,
 			login,
 			comment,

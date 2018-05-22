@@ -14,7 +14,7 @@ function create_like($login, $picture_path)
 	$date = date("Y-m-d");
 	$SQL_QUERY = '
 		INSERT INTO
-		`likes` (
+		camagru.likes (
 			id,
 			login,
 			picture_path

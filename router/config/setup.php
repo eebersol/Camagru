@@ -16,7 +16,7 @@ catch (PDOException $e) {
 
 try
 {
-	$SQL_QUERY = "CREATE TABLE users (
+	$SQL_QUERY = "CREATE TABLE camagru.users (
 		id 					INT 			NOT NULL AUTO_INCREMENT PRIMARY KEY,
 		email 				VARCHAR(255)	NOT NULL,
 		login 				VARCHAR(120)	NOT NULL,
@@ -39,7 +39,7 @@ catch (PDOException $e) {
 
 try
 {
-	$SQL_QUERY = "CREATE TABLE pictures (
+	$SQL_QUERY = "CREATE TABLE camagru.pictures (
 		id 					INT 			NOT NULL AUTO_INCREMENT PRIMARY KEY,
 		date_creation 		DATE			NOT NULL,
 		category			TEXT 			NOT NULL,
@@ -58,7 +58,7 @@ catch (PDOException $e) {
 
 try
 {
-	$SQL_QUERY = "CREATE TABLE likes (
+	$SQL_QUERY = "CREATE TABLE camagru.likes (
 		id 					INT 			NOT NULL AUTO_INCREMENT PRIMARY KEY,
 		login 				VARCHAR(120)	NOT NULL,
 		picture_path 		TEXT			NOT NULL
@@ -72,7 +72,7 @@ catch (PDOException $e) {
 
 try
 {
-	$SQL_QUERY = "CREATE TABLE comments (
+	$SQL_QUERY = "CREATE TABLE camagru.comments (
 		id 					INT 			NOT NULL AUTO_INCREMENT PRIMARY KEY,
 		login 				VARCHAR(120)	NOT NULL,
 		comment 			TEXT 			NOT NULL,

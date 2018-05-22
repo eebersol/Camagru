@@ -14,7 +14,7 @@ function create_picture($category, $picture_path, $desc)
 	$date = date("Y-m-d");
 	$SQL_QUERY = '
 		INSERT INTO
-		`pictures` (
+		camagru.pictures (
 			id,
 			date_creation,
 			category,
