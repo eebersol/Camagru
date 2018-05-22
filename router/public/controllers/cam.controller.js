@@ -218,6 +218,7 @@ function display_filter ()
 			this.filter 		= data;
 			for (let i = 0; i < this.filter.length; i++)
 			{
+				console.log(this.filter[i])
 				let filterDiv 	= document.createElement("div");
 				let filterImg 	= document.createElement("img");
 				let filterName 	= this.filter[i];
