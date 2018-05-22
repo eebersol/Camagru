@@ -193,7 +193,7 @@ function user_get_picture_like($login)
 
 	$conn = new PDO($DB_DSN, $DB_USER, $DB_PASS);
 	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-	$SQL_QUERY = $conn->prepare('SELECT camagru.picture_path FROM likes WHERE login=?');
+	$SQL_QUERY = $conn->prepare('SELECT picture_path FROM camagru.likes WHERE login=?');
 	$SQL_QUERY->execute([$login]);
 	$result = $SQL_QUERY->fetchAll();
 	return ($result);
