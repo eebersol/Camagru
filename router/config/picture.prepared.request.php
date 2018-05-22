@@ -60,7 +60,7 @@ function add_picture($date, $category, $token, $description, $login)
 			INSERT INTO pictures 
 			(id, date_creation, category, picture_path, description, nbr_like, auteur) 
 			VALUES 
-			(0,  :date_create, :category, :token, :description, 0, :login');
+			(0,  :date_create, :category, :token, :description, 0, :login)');
 	$SQL_QUERY->bindValue(':login', $login, PDO::PARAM_STR);
 	$SQL_QUERY->bindValue(':date_create', $date, PDO::PARAM_STR);
 	$SQL_QUERY->bindValue(':category', $category, PDO::PARAM_STR);

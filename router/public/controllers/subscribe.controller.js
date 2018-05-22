@@ -1,16 +1,24 @@
+
+function check_input(id)
+{	
+	console.log("Id : ", id );
+	console.log(document.getElementById(id).style)
+	if (document.getElementById(id).style.borderColor == "rgb(244, 67, 54)")
+		document.getElementById(id).style.borderColor = 'grey';
+}
+
 function validateEmail(email) 
 {
     var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(String(email).toLowerCase());
 }
 
-
-function check_input(name)
+function check_passwd(passwd)
 {
-	if (document.getElementsByName(name)[0].style.borderColor == 'red')
-		document.getElementsByName(name)[0].style.borderColor = 'grey';
-
+	let re  		= /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+	return re.test(String(passwd).toLowerCase());
 }
+
 
 function create_user()
 {
@@ -20,15 +28,15 @@ function create_user()
 	let passwdClone = document.getElementsByName("passwdClone")[0];
 
 	if (!email.value || !validateEmail(email.value))
-		email.style.borderColor = 'red';
+		email.style.borderColor = '#F44336';
 	else if (!login.value || login.value.length < 6)
-		login.style.borderColor = 'red';
+		login.style.borderColor = '#F44336';
 	else if (!passwdClone.value)
-		passwdClone[0].style.borderColor = 'red';
-	else if (!passwd.value || passwd.value.length < 6)
-		passwd.style.borderColor = 'red';
+		passwdClone[0].style.borderColor = '#F44336';
+	else if (!passwd.value || !check_passwd(passwd.value))
+		passwd.style.borderColor = '#F44336';
 	else if (passwd.value != passwdClone.value)
-		passwd.style.borderColor = passwdClone.style.borderColor ='red';
+		passwd.style.borderColor = passwdClone.style.borderColor ='#F44336';
 	else 
 	{
 		getData('/models/user.model.php', '?action=user.create&&email='+email.value+'&&login='+login.value+'&&passwd='+passwd.value, 'GET', (data) => {

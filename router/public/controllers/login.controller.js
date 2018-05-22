@@ -4,9 +4,9 @@ function login_user()
 	let passwd 		= document.getElementById("passwdLogin");
 
 	if (!login.value || login.value.length < 6)
-		login.style.borderColor = '#D32F2F';
+		login.style.borderColor = '#F44336';
 	else if (!passwd.value || passwd.value.length < 6)
-		passwd.style.borderColor = '#D32F2F';
+		passwd.style.borderColor = '#F44336';
 	else
 	{
 		getData('/models/user.model.php', '?action=user.login&&login='+login.value+'&&passwd='+passwd.value, 'GET', (data) => 

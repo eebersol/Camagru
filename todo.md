@@ -37,3 +37,5 @@ TODO  18mai ::
 il faudrait que la photo apparaisse dans le mail, et il faudrait verifier que l'auteur du message ne sois pas l'auteur de la photo
 
 
+- Ajouter dans la prise de photo un input pour la description et un pour le nom de la photo.
+

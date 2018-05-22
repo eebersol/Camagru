@@ -43,6 +43,8 @@ if ($_POST)
 {	
 	$picture 	= new Picture();
 	if (isset($_POST['login']) && isset($_POST['file']) && isset($_POST['description']))
+	{
 		$picture->save_picture($_POST['login'], $_POST['file'], $_POST['description'], $_POST['name']);
+	}
 }
 ?>

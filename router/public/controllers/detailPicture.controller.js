@@ -22,23 +22,6 @@ function pickRandomColor()
 }
 
 
-function display_like (data)
-{
-	let liked 					= document.getElementById("liked");	
-	let no_like 				= document.getElementById("no_like")
-
-	if (this.user.picture.liked.indexOf(this.pictures[this.currentPictureIndex].path) != -1)
-	{
-		liked.style.display 	= "block";
-		no_like.style.display 	= "none";
-	}
-	else
-	{
-		liked.style.display 	= "none";
-		no_like.style.display 	= "block";
-	}
-
-}
 
 
 function commentSeeLess(idComment, idAuteur, idCell, idMoreMore, idMoreLess)
@@ -67,7 +50,7 @@ function commentSeeLess(idComment, idAuteur, idCell, idMoreMore, idMoreLess)
 }
 
 
-function commentSeeMore(idComment, idAuteur, idCell, idMoreMore, idMoreLess, text)
+function commentSeeMore(idComment, idAuteur, idCell, idMoreMore, idMoreLess, text, idDate)
 {
 	console.log('ID : ', idMoreLess)
 	let commentDiv 	= document.getElementById("zoomComments")
@@ -76,6 +59,7 @@ function commentSeeMore(idComment, idAuteur, idCell, idMoreMore, idMoreLess, tex
 	let cell 		= document.getElementById(idCell);
 	let moreMore 	= document.getElementById(idMoreMore);
 	let moreLess 	= document.getElementById(idMoreLess);
+	let dateDiv 	= document.getElementById(idDate);
 
 
 	this.oldCommentProperty = {
@@ -89,7 +73,8 @@ function commentSeeMore(idComment, idAuteur, idCell, idMoreMore, idMoreLess, tex
 
 	moreMore.style.display 	= "none";
 	moreLess.style.display 	= "inline-block";
-	moreLess.style.margin 	= "0 0 0 10%";
+	moreLess.style.margin 	= "0 0 0 1%";
+	dateDiv.style.margin 	= "0 0 0 10%";
 
 	comment.textContent  	= text;
 	comment.style.wordWrap 	= "break-word";
@@ -157,7 +142,7 @@ function create_node_comment(login, text, i, date)
 
 			more.textContent 		= " ... ";
 			more.setAttribute("id", "moreMore-"+idComment.split('-')[1]);
-			more.setAttribute("onclick", "commentSeeMore('"+idComment+"', '"+idAuteur+"', '"+idCell+"', '"+"moreMore-"+idComment.split('-')[1]+"', '"+"moreLess-"+idComment.split('-')[1]+"', '"+text+"');");
+			more.setAttribute("onclick", "commentSeeMore('"+idComment+"', '"+idAuteur+"', '"+idCell+"', '"+"moreMore-"+idComment.split('-')[1]+"', '"+"moreLess-"+idComment.split('-')[1]+"', '"+text+"', '"+idDate+"');");
 			cell.appendChild(more)
 
 			moreLess.textContent	= " ... ";
@@ -169,6 +154,9 @@ function create_node_comment(login, text, i, date)
 	}
 }
 
+function clearContents(element) {
+  element.value = '';
+}
 
 
 function checkKey(event)
@@ -183,15 +171,17 @@ function checkKey(event)
 	}
 	if (event.keyCode === 13 && event.shiftKey === false) 
 	{
-		let text 	= document.getElementById("textComment").value;
+		let text 	= document.getElementById("textComment");
 		let login 	= this.user.login;
 		let auteur 	= this.pictures[this.currentPictureIndex].auteur;
 		let date 	= new Date("Y-m-d");
 
 		event.preventDefault();
-		getData('/models/user.model.php', '?action=user.add.comment&&text='+text+'&&picture='+this.pictures[this.currentPictureIndex].path+'&&auteur='+auteur, 'POST', (data) => {
+		getData('/models/user.model.php', '?action=user.add.comment&&text='+text.value+'&&picture='+this.pictures[this.currentPictureIndex].path+'&&auteur='+auteur, 'POST', (data) => {
 			let len 	= this.pictures[this.currentPictureIndex].comments.length
-			create_node_comment(login, text, this.pictures[this.currentPictureIndex].comments.length, date)
+			create_node_comment(login, text.value, this.pictures[this.currentPictureIndex].comments.length, date);
+			clearContents(text);
+			console.log(text);
 		});
 	}
 	else if (event.keyCode === 13 && event.shiftKey === true)
@@ -200,11 +190,24 @@ function checkKey(event)
 
 function changeLikeIcon(id)
 {
+	let nbr_like =  document.getElementById("nbr_like");
+	
 	if (id == "liked")
+	{
+		nbr_like.value = parseInt(nbr_like.value) + 1;
+		nbr_like.textContent = nbr_like.value.toString();
 		document.getElementById("no_like").style.display = "none";
+	}
 	else
+	{
+		if (nbr_like.value > 0)
+		{
+			nbr_like.value = parseInt(nbr_like.value) - 1;
+			nbr_like.textContent = nbr_like.value.toString();
+		}
 		document.getElementById("liked").style.display 	= "none";
-	document.getElementById(id).style.display 		= "block";
+	}
+	document.getElementById(id).style.display 		= "inline-block";
 }
 
 function likePicture() 
@@ -244,16 +247,19 @@ function display_like (data)
 {
 	let liked 					= document.getElementById("liked");	
 	let no_like 				= document.getElementById("no_like")
+	let nbr_like 				= document.getElementById("nbr_like")
 
+	nbr_like.textContent = this.pictures[this.currentPictureIndex].likes.toString();
+	nbr_like.value = this.pictures[this.currentPictureIndex].likes.toString();
 	if (this.user.picture.liked.indexOf(this.pictures[this.currentPictureIndex].path) != -1)
 	{
-		liked.style.display 	= "block";
+		liked.style.display 	= "inline-block";
 		no_like.style.display 	= "none";
 	}
 	else
 	{
 		liked.style.display 	= "none";
-		no_like.style.display 	= "block";
+		no_like.style.display 	= "inline-block";
 	}
 
 }
@@ -269,9 +275,9 @@ function displayPicture(index)
 	zoomPicture.style.width 		= "100%";
 	zoomPicture.style.height 		= "auto";
 	zoomPicture.setAttribute("src", this.pictures[index].path);
-	this.currentPictureIndex 		= index;	
+	this.currentPictureIndex 		= index;
 
-	if (this.pictures[index]['description'] != '')
+	if (this.pictures[index])
 	{
 		let zoomDescription					= document.getElementById("zoomDescription");
 		let zoomDescriptionText 			= document.getElementById("zoomDescriptionText");
@@ -281,7 +287,7 @@ function displayPicture(index)
 		zoomDescription.style.display 		= "block";
 
 		zoomDescriptionText.style.display 	= "inline-block";
-		zoomDescriptionText.textContent 	= this.pictures[index]['description'];
+		zoomDescriptionText.textContent 	= this.pictures[index]['description'] ? this.pictures[index]['description'] : '';
 
 
 		zoomDescriptionAuteur.style.display 	= "inline-block";
@@ -310,9 +316,9 @@ function displayPicture(index)
 
 
 		if (this.user.picture.liked.indexOf(this.pictures[this.currentPictureIndex].path) != -1)
-			document.getElementById("liked").style.display = "block";
+			document.getElementById("liked").style.display = "inline-block";
 		else
-			document.getElementById("no_like").style.display = "block";
+			document.getElementById("no_like").style.display = "inline-block";
 		cellAddComment.style.margin 			= "6% 0 0 0";
 		cellAddComment.style.borderRadius 		= "500px";
 		cellAddComment.style.backgroundColor 	= "#BDBDBD";

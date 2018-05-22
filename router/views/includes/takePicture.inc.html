@@ -13,8 +13,8 @@
 			<div >
 				<div class="app">
 					<a href="#" id="start-camera" class="visible">Touch here to start the app.</a>
-					<video id="camera-stream"></video>
-					<img id="snap">
+					<video onclick="get_position(event)" id="camera-stream"></video>
+					<img onclick="get_positionSnap(event)" id="snap">
 					<p id="error-message"></p>
 					<div class="controls">
 						<a href="#" id="delete-photo" title="Delete Photo" class="disabled">

@@ -12,7 +12,7 @@ function reinit_password_user($token_passwd, $email)
 	$SQL_QUERY->execute();
 }
 
-function email_user($email)
+function email_user($login)
 {
 	require("database.php");
 

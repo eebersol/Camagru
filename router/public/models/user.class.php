@@ -134,7 +134,7 @@ class User {
 			$this->_login = $old_login;
 		else if ($old_login != $new_login)
 		{
-			$this->_is_used_login = user_is_subscribe('login', $new_login);
+			$this->_is_used_login = user_is_subscribe_login($new_login);
 			if (count($this->_is_used_login) == 0)
 			{
 				$this->_login = $new_login;
@@ -194,29 +194,21 @@ class User {
 		}
 		$date = date("Y-m-d");
 		$this->_picture_comment = add_comment($this->_login, $text, $picture_path, $date);
-
-		$path = $picture_path;
-		$type = pathinfo($path, PATHINFO_EXTENSION);
-		$data = file_get_contents($path);
-		$base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
 		$this->_token_password 	= $this->generate_token(1);
 		$subject 		= "[-CAMAGRU-] - Notification";
 		$headers  		= 'MIME-Version: 1.0' . "\r\n";
 		$headers 		.= 'Content-type: text/html; charset=UTF-8' . "\r\n";
 		$headers 		.= 'From: <eebersol@student.42.fr>' . "\r\n";
-		// $headers		.= "Content-ID: <my50kphoto>" . "\r\n";
-		// $headers		.= "Content-Type: image/jpeg" . "\r\n";
-		// $headers		.= "Content-Transfer-Encoding: Base64" . "\r\n";
-		// $headers		.= $base64 . "\r\n";
 		$html_page 		= file_get_contents("../../ressources/mails/mail.new_comment.html");
 		$html_page 		= str_replace("LOGIN", $auteur, $html_page);
 		$html_page 		= str_replace("AUTEUR", $this->_login, $html_page);
 		$html_page 		= str_replace("PICTURE",$picture_path, $html_page);
+		$html_page 		= str_replace("TEXT",$text, $html_page);
 		$message 		= $html_page;
-		$this->_message = "Email envoyé.";
 		$this->_message = email_user($auteur);
-		$auteurEmail = $this->_message[0]['email'];
+		$auteurEmail = $this->_message[0][0];
 		mail($auteurEmail, $subject, $message, $headers); 
+		$this->_message = "Email envoyé.";
 	}
 
 	public function reinit_password($email)

@@ -1,4 +1,40 @@
 // MODIFIER MES INFORMATIONS //
+function modifyInformationProfil()
+{
+	let email 				= document.getElementById("userProfilEmailInput");
+	let login 				= document.getElementById("userProfilLoginInput");
+	let passwd 				= document.getElementById("userProfilPasswdInput");
+
+	if (passwd.value && !check_passwd(passwd.value))
+		passwd.style.borderColor = '#F44336';
+	else if (email.value && !validateEmail(email.value))
+		email.style.borderColor = '#F44336';
+	else if (login.value && login.value.length < 6)
+		login.style.borderColor = '#F44336';
+	else
+	{
+		let oldInformation = [this.user.email, this.user.login, this.user.passwd];
+		let newInformation = [email.value, login.value, passwd.value];
+		getData('/models/user.model.php', '?action=user.update.information&&oldInformation='+oldInformation+'&&newInformation='+newInformation, 'GET', (data) =>
+		{
+			let message 			= data;
+			let successModifyDiv 	= document.getElementById("successModify");
+			let successModifyText 	= document.getElementById("successModifyText");
+			console.log(successModifyDiv)
+			console.log(successModifyText)
+
+			successModifyDiv.style.display 	= "block";
+			successModifyText.textContent 	= message;
+
+			if (data == "Informations modifiées.")
+				successModifyDiv.style.backgroundColor = "#9CCC65";
+			else
+				successModifyDiv.style.backgroundColor = "#F44336";
+			getUser();
+			setTimeout(function(){ location.reload(); }, 1000);
+		});
+	}
+}
 
 function modifyInformation()
 {
@@ -14,47 +50,4 @@ function modifyInformation()
 	login.textContent 			= this.user.login;
 	passwd.textContent 			= "Mot de passe";
 }
-
-function modifyInformationProfil ()
-{
-	let 		emailTmp;
-	let 		loginTmp;
-	let 		passwdTmp;
-	let email 	= document.getElementById("userProfilEmailInput");
-	let login 	= document.getElementById("userProfilLoginInput");
-	let passwd 	= document.getElementById("userProfilPasswdInput");
-	let xhr 	= new XMLHttpRequest();
-
-	emailTmp 	= email.value;
-	loginTmp 	= login.value;
-	passwdTmp 	= passwd.value;
-	
-
-	if (emailTmp && !validateEmail(emailTmp))
-		email.style.borderColor = 'red';
-	else if (loginTmp && loginTmp.length < 6)
-		login.style.borderColor = 'red';
-	else
-	{
-		let oldInformation = [this.user.email, this.user.login, this.user.passwd];
-		let newInformation = [emailTmp, loginTmp, passwdTmp];
-		getData('/models/user.model.php', '?action=user.update.information&&oldInformation='+oldInformation+'&&newInformation='+newInformation, 'GET', (data) =>{
-			let message 	= data;
-			let messageDiv 	= document.getElementsByClassName("infoMessage")[0];
-			let messageText = document.getElementsByClassName("infoMessageText")[0];
-
-			messageDiv.style.display 	= "block";
-			messageText.textContent 	= message;
-
-			if (data == "Informations modifiées.")
-				messageDiv.style.backgroundColor = "#9CCC65";
-			else
-				messageDiv.style.backgroundColor = "#F44336";
-			getUser();
-			setTimeout(function(){ location.reload(); }, 1000);
-		});
-	}
-}
-
 /////////////////////////////////////
-

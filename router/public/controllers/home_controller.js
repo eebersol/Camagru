@@ -2,6 +2,23 @@ function returnHome() {
 	location.reload();
 }
 
+function troll(id)
+{
+	console.log(id)
+	let img = document.getElementById(id);
+
+	console.log(img)
+	if (img.src == 'https://image.freepik.com/icones-gratuites/appareil-photo-avec-un-flash_318-60075.jpg')
+	{
+		img.style.marginTop = '7%';
+		img.src = 'https://img.20mn.fr/sIChN5W-TCG0VWSpGYJYLw/310x190_tous-trolls';
+	}
+	else
+	{
+		img.style.marginTop = '0';
+		img.src = 'https://image.freepik.com/icones-gratuites/appareil-photo-avec-un-flash_318-60075.jpg'
+	}
+}
 
 
 function getUser()

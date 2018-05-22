@@ -1,9 +1,11 @@
 function takePicture()
 {
 	// References to all the element we will need.
+	this.desirePosition 				= {};
 	this.video 							= document.querySelector('#camera-stream');
 	this.image 							= document.querySelector('#snap');
 	this.start_camera					= document.querySelector('#start-camera');
+	this.camera_stream					= document.querySelector('#camera-stream');
 	this.controls 						= document.querySelector('.controls');
 	this.take_photo_btn 				= document.querySelector('#take-photo');
 	this.delete_photo_btn 				= document.querySelector('#delete-photo');
@@ -30,6 +32,56 @@ function takePicture()
 	active_event();
 	display_filter();
 	display_old_picture();
+}
+
+function getElementOffset() 
+{
+  let top = 0;
+  let left = 0;
+  let element = document.querySelector('#camera-stream');
+
+  // Loop through the DOM tree
+  // and add it's parent's offset to get page offset
+  do {
+    top += element.offsetTop || 0;
+    left += element.offsetLeft || 0;
+    element = element.offsetParent;
+  } while (element);
+
+  return {
+    top,
+    left,
+  };
+}
+
+function get_position(e)
+{
+	let offset = getElementOffset()
+	let relativeX = (e.pageX - offset.left);
+	let relativeY = (e.pageY - offset.top);
+
+  console.log("X: " + relativeX + "  Y: " + relativeY);
+
+	if (this.currentFilter && this.currentFilter.src)
+	{
+  		this.desirePosition.x 	= relativeX - 150;
+  		this.desirePosition.y 	= relativeY - 100;
+  	}
+}
+
+function get_positionSnap(e)
+{
+	let offset = getElementOffset()
+	let relativeX = (e.pageX - offset.left);
+	let relativeY = (e.pageY - offset.top);
+
+  console.log("X: " + relativeX + "  Y: " + relativeY);
+
+	if (this.currentFilter && this.currentFilter.src && this.is_take == true)
+	{
+  		this.desirePosition.x 	= relativeX - 150;
+  		this.desirePosition.y 	= relativeY - 100;
+  	}
 }
 
 
@@ -86,10 +138,10 @@ function choose_filter(i)
 {
 	let div = document.getElementById(this.filter[i].split('.')[0])
 
-	this.filter = {
+	this.currentFilter = {
 		'src'   : "ressources/filtre/" + this.filter[i],
 		'name'  : this.filter[i],
-		'index' :i,
+		'index' : i,
 		'width' : div.offsetWidth,
 		'height': div.offsetHeight
 	}
@@ -106,12 +158,18 @@ function draw_filter(src1)
 	imageObj1.src = src1
 		imageObj1.onload = () =>
 		{
-			imageObj2.src = this.filter.src;
+			imageObj2.src = this.currentFilter.src;
 			imageObj2.onload = () =>
 			{
-				this.context.drawImage(imageObj2, width/2, height/2, this.filter.width, this.filter.height);
+				let x = !this.desirePosition.x ? width/2 : this.desirePosition.x;
+				let y = !this.desirePosition.y ? height/2 : this.desirePosition.y;
+
+				console.log("Classic position : ", width/2, height/2)
+				console.log("New position : ",  this.desirePosition.x,  this.desirePosition.y)
+				this.context.drawImage(imageObj2, x, y, this.currentFilter.width, this.currentFilter.height);
 				buildImage();
 				showIUButton();
+				this.is_take = true;
 				this.video.pause();
 			}
 		};
@@ -146,8 +204,11 @@ function display_old_picture()
 
 			}
 		}
+		if (data.length == 0)
+			setTimeout(function(){ alert("1. .Choississez un filtre.\n2.Cliquer une fois sur la camera pour choisirs l'emplacement\n3.Prenez une photo."); }, 2000);
 	});
 }
+
 function display_filter () 
 {
 	getData('/models/picture.model.php', '?action=picture.get.filter', 'GET', (data) =>
@@ -218,10 +279,11 @@ function active_event()
 	this.take_photo_btn.addEventListener("click", (e) => 
 	{
 		e.preventDefault();
-		if (this.pictureTake)
-			this.delete_photo_btn.click();
-		this.pictureTake = takeSnapshot();
-			draw_filter(this.pictureTake)
+		// if (this.pictureTake)
+		// 	this.delete_photo_btn.click();
+		if (!this.pictureTake)
+			this.pictureTake = takeSnapshot();
+		draw_filter(this.pictureTake)
 		// this.image.setAttribute('src', this.pictureTake);
 		showIUButton()
 		this.video.pause();
@@ -235,6 +297,8 @@ function active_event()
 
 		this.dataPost.append('login', this.user.login);
 		this.dataPost.append('name', this.name);
+		if (this.description == undefined)
+			this.description = '';
 		this.dataPost.append('description', this.description);
 		this.dataPost.append('file', this.download_photo_btn.href)
 		check_info_picture();
