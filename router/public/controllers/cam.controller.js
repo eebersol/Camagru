@@ -218,26 +218,29 @@ function display_filter ()
 			this.filter 		= data;
 			for (let i = 0; i < this.filter.length; i++)
 			{
-				console.log(this.filter[i])
-				let filterDiv 	= document.createElement("div");
-				let filterImg 	= document.createElement("img");
-				let filterName 	= this.filter[i];
+				if (this.filter[i] != '.' && this.filter[i] != '..')
+				{
+					console.log(this.filter[i]);
+					let filterDiv 	= document.createElement("div");
+					let filterImg 	= document.createElement("img");
+					let filterName 	= this.filter[i];
 
-				if (i == 0 || i < this.filter.length)
-					filterDiv.style.padding	 = "1% 0 1% 15%";
-				else
-					filterDiv.style.padding	 = "0 0 1% 15%";
-				filterDiv.setAttribute("id", filterName.split('.')[0] + 'i');
-				
-				filterImg.setAttribute("src", "../ressources/filtre/" + filterName);
-				filterImg.setAttribute("onclick", "choose_filter("+i+")");
-				filterImg.style.maxWidth	 = "200px";
-				filterImg.setAttribute("id", filterName.split('.')[0]);
+					if (i == 0 || i < this.filter.length)
+						filterDiv.style.padding	 = "1% 0 1% 15%";
+					else
+						filterDiv.style.padding	 = "0 0 1% 15%";
+					filterDiv.setAttribute("id", filterName.split('.')[0] + 'i');
+					
+					filterImg.setAttribute("src", "../ressources/filtre/" + filterName);
+					filterImg.setAttribute("onclick", "choose_filter("+i+")");
+					filterImg.style.maxWidth	 = "200px";
+					filterImg.setAttribute("id", filterName.split('.')[0]);
 
-				document.getElementById("filterList").appendChild(filterDiv);
-				filterDiv.appendChild(filterImg);
+					document.getElementById("filterList").appendChild(filterDiv);
+					filterDiv.appendChild(filterImg);
 
-				this.index 		= i;
+					this.index 		= i;
+				}
 			}
 		}
 	});
